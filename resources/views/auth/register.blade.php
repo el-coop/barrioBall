@@ -73,6 +73,10 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="panel-footer text-right">Already registered?
+                                <a href="{{action ('Auth\LoginController@showLoginForm')}}">Login</a>
+                                </div>
+
                         </form>
                     </div>
                 </div>
