@@ -15,16 +15,16 @@ return [
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'email' => 'Email adress',
-    'password' => 'Password',
-    'confirmPassword' => 'Confirm password',
-    'language' => 'Language',
-    'login' => 'Login',
-     'register' => 'register',
-    'notMemberYet' => 'Not a member yet',
-    'rememberMe' => 'Remember me',
-    'alreadyRegistred' => 'already registred?',
-    'forgetMe' => 'forget your password',
-    'currentLanguage' => 'English'
+    'email' => 'Correo Electronico',
+    'password' => 'Contraseña',
+    'confirmPassword' => 'Confirmes Contraseña',
+    'language' => 'Idioma',
+    'login' => 'Ingresar',
+    'register' => 'Registrate',
+    'notMemberYet' => 'Todavía no tenés una cuenta',
+    'rememberMe' => 'Recordarme',
+    'forgetMe' => 'Olvidé mi contraseña',
+    'alreadyRegistred' => '¿Ya tenés una cuenta?',
+
 
 ];

@@ -18,7 +18,5 @@ elixir((mix) => {
 		.webpack('app.js')
 		.browserSync({
 			proxy: 'barrioball.dev',
-			browser: "firefox"
 		});
-	;
 });
