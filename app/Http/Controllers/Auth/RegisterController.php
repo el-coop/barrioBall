@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Admin;
+use App\Models\Regular;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -62,10 +64,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'language'=> $data['language']
-        ]);
+        $base = new User;
+        $base->email = $data['email'];
+        $base->password = bcrypt($data['password']);
+        $base->language = $data['language'];
+
+        if(User::count() == 0){
+            //Create Admin
+            $newUser = new Admin();
+
+        } else {
+            $newUser = new Regular();
+
+        }
+        $newUser->save();
+
+        $newUser->user()->save($base);
+
+        return $base;
     }
 }
