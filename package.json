@@ -15,5 +15,9 @@
     "lodash": "^4.16.2",
     "vue": "^2.0.1",
     "vue-resource": "^1.0.3"
+  },
+  "dependencies": {
+    "leaflet": "^1.0.3",
+    "leaflet-control-geocoder": "^1.5.4"
   }
 }
