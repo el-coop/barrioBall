@@ -11,11 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Match\PagesController@welcome');
+Route::post('/', 'Match\MatchController@create');
 
-Auth::routes();
+/*Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/', 'HomeController@index');

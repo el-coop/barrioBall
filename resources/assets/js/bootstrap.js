@@ -37,6 +37,10 @@ Vue.http.interceptors.push((request, next) => {
  * allows your team to easily build robust real-time web applications.
  */
 
+window.L = require('leaflet/dist/leaflet');
+
+window.L.leafletgeocoder = require('leaflet-control-geocoder/dist/Control.Geocoder');
+
 // import Echo from "laravel-echo"
 
 // window.Echo = new Echo({

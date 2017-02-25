@@ -31,4 +31,9 @@ class User extends Authenticatable
     {
         return $this->morphTo();
     }
+
+    public function match() {
+
+        return $this->hasMany('App\Models\Match');
+    }
 }

@@ -1,0 +1,1 @@
+Vue.component('mapel', require('./Map.vue'));

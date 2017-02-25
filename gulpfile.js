@@ -19,4 +19,5 @@ elixir((mix) => {
 		.browserSync({
 			proxy: 'barrioball.dev',
 		});
+	;
 });

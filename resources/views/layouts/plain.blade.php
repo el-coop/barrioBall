@@ -25,12 +25,10 @@
 <body>
 <div id="app">
     @yield('content')
-
-
-    @yield('scripts')
 </div>
 
 <!-- Scripts -->
 <script src="/js/app.js"></script>
+@yield('scripts')
 </body>
 </html>
