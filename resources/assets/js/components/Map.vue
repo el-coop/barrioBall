@@ -7,7 +7,7 @@
             let map = L.map(this.$el).setView([-34.600432785044404, -58.43421936035156], 13);
 
             let myIcon = L.icon({
-                iconUrl: 'css/images/Football-pitch-icon.png',
+                iconUrl: '/images/match-icon.png',
                 iconSize: [30, 30],
             });
             let matchMarker;
@@ -29,7 +29,6 @@
                     matchMarker = new L.marker(ev.latlng, {icon: myIcon});
                     matchMarker.addTo(map);
                 }
-
                 else {
                     matchMarker.setLatLng(ev.latlng);
                 }
