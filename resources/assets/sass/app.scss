@@ -8,9 +8,13 @@
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+// Bootstrap Date Time Picker
+@import "node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker";
+
 //fixes
 @import "fixes";
 
 @import "leaflet/leaflet";
 @import "leaflet/Control.Geocoder";
+@import "search/map";
 

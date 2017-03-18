@@ -7,7 +7,12 @@ use App\Http\Controllers\Controller;
 
 class PagesController extends Controller
 {
-    public function welcome() {
-        return(view('match.createMatch'));
-    }
+	public function welcome() {
+		return view('match.create');
+	}
+
+
+	public function search() {
+		return view('match.search');
+	}
 }

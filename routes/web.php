@@ -11,10 +11,15 @@
 |
 */
 
-Route::get('/match', 'Match\PagesController@welcome');
-Route::post('/match', 'Match\MatchController@create');
-
 Auth::routes();
+
+Route::group(['prefix' => "matches"],function(){
+	Route::get('/', 'Match\PagesController@welcome');
+	Route::post('/', 'Match\MatchController@create');
+});
+
+Route::get('search', 'Match\PagesController@search');
+
 
 Route::get('/home', 'HomeController@index');
 Route::get('/', 'HomeController@index');
