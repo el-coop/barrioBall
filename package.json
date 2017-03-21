@@ -5,6 +5,7 @@
     "dev": "gulp watch"
   },
   "devDependencies": {
+    "axios": "^0.15.3",
     "bootstrap-sass": "^3.3.7",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "gulp": "^3.9.1",
@@ -14,8 +15,7 @@
     "laravel-elixir-vue-2": "^0.2.0",
     "laravel-elixir-webpack-official": "^1.0.2",
     "lodash": "^4.16.2",
-    "vue": "^2.0.1",
-    "vue-resource": "^1.0.3"
+    "vue": "^2.0.1"
   },
   "dependencies": {
     "leaflet": "^1.0.3",

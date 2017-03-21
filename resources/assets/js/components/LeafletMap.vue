@@ -12,8 +12,20 @@
 	export default{
 		props: {},
 
+		data(){
+			return {
+				map: null
+			}
+		},
+
+		methods: {
+			getBounds(){
+				return this.map.getBounds();
+			}
+		},
+
 		mounted(){
-			let map = L.map(this.$el).locate({
+			this.map = L.map(this.$el).locate({
 				setView: true,
 				maxZoom: 13
 			});
@@ -22,7 +34,7 @@
 				attribution: '&copy; <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a>',
 				subdomains: ['a', 'b', 'c'],
 				interactive: true,
-			}).addTo(map);
+			}).addTo(this.map);
 
 		}
 

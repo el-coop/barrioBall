@@ -19,6 +19,7 @@ Route::group(['prefix' => "matches"],function(){
 });
 
 Route::get('search', 'Match\PagesController@search');
+Route::post('search', 'Match\MatchController@search');
 
 
 Route::get('/home', 'HomeController@index');
