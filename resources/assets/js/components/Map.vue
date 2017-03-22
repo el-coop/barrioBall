@@ -41,8 +41,10 @@
                     $('#address').val(fullAddress);
 
 
-                })
-                $('#geoCode').val(ev.latlng);
+                });
+                console.log(ev.latlng);
+                $('#lat').val(ev.latlng.lat);
+                $('#lng').val(ev.latlng.lng);
             });
 
             $('#mapModal').on('shown.bs.modal', function () {

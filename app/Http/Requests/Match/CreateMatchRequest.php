@@ -33,7 +33,8 @@ class CreateMatchRequest extends FormRequest
         $match = new Match();
         $match->name = $this->input('name');
         $match->address = $this->input('address');
-        $match->geoCode = $this->input('geoCode');
+        $match->lat = $this->input('lat');
+        $match->lng = $this->input('lng');
         $match->public = $this->has('public');
         $match->recurring = $this->has('recurring');
         $match->players = $this->input('players');

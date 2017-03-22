@@ -17,12 +17,11 @@
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="geoCode">
                             <button type="button" id="mapBtn" class="btn btn-primary" data-toggle="modal"
                                     data-target="#mapModal">Address
                             </button>
-                        </label>
-                        <input name="geoCode" id="geoCode" id="map" type="hidden">
+                        <input name="lat" id="lat" type="hidden">
+                        <input name="lng" id="lng" type="hidden">
                         <div class="modal fade" id="mapModal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
