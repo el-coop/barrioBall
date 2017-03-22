@@ -17,11 +17,12 @@ class CreateMatchesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique;
             $table->string('address');
-            $table->string('geoCode');
+            $table->string('lat');
+            $table->string('lng');
             $table->boolean('public')->default(false);
             $table->boolean('recurring')->default(false);
             $table->integer('players');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

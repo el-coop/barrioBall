@@ -8393,20 +8393,6 @@ button.close {
   border-right-color: #fff;
 }
 
-/*
-	Question settings - number fo questions per page
-	Answer settings - number of answers per page.
-	scale - 5 or 7 or 9
-	test creator - decide grading with 5 or 7 or 9 per test
-	scale - fix resolution issue
-	test grader - see all/select one question/navigate through questions
-
-	stream videos to make them smaller
-
-	institute:
-	see top applicants. charts for overall applicants.
-
- */
 .leaflet-control-geocoder {
   border-radius: 4px;
   background: white;
