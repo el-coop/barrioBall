@@ -8129,6 +8129,10 @@ button.close {
   margin-top: 70px;
 }
 
+.bottom-margin {
+  margin-bottom: 10px;
+}
+
 /* required styles */
 .leaflet-pane,
 .leaflet-tile,
@@ -8965,8 +8969,26 @@ button.close {
   width: 40%;
 }
 
+.search-icon {
+  opacity: 0.75;
+}
+
+.search-icon:hover {
+  opacity: 1;
+}
+
+.search-icon.selected {
+  opacity: 1;
+  box-shadow: 5px 5px 5px;
+}
+
 #search-results-container {
   width: 60%;
+}
+
+#search-results-container .selected .panel-heading {
+  background-color: #1a69a4;
+  color: white;
 }
 
 /*# sourceMappingURL=app.css.map */

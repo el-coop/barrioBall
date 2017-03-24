@@ -3,7 +3,7 @@
     </div>
 </template>
 <style>
-    .map{
+    .map {
         width: 100%;
         height: 100%;
     }
@@ -14,13 +14,28 @@
 
 		data(){
 			return {
-				map: null
+				map: null,
+				markers: []
 			}
 		},
 
 		methods: {
 			getBounds(){
 				return this.map.getBounds();
+			},
+
+			addMarker(marker){
+				marker.addTo(this.map);
+				this.markers.push(marker);
+			},
+
+
+			clearMarkers(){
+				//noinspection BadExpressionStatementJS
+				$.each(this.markers, (index, value) => {
+					this.map.removeLayer(value);
+			    });
+				this.markers = [];
 			}
 		},
 

@@ -17,8 +17,8 @@ class CreateMatchesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique;
             $table->string('address');
-            $table->string('lat');
-            $table->string('lng');
+            $table->double('lat',20,16);
+            $table->double('lng',20,16);
             $table->boolean('public')->default(false);
             $table->boolean('recurring')->default(false);
             $table->integer('players');

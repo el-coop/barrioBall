@@ -5,6 +5,15 @@
 	bottom: 0;
 	width: 40%;
 }
-#search-results-container {
-	width: 60%;
+.search-icon {
+	opacity: 0.75;
+}
+
+.search-icon:hover {
+	opacity: 1;
+}
+
+.search-icon.selected {
+	opacity: 1;
+	box-shadow: 5px 5px 5px;
 }

@@ -23,7 +23,7 @@
 			},
             event: {
 				type: String,
-                default: 'completed'
+                default: 'search-completed'
             },
             btnClass: {
 				type: String,
