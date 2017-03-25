@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class MatchTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-		$this->call(AdminsTableSeeder::class);
-		$this->call(MatchTableSeeder::class);
+    	factory(App\Models\Match::class,50)->create();
     }
 }
