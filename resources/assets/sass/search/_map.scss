@@ -1,19 +1,22 @@
 #search-map-container {
-	position: fixed;
-	top: 45px;
-	right: 0;
-	bottom: 0;
-	width: 40%;
-}
-.search-icon {
-	opacity: 0.75;
-}
+	@media #{$above-tablet} {
+		position: fixed;
+		top: 45px;
+		right: 0;
+		bottom: 0;
+		width: 40%;
+	}
 
-.search-icon:hover {
-	opacity: 1;
-}
+	.search-icon {
+		opacity: 0.75;
+	}
 
-.search-icon.selected {
-	opacity: 1;
-	box-shadow: 5px 5px 5px;
+	.search-icon:hover {
+		opacity: 1;
+	}
+
+	.search-icon.selected {
+		opacity: 1;
+		box-shadow: 5px 5px 5px;
+	}
 }

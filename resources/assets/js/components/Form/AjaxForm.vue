@@ -27,7 +27,7 @@
             },
             btnClass: {
 				type: String,
-                default: 'btn btn-info'
+                default: 'btn btn-info sm-btn-block'
             },
             autoSubmit: {
 				type: Boolean,
