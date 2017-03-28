@@ -35,7 +35,7 @@ class SearchRequest extends FormRequest {
 	public function commit() {
 		$matches = Match::whereBetween('lng', [$this->input('west'), $this->input('east')])
 			->whereBetween('lat', [$this->input('south'), $this->input('north')])
-			->get();
+			->paginate(20);
 
 		return $matches;
 	}

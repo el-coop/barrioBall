@@ -14,8 +14,8 @@
 //fixes
 @import "fixes";
 
+@import "responsive/responsive";
 @import "leaflet/leaflet";
 @import "leaflet/Control.Geocoder";
-@import "search/map";
-@import "search/results";
+@import "search/search";
 

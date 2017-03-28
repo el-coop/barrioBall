@@ -25,6 +25,11 @@ window.axios.defaults.headers.common = {
 
 window.Vue = require('vue');
 
+
+import Paginate from 'vuejs-paginate';
+Vue.component('paginate', Paginate);
+
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

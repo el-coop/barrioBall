@@ -3,7 +3,7 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">{{config('app.name')}}</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right hidden-sm hidden-xs">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     {{ config('languages')[App::getLocale()] }}

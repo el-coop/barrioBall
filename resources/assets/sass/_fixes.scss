@@ -1,11 +1,17 @@
-.navbar-fixed-top + .container {
-  margin-top: 70px;
+html, body, #app{
+	height: 100%;
+	width: 100%;
 }
 
-.navbar-fixed-top + .container-fluid{
-  margin-top: 70px;
+
+.navbar-fixed-top + .container {
+	padding-top: 70px;
+}
+
+.navbar-fixed-top + .container-fluid {
+	padding-top: 70px;
 }
 
 .bottom-margin {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }

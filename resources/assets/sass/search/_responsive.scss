@@ -1,0 +1,21 @@
+.search-toggle {
+	position: fixed;
+	bottom: 20px;
+	left: 0;
+	right: 0;
+}
+
+#search-page {
+	transition:  padding 1s linear;
+}
+
+@media #{$under-tablet} {
+	.sm-no-side-padding {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.sm-margin-bottom {
+		margin-bottom: 50px;
+	}
+}

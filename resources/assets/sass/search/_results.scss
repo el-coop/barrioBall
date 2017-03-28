@@ -1,10 +1,21 @@
 #search-results-container {
-	width: 60%;
 
-	.selected{
+	@media #{$above-tablet} {
+		width: 60%;
+	}
+
+	.selected {
 		.panel-heading {
 			background-color: #1a69a4;
 			color: white;
+		}
+	}
+}
+
+#search-page {
+	.flipped {
+		& > .front {
+			overflow-y: hidden;
 		}
 	}
 }

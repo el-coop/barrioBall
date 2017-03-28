@@ -8121,16 +8121,75 @@ button.close {
   border: 0;
 }
 
+html, body, #app {
+  height: 100%;
+  width: 100%;
+}
+
 .navbar-fixed-top + .container {
-  margin-top: 70px;
+  padding-top: 70px;
 }
 
 .navbar-fixed-top + .container-fluid {
-  margin-top: 70px;
+  padding-top: 70px;
 }
 
 .bottom-margin {
   margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* entire container, keeps perspective */
+  .flip-container {
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+    height: 100%;
+  }
+  .flip-container > .flipper {
+    -webkit-transition: 1s;
+    transition: 1s;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    /* hide back of pane during swap */
+    /* front pane, placed above back */
+    /* back, initially hidden pane */
+  }
+  .flip-container > .flipper.flipped {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+  .flip-container > .flipper > .front, .flip-container > .flipper > .back {
+    height: 100%;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .flip-container > .flipper > .front {
+    z-index: 2;
+    /* for firefox 31 */
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+  .flip-container > .flipper > .back {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .sm-full-height {
+    height: 100%;
+  }
+  .sm-btn-block {
+    width: 100%;
+    display: block;
+  }
 }
 
 /* required styles */
@@ -8961,34 +9020,64 @@ button.close {
   color: #666;
 }
 
-#search-map-container {
-  position: fixed;
-  top: 45px;
-  right: 0;
-  bottom: 0;
-  width: 40%;
+@media only screen and (min-width: 768px) {
+  #search-map-container {
+    position: fixed;
+    top: 45px;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+  }
 }
 
-.search-icon {
+#search-map-container .search-icon {
   opacity: 0.75;
 }
 
-.search-icon:hover {
+#search-map-container .search-icon:hover {
   opacity: 1;
 }
 
-.search-icon.selected {
+#search-map-container .search-icon.selected {
   opacity: 1;
   box-shadow: 5px 5px 5px;
 }
 
-#search-results-container {
-  width: 60%;
+@media only screen and (min-width: 768px) {
+  #search-results-container {
+    width: 60%;
+  }
 }
 
 #search-results-container .selected .panel-heading {
   background-color: #1a69a4;
   color: white;
+}
+
+#search-page .flipped > .front {
+  overflow-y: hidden;
+}
+
+.search-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+}
+
+#search-page {
+  -webkit-transition: padding 1s linear;
+  transition: padding 1s linear;
+}
+
+@media only screen and (max-width: 768px) {
+  .sm-no-side-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .sm-margin-bottom {
+    margin-bottom: 50px;
+  }
 }
 
 /*# sourceMappingURL=app.css.map */
