@@ -44,7 +44,7 @@
 				form.submit();
 			},
 			getPage(page){
-				$('#search-results-container').find('.selected').removeClass('selected');
+				this.selectedResult = null;
 				axios.post(this.url + '?page=' + page,this.searchParams).then((response) => {
 					this.searchResults(response.data,this.searchParams);
                 });
