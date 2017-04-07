@@ -11,7 +11,14 @@
 |
 */
 
+use App\Models\Errors\PhpError;
+
 Auth::routes();
+
+Route::get('error',function(){
+	dd(PhpError::latest()->first()->request);
+	return \App\Models\Error::all();
+});
 
 Route::group(['prefix' => "matches"],function(){
 	Route::get('/', 'Match\PagesController@welcome');
