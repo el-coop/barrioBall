@@ -1,7 +1,3 @@
-
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Variables
 @import "variables";
 
@@ -14,6 +10,7 @@
 //fixes
 @import "fixes";
 
+@import "fontawesome/font-awesome";
 @import "responsive/responsive";
 @import "leaflet/leaflet";
 @import "leaflet/Control.Geocoder";

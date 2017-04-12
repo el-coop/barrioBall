@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Models\Error;
+use App\Models\Errors\Error;
 use App\Models\Errors\PhpError;
 use Exception;
 use Illuminate\Auth\AuthenticationException;

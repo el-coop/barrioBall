@@ -32,3 +32,6 @@ Route::post('search', 'Match\MatchController@search');
 Route::get('/home', 'HomeController@index');
 Route::get('/', 'HomeController@index');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
+
+Route::post('jserror','ErrorController@store');
+

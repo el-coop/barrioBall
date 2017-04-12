@@ -2,7 +2,6 @@
 
 namespace App\Models\Errors;
 
-use App\Models\Error;
 use Illuminate\Database\Eloquent\Model;
 
 class PhpError extends Model

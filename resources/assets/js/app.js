@@ -3,7 +3,7 @@
  * include Vue and Vue Resource. This gives a great starting point for
  * building robust, powerful web applications using Vue and Laravel.
  */
-
+require('./errorLogger');
 require('./bootstrap');
 require('./components/vue.js');
 
@@ -14,5 +14,6 @@ require('./components/vue.js');
  */
 
 const app = new Vue({
-	el: '#app'
+	el: '#app',
 });
+
