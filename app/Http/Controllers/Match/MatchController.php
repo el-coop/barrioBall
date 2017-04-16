@@ -11,7 +11,7 @@ use App\Models\Match;
 class MatchController extends Controller
 {
     public function create(CreateMatchRequest $request) {
-        $match = $request->commit();
+        $match = $request->commit($request->user());
         return redirect()->action('Match\PagesController@welcome');
     }
 

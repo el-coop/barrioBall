@@ -17,9 +17,6 @@
 			label:{
 				default: ''
 			},
-		    minDate: {
-		    	default: 'now'
-            },
             locale:{
 		    	default: 'en'
             },
@@ -30,7 +27,6 @@
 
 		mounted(){
 			$(this.$el).datetimepicker({
-				minDate: this.minDate,
                 locale: this.locale,
 				format: "HH:mm"
 			});
