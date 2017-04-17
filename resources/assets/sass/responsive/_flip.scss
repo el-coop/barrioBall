@@ -33,12 +33,16 @@
 			/* front pane, placed above back */
 			& > .front {
 				z-index: 2;
+				height: 100%;
+				width: 100%;
 				/* for firefox 31 */
 				transform: rotateY(0deg);
 			}
 
 			/* back, initially hidden pane */
 			& > .back {
+				height: 100%;			width: 100%;
+
 				transform: rotateY(-180deg);
 			}
 

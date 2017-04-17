@@ -8172,11 +8172,15 @@ html, body, #app {
   }
   .flip-container > .flipper > .front {
     z-index: 2;
+    height: 100%;
+    width: 100%;
     /* for firefox 31 */
     -webkit-transform: rotateY(0deg);
     transform: rotateY(0deg);
   }
   .flip-container > .flipper > .back {
+    height: 100%;
+    width: 100%;
     -webkit-transform: rotateY(-180deg);
     transform: rotateY(-180deg);
   }
@@ -9020,8 +9024,12 @@ html, body, #app {
   color: #666;
 }
 
+.map-static-left {
+  height: 100%;
+}
+
 @media only screen and (min-width: 768px) {
-  #search-map-container {
+  .map-static-left {
     position: fixed;
     top: 45px;
     right: 0;
@@ -9030,26 +9038,26 @@ html, body, #app {
   }
 }
 
-#search-map-container .search-icon {
+.map-static-left .search-icon {
   opacity: 0.75;
 }
 
-#search-map-container .search-icon:hover {
+.map-static-left .search-icon:hover {
   opacity: 1;
 }
 
-#search-map-container .search-icon.selected {
+.map-static-left .search-icon.selected {
   opacity: 1;
   box-shadow: 5px 5px 5px;
 }
 
 @media only screen and (min-width: 768px) {
-  #search-results-container {
+  .content-static-right {
     width: 60%;
   }
 }
 
-#search-results-container .selected .panel-heading {
+.content-static-right .selected .panel-heading {
   background-color: #1a69a4;
   color: white;
 }
