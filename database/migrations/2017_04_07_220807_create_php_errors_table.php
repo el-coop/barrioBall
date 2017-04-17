@@ -15,6 +15,7 @@ class CreatePhpErrorsTable extends Migration
     {
         Schema::create('php_errors', function (Blueprint $table) {
             $table->increments('id');
+			$table->string('message');
 			$table->json('request');
             $table->json('exception');
             $table->timestamps();

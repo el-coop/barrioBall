@@ -14,7 +14,7 @@ require('laravel-elixir-vue-2');
  */
 
 elixir((mix) => {
-	mix.sass('app.fontawesome')
+	mix.sass('app.scss')
 		.webpack('app.js')
 		.browserSync({
 			proxy: 'barrioball.dev',

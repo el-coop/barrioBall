@@ -1,0 +1,1 @@
+Vue.component('datatableDelete',require('./Delete.vue'));

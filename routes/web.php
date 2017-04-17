@@ -14,19 +14,11 @@
 use App\Models\Errors\PhpError;
 
 Auth::routes();
+foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
+	require $routeFile;
+}
 
-Route::get('error',function(){
-	dd(PhpError::latest()->first()->request);
-	return \App\Models\Error::all();
-});
 
-Route::group(['prefix' => "matches"],function(){
-	Route::get('/', 'Match\PagesController@welcome');
-	Route::post('/', 'Match\MatchController@create');
-});
-
-Route::get('search', 'Match\PagesController@search');
-Route::post('search', 'Match\MatchController@search');
 
 
 Route::get('/home', 'HomeController@index');

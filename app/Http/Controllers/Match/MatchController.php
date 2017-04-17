@@ -15,6 +15,11 @@ class MatchController extends Controller
         return redirect()->action('Match\PagesController@welcome');
     }
 
+
+	public function showSearch() {
+		return view('match.search');
+	}
+
     public function search(SearchRequest $request){
 		return $request->commit();
 	}

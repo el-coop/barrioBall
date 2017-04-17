@@ -2,6 +2,7 @@
 
 namespace App\Models\Errors;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Error extends Model

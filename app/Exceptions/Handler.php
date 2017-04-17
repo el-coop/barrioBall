@@ -82,6 +82,7 @@ class Handler extends ExceptionHandler {
 			$error->user_id = $request->user->id;
 		}
 		$error->page = $request->fullUrl();
+		$phpError->message = $exception->getMessage();
 		$phpError->exception = json_encode([
 			'class' => get_class($exception),
 			'message' => $exception->getMessage(),
