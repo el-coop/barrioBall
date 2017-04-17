@@ -20,9 +20,10 @@ class CreateMatchesTable extends Migration
             $table->double('lat',20,16);
             $table->double('lng',20,16);
             $table->boolean('public')->default(false);
-            $table->boolean('recurring')->default(false);
             $table->integer('players');
             $table->text('description')->nullable();
+            $table->date('date');
+            $table->time('time');
             $table->timestamps();
         });
     }

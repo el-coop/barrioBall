@@ -13,6 +13,7 @@ return [
 	*/
 
 	'date' => 'Date',
+    'name' => 'Match Name',
 	'from' => 'From',
 	'to' => 'To',
 	'players' => 'Players',

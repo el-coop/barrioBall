@@ -1,10 +1,18 @@
 <template>
-    <div style="height: 580px"></div>
+    <div class="modal fade" id="mapModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div style="height: 580px" id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
     export default{
         mounted(){
-            let map = L.map(this.$el).setView([-34.600432785044404, -58.43421936035156], 13);
+            let map = L.map('map').setView([-34.600432785044404, -58.43421936035156], 13);
 
             let myIcon = L.icon({
                 iconUrl: '/images/match-icon.png',
