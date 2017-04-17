@@ -1,3 +1,5 @@
+require('./Elements/elements');
+
 Vue.component('mapel', require('./Map.vue'));
 
 Vue.component('leafletMap', require('./LeafletMap.vue'));

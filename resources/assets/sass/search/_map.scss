@@ -1,4 +1,7 @@
-#search-map-container {
+.map-static-left {
+
+	height: 100%;
+
 	@media #{$above-tablet} {
 		position: fixed;
 		top: 45px;
