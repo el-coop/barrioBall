@@ -11,17 +11,19 @@
 |
 */
 
+use App\Models\Errors\PhpError;
+
 Auth::routes();
+foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
+	require $routeFile;
+}
 
-Route::group(['prefix' => "matches"],function(){
-	Route::get('/', 'Match\PagesController@welcome');
-	Route::post('/', 'Match\MatchController@create');
-});
 
-Route::get('search', 'Match\PagesController@search');
-Route::post('search', 'Match\MatchController@search');
 
 
 Route::get('/home', 'HomeController@index');
 Route::get('/', 'HomeController@index');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
+
+Route::post('jserror','ErrorController@store');
+

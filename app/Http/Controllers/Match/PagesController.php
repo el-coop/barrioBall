@@ -10,9 +10,4 @@ class PagesController extends Controller
 	public function welcome() {
 		return view('match.create');
 	}
-
-
-	public function search() {
-		return view('match.search');
-	}
 }

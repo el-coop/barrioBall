@@ -3,7 +3,7 @@
 
 
 @section('content')
-    @include ('navbar.unauthorized')
+    @include ('partials.navbar.unauthorized')
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
