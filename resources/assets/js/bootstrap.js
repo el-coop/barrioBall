@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 
 /**
@@ -22,13 +21,10 @@ window.axios.defaults.headers.common = {
 	'X-Requested-With': 'XMLHttpRequest'
 };
 
+window.moment = require('moment');
+
 
 window.Vue = require('vue');
-
-
-import Paginate from 'vuejs-paginate';
-Vue.component('paginate', Paginate);
-
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

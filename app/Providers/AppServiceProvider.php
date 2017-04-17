@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Errors\JsError;
+use App\Models\Errors\PhpError;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+		Relation::morphMap([
+			'PHPError' => PhpError::class,
+			'JSError' => JsError::class,
+		]);
     }
 
     /**

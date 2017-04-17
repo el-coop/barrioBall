@@ -2,7 +2,7 @@
 @section('title','Search Matches')
 
 @section('content')
-    @include('navbar.authorized')
+    @include('partials.navbar.authorized')
 
     <search-page inline-template map-name="@lang('search.map')" search-name="@lang('search.search')">
         <div class="container-fluid sm-full-height" :class="{ 'sm-no-side-padding' : mapToggled}" id="search-page">
