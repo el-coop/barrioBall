@@ -54,13 +54,14 @@
                                     <div class="search-result-map">
                                         <leaflet-map :interactive="false" :zoom="19" :center="[match.lat,match.lng]">
                                         </leaflet-map>
-                                        <p>
-                                            <strong>
-                                                <span>@{{ match.address }}</span>
-                                                <span class="pull-right">@{{ match.players }} @lang('search.players')</span>
-                                            </strong>
-                                        </p>
-                                        <p>@{{ match.description }}</p>
+                                        <div class="row">
+
+                                                <div class="col-xs-7"><strong>@{{ match.address }}</strong></div>
+                                                <div class="col-xs-5 text-right"><strong>@{{ match.players }} @lang('search.players')</strong></div>
+                                            <div class="col-xs-12">
+                                            <p>@{{ match.description }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
