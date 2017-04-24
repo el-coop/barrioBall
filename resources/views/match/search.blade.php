@@ -5,40 +5,63 @@
     @include('partials.navbar.authorized')
 
     <search-page inline-template map-name="@lang('search.map')" search-name="@lang('search.search')">
-        <div class="container-fluid sm-full-height" :class="{ 'sm-no-side-padding' : mapToggled}" id="search-page">
+        <div class="container-fluid sm-full-height"
+             :class="{ 'sm-no-side-padding' : mapToggled, 'fixed-loading' : loading}" id="search-page">
             <flipper :flipped="mapToggled">
                 <div class="content-static-right" slot="front">
                     <div class="row bottom-margin">
                         <div class="col-sm-12">
                             <ajax-form class="form-inline text-center" :auto-submit="false" v-on:submit-clicked="submit"
-                                       v-on:search-completed="searchResults" ref="form">
-                                <div class="form-group">
+                                       v-on:search-completed="searchResults" v-on:error="showErrors" :errors-box="false"
+                                       ref="form">
+                                <div class="form-group" :class="{'has-error' : errors.hasOwnProperty('date')}"
+                                     id="date_group">
                                     <date-picker label="@lang('search.date'):" name="date"></date-picker>
+                                    <span class="help-block text-left"
+                                          v-if="errors.hasOwnProperty('date')">* @{{ errors.date[0] }}</span>
                                 </div>
-                                <div class="form-group">
-                                    <time-picker label="@lang('search.from'):" name="start_time"></time-picker>
+                                <div class="form-group" :class="{'has-error' : errors.hasOwnProperty('from')}"
+                                     id="start_time_group">
+                                    <time-picker label="@lang('search.from'):" name="from"></time-picker>
+                                    <span class="help-block text-left"
+                                          v-if="errors.hasOwnProperty('from')">* @{{ errors.from[0] }}</span>
                                 </div>
-                                <div class="form-group">
-                                    <time-picker label="@lang('search.to'):" name="end_time"></time-picker>
+                                <div class="form-group" :class="{'has-error' : errors.hasOwnProperty('to')}"
+                                     id="end_time_group">
+                                    <time-picker label="@lang('search.to'):" name="to"></time-picker>
+                                    <span class="help-block text-left"
+                                          v-if="errors.hasOwnProperty('to')">* @{{ errors.to[0]}}</span>
                                 </div>
                                 <i class="glyphicon glyphicon-search" slot="submit"></i>
                             </ajax-form>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-12" v-if="matches != null && !matches.length">
+                            <h4 class="text-center">
+                                @lang('search.noMatchesFound')
+                            </h4>
+                        </div>
                         <div class="col-sm-12 col-md-6" v-for="(match, index) in matches">
                             <div class="panel panel-default" :class="{ selected: selectedResult == index}"
                                  :ref="'result' + index" @mouseenter="resultHover(index)"
                                  @mouseleave="stopHover(index)">
-                                <div class="panel-heading">@{{ match.name  }}</div>
+                                <div class="panel-heading">
+                                        @{{ match.name  }}
+                                        <span class="pull-right">@{{ match.date }} @{{ match.time }}</span>
+                                </div>
                                 <div class="panel-body">
-                                    <p>
-                                        <strong>
-                                            <span>@{{ match.address }}</span>
-                                            <span class="pull-right">@{{ match.players }} @lang('search.players')</span>
-                                        </strong>
-                                    </p>
-                                    <p>@{{ match.description }}</p>
+                                    <div class="search-result-map">
+                                        <leaflet-map :interactive="false" :zoom="19" :center="[match.lat,match.lng]">
+                                        </leaflet-map>
+                                        <p>
+                                            <strong>
+                                                <span>@{{ match.address }}</span>
+                                                <span class="pull-right">@{{ match.players }} @lang('search.players')</span>
+                                            </strong>
+                                        </p>
+                                        <p>@{{ match.description }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

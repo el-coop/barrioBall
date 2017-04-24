@@ -1,5 +1,5 @@
 <template>
-    <div class="alert alert-danger" v-if="errors">
+    <div class="alert alert-danger text-left" v-if="errors">
         <ul v-if="typeof errors == 'object'">
             <li v-for="error in errors">
                 {{error[0]}}

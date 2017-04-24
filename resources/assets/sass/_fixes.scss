@@ -15,3 +15,9 @@ html, body, #app{
 .bottom-margin {
 	margin-bottom: 10px;
 }
+
+.form-inline {
+	.form-group {
+		vertical-align: top;
+	}
+}

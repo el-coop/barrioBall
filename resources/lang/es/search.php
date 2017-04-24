@@ -19,6 +19,7 @@ return [
 	'prev' => 'Anterior',
 	'next' => 'Proximo',
 	'search' => 'Pesquisa',
-	'map' => 'Mapa'
+	'map' => 'Mapa',
+	'noMatchesFound' => 'No hay partidos en estos horarios'
 
 ];

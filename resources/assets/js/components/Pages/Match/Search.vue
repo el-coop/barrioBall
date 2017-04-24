@@ -24,7 +24,9 @@
                 pages: 0,
                 mapToggled: false,
 				mapBtn: 'Map',
-                selectedResult: null
+                selectedResult: null,
+                loading: false,
+                errors: {}
             }
         },
 
@@ -41,9 +43,12 @@
 				form.addData('east',bounds.getEast());
 				form.addData('west',bounds.getWest());
 				form.addData('south',bounds.getSouth());
+				this.errors = {};
+				this.loading = true;
 				form.submit();
 			},
 			getPage(page){
+				this.loading = true;
 				this.selectedResult = null;
 				axios.post(this.url + '?page=' + page,this.searchParams).then((response) => {
 					this.searchResults(response.data,this.searchParams);
@@ -78,6 +83,7 @@
             },
 
             searchResults(results,params){
+				this.loading = false;
 				this.searchParams = params;
 				this.pages = results.last_page;
     	    	let map = this.$refs.map;
@@ -92,6 +98,11 @@
                 	marker.on('click',this.markerClick.bind(this,index));
                 	map.addMarker(marker);
                 });
+            },
+
+            showErrors(errors){
+            	this.loading = false;
+            	this.errors = errors;
             }
         }
     }
