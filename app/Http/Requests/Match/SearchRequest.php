@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Match;
 
 use App\Models\Match;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchRequest extends FormRequest {
@@ -23,8 +24,8 @@ class SearchRequest extends FormRequest {
 	public function rules() {
 		return [
 			'date' => 'required|date_format:d/m/y',
-			'start_time' => 'required|date_format:H:i',
-			'end_time' => 'required|date_format:H:i',
+			'from' => 'required|date_format:H:i',
+			'to' => 'required|date_format:H:i',
 			'north' => 'required|numeric',
 			'east' => 'required|numeric',
 			'west' => 'required|numeric',
@@ -33,8 +34,14 @@ class SearchRequest extends FormRequest {
 	}
 
 	public function commit() {
+		$date = Carbon::createFromFormat('d/m/y',$this->input('date'))->format('Y-m-d');
+		$startTime = Carbon::createFromFormat('H:i',$this->input('from'))->subSecond()->format('H:i:s');
+		$endTime = Carbon::createFromFormat('H:i',$this->input('to'))->addSecond()->format('H:i:s');
+
 		$matches = Match::whereBetween('lng', [$this->input('west'), $this->input('east')])
 			->whereBetween('lat', [$this->input('south'), $this->input('north')])
+			->whereBetween('time',[$startTime,$endTime])
+			->where('date',$date)
 			->paginate(20);
 
 		return $matches;

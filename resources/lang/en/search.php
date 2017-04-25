@@ -20,6 +20,7 @@ return [
 	'prev' => 'Prev',
 	'next' => 'Next',
 	'search' => 'Search',
-	'map' => 'Map'
+	'map' => 'Map',
+	'noMatchesFound' => 'There are no matches at these hours'
 
 ];

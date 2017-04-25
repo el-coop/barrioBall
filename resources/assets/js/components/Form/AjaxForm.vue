@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="submitClicked">
-        <form-errors :errors="errors"></form-errors>
+        <form-errors :errors="errors" v-if="errorsBox"></form-errors>
         <slot></slot>
         <div  class="form-group">
             <button :class="btnClass" ref="submit">
@@ -32,6 +32,10 @@
             autoSubmit: {
 				type: Boolean,
                 default: true
+            },
+            errorsBox: {
+				type: Boolean,
+                default: true
             }
 		},
 
@@ -53,9 +57,14 @@
                 }
             },
 
-			submit(){
-				this.showLoadingButton();
+            clearErrors(){
+				$(this.$el).find('.form-group').removeClass('has-error');
 				this.errors = null
+            },
+
+			submit(){
+            	this.clearErrors();
+				this.showLoadingButton();
 				let data = this.makeData();
 				axios[this.method](this.action, data).then(response => {
 					this.showNormalButton();
@@ -63,6 +72,7 @@
 				}, error => {
 					this.showNormalButton();
 					this.errors = error.response.data;
+					this.$emit('error', error.response.data);
 				});
 			},
 
