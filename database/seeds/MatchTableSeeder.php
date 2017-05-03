@@ -11,6 +11,6 @@ class MatchTableSeeder extends Seeder
      */
     public function run()
     {
-    	factory(App\Models\Match::class,50)->create();
+    	factory(App\Models\Match::class,50)->create()->each();
     }
 }

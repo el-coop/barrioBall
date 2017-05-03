@@ -17,7 +17,6 @@
                 </p>
             </div>
         </div>
-
         <div class="row">
             <div class="col-xs-12">
                 <hr>
@@ -29,9 +28,11 @@
                         <p>
                             {{$match->registeredPlayers()->count()}}/{{$match->players}}
                         </p>
+                        <p>
+                            <button class="btn btn-success"><i class="fa fa-plus"></i> Send join request</button>
+                        </p>
                     </div>
                     <div class="col-xs-12 col-md-6 text-center">
-                        Players {{$match->players}}
                     </div>
                 </div>
                 <hr>

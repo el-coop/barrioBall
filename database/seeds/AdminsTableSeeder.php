@@ -13,6 +13,7 @@ class AdminsTableSeeder extends Seeder
     {
         factory(App\Models\Admin::class,1)->create()->each(function($user){
         	$user->user()->save(factory(App\Models\User::class)->make([
+        		'username' => 'admin',
         		'email' => 'admin@barrioball.dev',
 				'language' => 'en',
 				'password' => bcrypt('123456')
