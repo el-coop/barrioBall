@@ -10,11 +10,18 @@ use App\Models\Match;
 
 class MatchController extends Controller
 {
+	public function showCreate() {
+		return view('match.create');
+	}
+
     public function create(CreateMatchRequest $request) {
         $match = $request->commit($request->user());
         return redirect()->action('Match\PagesController@welcome');
     }
 
+	public function showMatch(Match $match){
+		return view('match.show', compact('match'));
+	}
 
 	public function showSearch() {
 		return view('match.search');

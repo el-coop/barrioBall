@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Admin;
-use App\Models\Regular;
+use App\Models\Player;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -74,7 +74,7 @@ class RegisterController extends Controller
             $newUser = new Admin();
 
         } else {
-            $newUser = new Regular();
+            $newUser = new Player();
 
         }
         $newUser->save();
