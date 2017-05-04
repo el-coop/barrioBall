@@ -11,9 +11,10 @@
                     {{ $match->name }}
                 </h2>
                 <p>
-                    <strong>Address:</strong> {{ $match->address }}
-                    <br>
-                    <strong>Time:</strong> {{ $match->date }} {{ $match->time }}
+                    Managed by:
+                    @foreach($match->managers as $manager)
+                        <a href="#">{{ $manager->username }}</a>@if (!$loop->last), @endif
+                    @endforeach
                 </p>
             </div>
         </div>
@@ -21,21 +22,67 @@
             <div class="col-xs-12">
                 <hr>
                 <div class="row">
-                    <div class="col-xs-12 col-md-6 text-center">
+                    <div class="col-xs-12 col-md-4 text-center">
+                        <p>
+                            <i class="fa fa-home fa-3x"></i>
+                        </p>
+                        <strong>
+                            {{$match->address}}
+                        </strong>
+                        <hr class="visible-sm visible-xs">
+                    </div>
+                    <div class="col-xs-12 col-md-4 text-center">
+                        <p>
+                            <i class="fa fa-clock-o fa-3x"></i>
+                        </p>
+                        <strong>
+                            {{$match->date}} {{$match->time}}
+                        </strong>
+                        <hr class="visible-sm visible-xs">
+                    </div>
+                    <div class="col-xs-12 col-md-4 text-center">
                         <p>
                             <i class="fa fa-users fa-3x"></i>
                         </p>
-                        <p>
+                        <strong>
                             {{$match->registeredPlayers()->count()}}/{{$match->players}}
-                        </p>
+                        </strong>
                         <p>
-                            <button class="btn btn-success"><i class="fa fa-plus"></i> Send join request</button>
+                            <button class="btn btn-success"><i class="fa fa-plus"></i> Join request</button>
                         </p>
-                    </div>
-                    <div class="col-xs-12 col-md-6 text-center">
+                        <hr class="visible-sm visible-xs">
                     </div>
                 </div>
                 <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12 col-md-8">
+                        <p>
+                            {{ str_replace('\n','<br>',$match->description) }}
+                        </p>
+                        <hr class="visible-sm visible-xs">
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="list-group">
+                            <span class="list-group-item list-group-item-info"><strong>Players: </strong></span>
+                            @foreach($match->registeredPlayers as $player)
+                                <a href="#" class="list-group-item">{{$player->username}}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 row-map-wrapper">
+                <leaflet-map ref="map"
+                             :center="[{{$match->lat}},{{$match->lng}}]">
+
+                </leaflet-map>
             </div>
         </div>
     </div>

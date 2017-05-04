@@ -23,3 +23,12 @@
 		box-shadow: 5px 5px 5px;
 	}
 }
+
+.row-map-wrapper {
+	margin-bottom: 20px;
+	height: 300px;
+
+	@media #{$above-tablet} {
+		height: 600px;
+	}
+}

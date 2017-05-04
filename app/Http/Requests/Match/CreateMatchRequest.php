@@ -47,6 +47,6 @@ class CreateMatchRequest extends FormRequest {
 		$match->date = $this->input('date');
 		$match->time = $this->input('time');
 		$match->save();
-		$match->users()->attach($user, ['role' => 'manager']);
+		$match->addManager($user);
 	}
 }
