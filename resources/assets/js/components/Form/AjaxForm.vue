@@ -2,7 +2,7 @@
     <form @submit.prevent="submitClicked">
         <form-errors :errors="errors" v-if="errorsBox"></form-errors>
         <slot></slot>
-        <div  class="form-group">
+        <div class="form-group" :class="btnWrapperClass">
             <button :class="btnClass" ref="submit">
                 <slot name="submit"></slot>
             </button>
@@ -25,10 +25,14 @@
 				type: String,
                 default: 'search-completed'
             },
-            btnClass: {
+			btnClass: {
 				type: String,
-                default: 'btn btn-info sm-btn-block'
-            },
+				default: 'btn btn-info sm-btn-block'
+			},
+			btnWrapperClass: {
+				type: String,
+				default: ''
+			},
             autoSubmit: {
 				type: Boolean,
                 default: true

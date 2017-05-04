@@ -12,8 +12,18 @@ html, body, #app{
 	padding-top: 70px;
 }
 
-.bottom-margin {
-	margin-bottom: 10px;
+@media #{$under-tablet} {
+	.navbar.fixed-top + .container {
+		padding-top: 57px;
+	}
+
+	.navbar.fixed-top + .container-fluid {
+		padding-top: 55px;
+	}
+
+	.w-100-sm-down{
+		width: 100%;
+	}
 }
 
 .form-inline {

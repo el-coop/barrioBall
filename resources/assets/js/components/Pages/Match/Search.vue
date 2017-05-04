@@ -61,7 +61,7 @@
 				this.selectedResult = index;
 				let selected = $(this.$refs['result' + index]);
 				$('html, body').animate({
-					scrollTop: selected.offset().top - $('.navbar').height()
+					scrollTop: selected.offset().top - $('.navbar').height() - 20
 				},500);
 			},
 

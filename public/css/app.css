@@ -8991,8 +8991,16 @@ html, body, #app {
   padding-top: 70px;
 }
 
-.bottom-margin {
-  margin-bottom: 10px;
+@media only screen and (max-width: 768px) {
+  .navbar.fixed-top + .container {
+    padding-top: 57px;
+  }
+  .navbar.fixed-top + .container-fluid {
+    padding-top: 55px;
+  }
+  .w-100-sm-down {
+    width: 100%;
+  }
 }
 
 .form-inline .form-group {
@@ -9895,7 +9903,7 @@ html, body, #app {
 @media only screen and (min-width: 768px) {
   .map-static-left {
     position: fixed;
-    top: 45px;
+    top: 56px;
     right: 0;
     bottom: 0;
     width: 40%;
@@ -9921,9 +9929,21 @@ html, body, #app {
   }
 }
 
-.content-static-right .selected .panel-heading {
-  background-color: #1a69a4;
+.content-static-right .selected .card-header {
+  background-color: #1a69a4 !important;
   color: white;
+}
+
+.card-block.search-result-map-wrapper {
+  padding: 0.3rem;
+}
+
+.bg-white {
+  background-color: #fff !important;
+}
+
+a.bg-white:focus, a.bg-white:hover {
+  background-color: #e6e6e6 !important;
 }
 
 .search-result-map {
