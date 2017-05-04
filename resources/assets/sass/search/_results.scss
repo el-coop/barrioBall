@@ -5,12 +5,18 @@
 	}
 
 	.selected {
-		.panel-heading {
-			background-color: #1a69a4;
+		.card-header {
+			background-color: #1a69a4 !important;
 			color: white;
 		}
 	}
 }
+
+.card-block.search-result-map-wrapper{
+	padding: 0.3rem;
+}
+
+@include bg-variant('.bg-white', $white);
 
 .search-result-map {
 	width: 100%;
