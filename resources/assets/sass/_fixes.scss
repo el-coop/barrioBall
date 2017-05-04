@@ -4,11 +4,11 @@ html, body, #app{
 }
 
 
-.navbar-fixed-top + .container {
+.navbar.fixed-top + .container {
 	padding-top: 70px;
 }
 
-.navbar-fixed-top + .container-fluid {
+.navbar.fixed-top + .container-fluid {
 	padding-top: 70px;
 }
 
