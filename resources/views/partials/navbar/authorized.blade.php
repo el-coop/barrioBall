@@ -1,26 +1,30 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">{{config('app.name')}}</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">{{config('app.name')}}</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        {{ config('languages')[App::getLocale()] }}
+                        <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu">
+                        @foreach (config('languages') as $lang => $language)
+                            <a href="{{action ('LanguageController@switchLang', $lang) }}"
+                               class="dropdown-item">{{$language}}</a>
+                        @endforeach
+                    </div>
+                </li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav navbar-right hidden-sm hidden-xs">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{ config('languages')[App::getLocale()] }}
-
-                    <b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu">
-                    @foreach (config('languages') as $lang => $language)
-                        @if ($lang != App::getLocale())
-                            <li>
-                                <a href="{{action ('LanguageController@switchLang', $lang) }}">{{$language}}</a>
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
-            </li>
-        </ul>
     </div>
-
 </nav>
-

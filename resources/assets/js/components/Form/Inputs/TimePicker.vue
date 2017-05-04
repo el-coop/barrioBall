@@ -5,7 +5,7 @@
         </span>
         <input type='text' class="form-control" :name="name"/>
         <span class="input-group-addon">
-            <i class="glyphicon glyphicon-time"></i>
+            <i class="fa fa-clock-o"></i>
         </span>
     </div>
 </template>
@@ -28,7 +28,18 @@
 		mounted(){
 			$(this.$el).datetimepicker({
                 locale: this.locale,
-				format: "HH:mm"
+				format: "HH:mm",
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up: 'fa fa-chevron-up',
+					down: 'fa fa-chevron-down',
+					previous: 'fa fa-chevron-left',
+					next: 'fa fa-chevron-right',
+					today: 'fa fa-crosshairs',
+					clear: 'fa fa-trash',
+					close: 'fa fa-times'
+				},
 			});
         }
 	}

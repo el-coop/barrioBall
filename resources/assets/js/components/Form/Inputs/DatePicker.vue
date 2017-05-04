@@ -5,7 +5,7 @@
         </span>
         <input type='text' class="form-control" :name="name"/>
         <span class="input-group-addon">
-            <i class="glyphicon glyphicon-calendar"></i>
+            <i class="fa fa-calendar"></i>
         </span>
     </div>
 </template>
@@ -32,7 +32,18 @@
 			$(this.$el).datetimepicker({
 				minDate: this.minDate,
                 locale: this.locale,
-				format: "DD/MM/YY"
+				format: "DD/MM/YY",
+				icons: {
+					time: 'fa fa-clock-o',
+					date: 'fa fa-calendar',
+					up: 'fa fa-chevron-up',
+					down: 'fa fa-chevron-down',
+					previous: 'fa fa-chevron-left',
+					next: 'fa fa-chevron-right',
+					today: 'fa fa-crosshairs',
+					clear: 'fa fa-trash',
+					close: 'fa fa-times'
+				},
 			});
         }
 	}
