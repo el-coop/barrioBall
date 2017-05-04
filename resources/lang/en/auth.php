@@ -20,10 +20,10 @@ return [
     'confirmPassword' => 'Confirm password',
     'language' => 'Language',
     'login' => 'Login',
-     'register' => 'register',
+     'register' => 'Register',
     'notMemberYet' => 'Not a member yet',
     'rememberMe' => 'Remember me',
-    'alreadyRegistred' => 'already registred?',
+    'alreadyRegistred' => 'Already registred?',
     'forgetMe' => 'forget your password',
     'currentLanguage' => 'English'
 
