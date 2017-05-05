@@ -16,6 +16,22 @@
                     <div class="card-block">
                         <form role="form" method="POST" action="{{ url('/register') }}">
                             {{ csrf_field() }}
+                            <div class="form-group row{{ $errors->has('username') ? ' has-danger' : '' }}">
+                                <label for="username"
+                                       class="col-md-4 col-form-label text-md-right"><strong>@lang('auth.username'):</strong></label>
+
+                                <div class="col-md-6">
+                                    <input id="username" type="text" class="form-control" name="username"
+                                           value="{{ old('username') }}" required>
+
+                                    @if ($errors->has('username'))
+                                        <span class="form-control-feedback">
+                                            {{ $errors->first('username') }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="form-group row{{ $errors->has('email') ? ' has-danger' : '' }}">
                                 <label for="email"
                                        class="col-md-4 col-form-label text-md-right"><strong>@lang('auth.email'):</strong></label>

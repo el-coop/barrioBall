@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
+use App\Models\Player;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
 		Relation::morphMap([
 			'PHPError' => PhpError::class,
 			'JSError' => JsError::class,
+			'Admin' => Admin::class,
+			'Player' => Player::class
 		]);
     }
 

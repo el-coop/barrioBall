@@ -26,6 +26,4 @@ return [
     'forgetMe' => 'Olvidé mi contraseña',
     'alreadyRegistred' => '¿Ya tienes una cuenta?',
 	'username' => 'Nombre de usuario'
-
-
 ];
