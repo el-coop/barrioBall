@@ -25,4 +25,4 @@ Route::get('/', 'HomeController@index');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 
 Route::post('jserror','ErrorController@store');
-
+Route::get('/profile', 'HomeController@profile');
