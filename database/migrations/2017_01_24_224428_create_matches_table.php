@@ -15,7 +15,7 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique;
+            $table->string('name')->unique();
             $table->string('address');
             $table->double('lat',20,16);
             $table->double('lng',20,16);
