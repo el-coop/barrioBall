@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Regular extends Model
+class Player extends Model
 {
     public function user()
     {

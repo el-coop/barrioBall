@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class MatchTableSeeder extends Seeder
@@ -11,6 +12,9 @@ class MatchTableSeeder extends Seeder
      */
     public function run()
     {
-    	factory(App\Models\Match::class,50)->create();
+    	$user = User::first();
+    	factory(App\Models\Match::class,50)->create()->each(function($match) use ($user){
+			$match->addManager($user);
+		});
     }
 }
