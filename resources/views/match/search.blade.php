@@ -30,7 +30,8 @@
                                     <span class="form-control-feedback"
                                           v-if="errors.hasOwnProperty('from')">* @{{ errors.from[0] }}</span>
                                 </div>
-                                <div class="mb-2 mr-sm-2 mb-sm-0 w-100-sm-down align-self-baseline" :class="{'has-danger' : errors.hasOwnProperty('to')}"
+                                <div class="mb-2 mr-sm-2 mb-sm-0 w-100-sm-down align-self-baseline"
+                                     :class="{'has-danger' : errors.hasOwnProperty('to')}"
                                      id="end_time_group">
                                     <time-picker label="@lang('search.to'):" name="to"></time-picker>
                                     <span class="form-control-feedback"
@@ -51,7 +52,7 @@
                                  :ref="'result' + index" @mouseenter="resultHover(index)"
                                  @mouseleave="stopHover(index)">
                                 <div class="card-header bg-white">
-                                    @{{ match.name  }}
+                                    <a :href="'matches/' + match.id">@{{ match.name  }}</a>
                                     <span class="pull-right">@{{ match.date }} @{{ match.time }}</span>
                                 </div>
                                 <div class="card-block search-result-map-wrapper">
@@ -59,7 +60,6 @@
                                         <leaflet-map :interactive="false" :zoom="19" :center="[match.lat,match.lng]">
                                         </leaflet-map>
                                         <div class="row">
-
                                             <div class="col-7"><strong>@{{ match.address }}</strong></div>
                                             <div class="col-5 text-right">
                                                 <strong>@{{ match.players }} @lang('search.players')</strong></div>

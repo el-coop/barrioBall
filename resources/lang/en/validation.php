@@ -98,8 +98,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'invite_managers' => [
+            'required' => 'You must input users to send invitations',
         ],
     ],
 

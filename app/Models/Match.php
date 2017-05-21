@@ -30,7 +30,6 @@ class Match extends Model
 		$this->users()->attach($user,[
 			'role' => $manager ? 'manager' : 'player'
 		]);
-
 	}
 
 	public function addManager(User $user){
@@ -40,6 +39,14 @@ class Match extends Model
 	public function managers() {
 		return $this->belongsToMany(User::class)
 			->wherePivot('role','manager');
+	}
+
+	public function addPlayer(User $user){
+		$this->addUser($user,false);
+	}
+
+	public function removePlayer(User $user){
+		$this->registeredPlayers()->detach($user);
 	}
 
     public function registeredPlayers(){

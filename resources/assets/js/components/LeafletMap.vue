@@ -22,6 +22,12 @@
 				type: Number,
                 default: null
 			},
+            initMarkers: {
+				type: Array,
+                default(){
+					return [];
+                }
+            }
         },
 
 		data(){
@@ -89,6 +95,13 @@
 				interactive: true,
 			}).addTo(this.map);
 
+			this.initMarkers.forEach((coordinates) => {
+				let marker = new L.marker(coordinates, { icon : L.icon({
+					iconUrl: '/images/match-icon.png',
+					iconSize: [30, 30]
+				})});
+				this.addMarker(marker);
+            });
 		}
 
 	}

@@ -32,8 +32,16 @@ class User extends Authenticatable
         return $this->morphTo();
     }
 
-    public function match() {
+    public function matches() {
 
         return $this->hasMany('App\Models\Match');
     }
+
+	public function inMatch(Match $match){
+		return $match->registeredPlayers->contains($this);
+	}
+
+	public function isManager(Match $match){
+		return $match->managers->contains($this);
+	}
 }
