@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Match;
 
 use App\Http\Requests\Match\InviteMangersRequest;
 use App\Http\Requests\Match\JoinMatchRequest;
-use App\Http\Requests\Match\leaveMatchRequest;
+use App\Http\Requests\Match\LeaveMatchRequest;
+use App\Http\Requests\Match\StopManagingRequest;
 use App\Models\Match;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class MatchUsersController extends Controller
 		return back()->with('alert', $message);
 	}
 
-	public function leaveMatch(leaveMatchRequest $request, Match $match){
+	public function leaveMatch(LeaveMatchRequest $request, Match $match){
 		$request->commit();
 		return back()->with('alert', 'You left the match');
 	}
@@ -29,5 +30,10 @@ class MatchUsersController extends Controller
 	public function inviteManagers(InviteMangersRequest $request, Match $match){
 		$request->commit();
 		return back()->with('alert', 'Invitation Sent');
+	}
+
+	public function stopManaging(StopManagingRequest $request, Match $match){
+		$request->commit();
+		return back()->with('alert', 'You are no longer the manager');
 	}
 }

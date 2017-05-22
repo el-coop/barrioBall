@@ -20,7 +20,7 @@
 			},
 			zoom: {
 				type: Number,
-                default: null
+                default: 8
 			},
             initMarkers: {
 				type: Array,
@@ -75,13 +75,13 @@
 		mounted(){
 			this.map = L.map(this.$el,{
 				center: this.center,
-				zoom: this.zoom,
-				maxZoom: 13
+				zoom: this.zoom
             });
 
             if(! this.center){
 			    this.map.locate({
 					setView: true,
+					maxZoom: 13
 				});
             }
 

@@ -11,4 +11,5 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 	Route::delete('/{match}/players', 'MatchUsersController@leaveMatch');
 
 	Route::post('/{match}/admins/invite', 'MatchUsersController@inviteManagers');
+	Route::delete('/{match}/admins', 'MatchUsersController@stopManaging');
 });

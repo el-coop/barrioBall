@@ -36,6 +36,10 @@ class Match extends Model
 		$this->addUser($user,true);
 	}
 
+	public function removeManager(User $user){
+		$this->managers()->detach($user);
+	}
+
 	public function managers() {
 		return $this->belongsToMany(User::class)
 			->wherePivot('role','manager');

@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="card-block search-result-map-wrapper">
                                     <div class="search-result-map">
-                                        <leaflet-map :interactive="false" :zoom="19" :center="[match.lat,match.lng]">
+                                        <leaflet-map :interactive="false" :zoom="13" :center="[match.lat,match.lng]">
                                         </leaflet-map>
                                         <div class="row">
                                             <div class="col-7"><strong>@{{ match.address }}</strong></div>

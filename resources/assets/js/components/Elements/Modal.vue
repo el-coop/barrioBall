@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <span>
         <button class="btn" :class="btnClass" @click="toggleModal">
             <slot name="button"></slot>
         </button>
@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </span>
 </template>
 <script>
 	export default{

@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\UserLeft;
+use App\Events\Match\ManagerLeft;
 use Illuminate\Foundation\Http\FormRequest;
 
-class leaveMatchRequest extends FormRequest
+class StopManagingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,11 +14,13 @@ class leaveMatchRequest extends FormRequest
      */
     public function authorize()
     {
-		if(! $this->user() || ! $this->user()->inMatch($this->route('match'))){
+
+		$match = $this->route('match');
+		if(! $this->user()->isManager($match) && $match->managers()->count() > 1){
 			return false;
 		}
 		return true;
-    }
+	}
 
     /**
      * Get the validation rules that apply to the request.
@@ -33,8 +35,8 @@ class leaveMatchRequest extends FormRequest
     }
 
 	public function commit() {
-		$this->route('match')->removePlayer($this->user());
-		event(new UserLeft($this->user(),$this->route('match')));
+		$this->route('match')->removeManager($this->user());
+		event(new ManagerLeft($this->user(),$this->route('match')));
 		return true;
 	}
 }
