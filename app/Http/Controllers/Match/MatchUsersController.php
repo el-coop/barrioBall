@@ -20,7 +20,7 @@ class MatchUsersController extends Controller
 
 	public function leaveMatch(LeaveMatchRequest $request, Match $match){
 		$request->commit();
-		return back()->with('alert', 'You left the match');
+		return back()->with('alert', __('match/show.left'));
 	}
 
 	public function searchUsers(Request $request){
@@ -29,11 +29,11 @@ class MatchUsersController extends Controller
 
 	public function inviteManagers(InviteMangersRequest $request, Match $match){
 		$request->commit();
-		return back()->with('alert', 'Invitation Sent');
+		return back()->with('alert', __('match/show.invitationSent'));
 	}
 
 	public function stopManaging(StopManagingRequest $request, Match $match){
 		$request->commit();
-		return back()->with('alert', 'You are no longer the manager');
+		return back()->with('alert', __('match/show.managementLeft'));
 	}
 }

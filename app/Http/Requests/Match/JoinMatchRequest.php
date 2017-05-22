@@ -37,10 +37,10 @@ class JoinMatchRequest extends FormRequest
     	$match = $this->route('match');
     	if($this->user()->isManager($match)){
 			$match->addPlayer($this->user());
-			$message = "You joined the match";
+			$message = __('match/show.joined');
 			event(new UserJoined($this->user(),$this->route('match')));
 		} else {
-			$message = "Your request was sent. Wait for a reply from match manager";
+			$message = __('match/show.joinMatchSent');
     		//TODO - send user join request
 		}
 
