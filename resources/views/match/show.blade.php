@@ -35,14 +35,17 @@
                 @if($user && $user->isManager($match))
                     <modal v-cloak btn-class="col-12 col-md-4 btn-info mb-1">
                         <span slot="button">
-                            <i class="fa fa-plus-circle"></i> Invite Managers
+                            <i class="fa fa-plus-circle"></i> @lang('match/show.inviteManagers')
                         </span>
                         <form method="post" action="{{ action('Match\MatchUsersController@inviteManagers', $match) }}"
                               slot="body">
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <multi-select name="invite_managers" label="name"
-                                              action="/matches/users"></multi-select>
+                                <multi-select name="invite_managers"
+                                              label="name"
+                                              action="{{ action('Match\MatchUsersController@searchUsers', $match) }}"
+                                              placeholder="@lang('match/show.invitePlaceholder')"
+                                ></multi-select>
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-info btn-block"><i class="fa fa-plus-circle"></i> @lang('match/show.inviteManagers')
@@ -61,8 +64,12 @@
                     <form method="post" action="{{ action('Match\MatchController@delete', $match) }}" class="mb-1">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <button class="btn btn-danger col-12 col-md-4"><i class="fa fa-times-circle"></i> @lang('match/show.deleteMatch')
-                        </button>
+                        <swal-submit class="btn btn-danger col-12 col-md-4"
+                                     title="@lang('match/show.areYouSure')"
+                                     confirm-text="@lang('match/show.deleteMatch')"
+                                     cancel-text="No"
+                        ><i class="fa fa-times-circle"></i> @lang('match/show.deleteMatch')
+                        </swal-submit>
                     </form>
                 @endif
             </div>

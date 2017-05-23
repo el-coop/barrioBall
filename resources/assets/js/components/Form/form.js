@@ -1,5 +1,6 @@
-Vue.component('formErrors', require('./FormErrors.vue'));
-Vue.component('ajaxForm', require('./AjaxForm.vue'));
-Vue.component('datePicker', require('./Inputs/DatePicker.vue'));
-Vue.component('timePicker', require('./Inputs/TimePicker.vue'));
-Vue.component('multi-select', require('./Inputs/MultiSelect.vue'));
+Vue.component('FormErrors', require('./FormErrors.vue'));
+Vue.component('AjaxForm', require('./AjaxForm.vue'));
+Vue.component('DatePicker', require('./Inputs/DatePicker.vue'));
+Vue.component('TimePicker', require('./Inputs/TimePicker.vue'));
+Vue.component('MultiSelect', require('./Inputs/MultiSelect.vue'));
+Vue.component('SwalSubmit', require('./Inputs/SwalSubmit.vue'));

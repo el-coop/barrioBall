@@ -5,7 +5,7 @@
                   :debounce="250"
                   :on-search="getOptions"
                   :options="options"
-                  placeholder="Insert users names"
+                  :placeholder="placeholder"
                   label="username"
                   ref="select"
         >
@@ -26,10 +26,13 @@
 				type: String,
                 required: true,
 			},
-            action: {
+			action: {
 				type: String,
-                required: true
-            }
+				required: true
+			},
+			placeholder: {
+				type: String,
+			}
 		},
 		data() {
 			return {

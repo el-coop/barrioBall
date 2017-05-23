@@ -16,7 +16,7 @@ class StopManagingRequest extends FormRequest
     {
 
 		$match = $this->route('match');
-		if(! $this->user()->isManager($match) && $match->managers()->count() > 1){
+		if(! $this->user()->isManager($match) && $match->managers()->count() < 2){
 			return false;
 		}
 		return true;

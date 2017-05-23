@@ -8,10 +8,11 @@ return [
 	'managementLeft' => 'Usted ya no es un gerente',
 	'managedBy' => 'Gestionado por',
 	'joinRequest' => 'Únase',
-	'leaveMatch' => 'Dejarse',
+	'leaveMatch' => 'Dejese',
 	'inviteManagers' => 'Invitar gerentes',
 	'stopManaging' => 'Bajarse de la gestión',
 	'deleteMatch' => 'Borrar el partido',
-	'players' => 'Jugadores'
-
+	'players' => 'Jugadores',
+	'invitePlaceholder' => 'Ingrese nombre de usario',
+	'areYouSure' => "¿Estás seguro?"
 ];

@@ -23,8 +23,12 @@ class MatchUsersController extends Controller
 		return back()->with('alert', __('match/show.left'));
 	}
 
-	public function searchUsers(Request $request){
-		return User::select('id','username')->where('username','LIKE',"%{$request->get('query')}%")->get();
+	public function searchUsers(Request $request, Match $match){
+		return User::select('id','username')
+			->where('username','LIKE',"%{$request->get('query')}%")
+			->whereDoesntHave('managedMatches',function($query) use ($match){
+				return $query->where('id',$match->id);
+			})->get();
 	}
 
 	public function inviteManagers(InviteMangersRequest $request, Match $match){

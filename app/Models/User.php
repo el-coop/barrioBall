@@ -34,8 +34,13 @@ class User extends Authenticatable
 
     public function matches() {
 
-        return $this->hasMany('App\Models\Match');
+        return $this->belongsToMany(Match::class);
     }
+
+	public function managedMatches() {
+		return $this->belongsToMany(Match::class)
+			->wherePivot('role','manager');
+	}
 
 	public function inMatch(Match $match){
 		return $match->registeredPlayers->contains($this);

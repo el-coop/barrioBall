@@ -5,8 +5,8 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 	Route::post('/', 'MatchController@create');
 	Route::delete('/matches/{match}', 'MatchController@delete');
 
-	Route::get('/users','MatchUsersController@searchUsers');
 	Route::get('/{match}', 'MatchController@showMatch');
+	Route::get('/{match}/users','MatchUsersController@searchUsers');
 	Route::post('/{match}/players', 'MatchUsersController@joinMatch');
 	Route::delete('/{match}/players', 'MatchUsersController@leaveMatch');
 

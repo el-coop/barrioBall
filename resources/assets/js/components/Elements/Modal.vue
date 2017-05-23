@@ -32,7 +32,6 @@
 
 		methods: {
 			toggleModal(){
-				console.log('here');
 				$(this.$refs.modal).modal('show');
             }
         }

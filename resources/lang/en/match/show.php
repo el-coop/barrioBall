@@ -12,6 +12,8 @@ return [
 	'inviteManagers' => 'Invite Managers',
 	'stopManaging' => 'Stop Managing',
 	'deleteMatch' => 'Delete Match',
-	'players' => 'Players'
+	'players' => 'Players',
+	'invitePlaceholder' => 'Insert users names',
+	'areYouSure' => "Are you sure?"
 
 ];
