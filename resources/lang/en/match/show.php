@@ -14,6 +14,6 @@ return [
 	'deleteMatch' => 'Delete Match',
 	'players' => 'Players',
 	'invitePlaceholder' => 'Insert users names',
-	'areYouSure' => "Are you sure?"
-
+	'areYouSure' => "Are you sure?",
+	'login' => 'Login to join match'
 ];

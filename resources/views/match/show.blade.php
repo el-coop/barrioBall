@@ -14,26 +14,31 @@
                 @foreach($match->managers as $manager)
                     <a href="#">{{ $manager->username }}</a>@if (!$loop->last), @endif
                 @endforeach
-                @if($canJoin)
-                    <form method="post" action="{{ action('Match\MatchUsersController@joinMatch', $match) }}"
-                          class="mt-1 mb-1">
-                        {{ csrf_field() }}
-                        <button class="btn btn-success col-12 col-md-3"><i class="fa fa-plus-circle"></i> @lang('match/show.joinRequest')
-                        </button>
-                    </form>
-                @elseif($user && $user->inMatch($match))
+                @if(! $user)
+                    <div class="mb-1">
+                    <a href="{{ action("Auth\LoginController@login") }}"><button class="btn btn-success sm-btn-block"><i class="fa fa-plus-circle"></i> @lang('match/show.login')
+                    </button></a>
+                    </div>
+                @elseif($user->inMatch($match))
                     <form method="post" action="{{ action('Match\MatchUsersController@leaveMatch', $match) }}"
                           class="mb-1">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <button class="btn btn-warning col-12 col-md-3"><i class="fa fa-minus-circle"></i> @lang('match/show.leaveMatch')
+                        <button class="btn btn-warning sm-btn-block"><i class="fa fa-minus-circle"></i> @lang('match/show.leaveMatch')
+                        </button>
+                    </form>
+                @else
+                    <form method="post" action="{{ action('Match\MatchUsersController@joinMatch', $match) }}"
+                          class="mt-1 mb-1">
+                        {{ csrf_field() }}
+                        <button class="btn btn-success sm-btn-block"><i class="fa fa-plus-circle"></i> @lang('match/show.joinRequest')
                         </button>
                     </form>
                 @endif
             </div>
             <div class="col-12 col-md-6 text-md-right">
                 @if($user && $user->isManager($match))
-                    <modal v-cloak btn-class="col-12 col-md-4 btn-info mb-1">
+                    <modal v-cloak btn-class="col-12 col-md-6 col-lg-4 btn-info mb-1">
                         <span slot="button">
                             <i class="fa fa-plus-circle"></i> @lang('match/show.inviteManagers')
                         </span>
@@ -57,14 +62,14 @@
                         <form method="post" action="{{ action('Match\MatchUsersController@stopManaging', $match) }}" class="mb-1">
                             {{ csrf_field() }}
                             {{ method_field('delete') }}
-                            <button class="btn btn-warning col-12 col-md-4"><i class="fa fa-times-circle"></i> @lang('match/show.stopManaging')
+                            <button class="btn btn-warning col-12 col-md-6 col-lg-4"><i class="fa fa-times-circle"></i> @lang('match/show.stopManaging')
                             </button>
                         </form>
                     @endif
                     <form method="post" action="{{ action('Match\MatchController@delete', $match) }}" class="mb-1">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <swal-submit class="btn btn-danger col-12 col-md-4"
+                        <swal-submit class="btn btn-danger col-12 col-md-6 col-lg-4"
                                      title="@lang('match/show.areYouSure')"
                                      confirm-text="@lang('match/show.deleteMatch')"
                                      cancel-text="No"

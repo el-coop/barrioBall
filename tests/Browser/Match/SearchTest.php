@@ -10,6 +10,8 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class SearchTest extends DuskTestCase {
+	use DatabaseMigrations;
+
 	/**
 	 * A Dusk test example.
 	 *
@@ -17,7 +19,7 @@ class SearchTest extends DuskTestCase {
 	 */
 	public function test_shows_search_errors() {
 		$this->browse(function (Browser $browser) {
-			$browser->visit('/search')
+			$browser->visit(action('Match\MatchController@showSearch'))
 				->waitFor('.leaflet-map-pane', 20)
 				->clear('date')
 				->clear('from')
@@ -35,13 +37,12 @@ class SearchTest extends DuskTestCase {
 			$faker = new Base(new Generator());
 
 			$matches = factory(Match::class,5)->create([
-				'date' => date('d/m/y'),
+				'date' => date('y/m/d'),
 				'lat' => $faker->randomFloat(15, 0, 5),
 				'lng' => $faker->randomFloat(15, 0, 5),
 			]);
 
-
-			$browser->visit('/search')
+			$browser->visit(action('Match\MatchController@showSearch'))
 				->waitFor('.leaflet-map-pane', 20)
 				->type('date',date('d/m/y'))
 				->type('from','00:01')

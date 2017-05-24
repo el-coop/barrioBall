@@ -9938,6 +9938,10 @@ html, body, #app {
   padding-top: 70px;
 }
 
+.nav-link {
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 768px) {
   .navbar.fixed-top + .container {
     padding-top: 57px;
