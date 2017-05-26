@@ -5,9 +5,9 @@
     @include('partials.navbar.authorized')
 
     <errors-page inline-template delete-url="/admin/errors">
-        <div class="container-fluid sm-full-height">
+        <div class="container-fluid mb-5">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-12">
                     @component('partials.components.panel')
                         @slot('title')
                             <h4>PHP Errors</h4>
@@ -25,12 +25,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-12">
                     <hr>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-12">
                     @component('partials.components.panel')
                         @slot('title')
                             <h4>JS Errors</h4>

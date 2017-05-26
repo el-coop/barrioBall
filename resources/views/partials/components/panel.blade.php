@@ -1,4 +1,4 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{ $title }}</div>
-    <div class="panel-body">{{ $slot }}</div>
+<div class="card">
+    <div class="card-header">{{ $title }}</div>
+    <div class="card-block">{{ $slot }}</div>
 </div>

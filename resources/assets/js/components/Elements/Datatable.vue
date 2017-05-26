@@ -1,17 +1,22 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12 col-md-6">
-                <div class="form-inline form-group">
-                    <label>Search:</label>
-                    <input type="text" v-model="filter" @keyup.enter="updateParams" class="form-control">
-                    <button class="btn btn-primary" @click="updateParams"><i class="glyphicon glyphicon-search"></i>
-                    </button>
+            <div class="col-12 col-md-6">
+                <div class="form-group form-inline">
+                    <label>Search:&nbsp;&nbsp;</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" v-model="filter" @keyup.enter="updateParams">
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" @click="updateParams">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-6">
-                <div class="form-inline form-group pull-right">
-                    <label>Per Page:</label>
+            <div class="col-12 col-md-6">
+                <div class="form-inline form-group float-md-right">
+                    <label>Per Page:&nbsp;&nbsp;</label>
                     <select v-model="perPage" class="form-control" @change="updateParams">
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -22,7 +27,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="table-responsive">
                     <vuetable ref="table"
                               :api-url="url"
@@ -46,13 +51,12 @@
                         </template>
                     </vuetable>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <vuetable-pagination-info ref="paginationInfo"
-                                                  info-class="pull-left">
+                <div class="row text-center text-md-left">
+                    <div class="col-12 col-md-6">
+                        <vuetable-pagination-info ref="paginationInfo">
                         </vuetable-pagination-info>
                     </div>
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-12 col-md-6 d-flex d-md-block">
                         <vuetable-pagination ref="pagination"
                                              :css="cssPagination"
                                              @vuetable-pagination:change-page="changePage">
@@ -61,7 +65,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 </template>
@@ -96,16 +99,22 @@
 				loading: false,
 				css: {
 					tableClass: 'table table-striped table-bordered',
-					ascendingIcon: 'glyphicon glyphicon-chevron-up',
-					descendingIcon: 'glyphicon glyphicon-chevron-down',
-					sortHandleIcon: 'glyphicon glyphicon-menu-hamburger',
+					ascendingIcon: 'fa fa-chevron-up',
+					descendingIcon: 'fa fa-chevron-down',
+					sortHandleIcon: 'fa fa-bars',
 				},
 				cssPagination: {
-					wrapperClass: 'pull-right',
-					activeClass: 'btn-primary',
+					wrapperClass: 'pagination mx-auto float-md-right',
+					activeClass: 'active',
 					disabledClass: 'disabled',
-					pageClass: 'btn btn-border',
-					linkClass: 'btn btn-border',
+					pageClass: 'btn btn-outline-secondary',
+					linkClass: '',
+					icons: {
+						first: 'fa fa-angle-double-left',
+						prev: 'fa fa-chevron-left',
+						next: 'fa fa-chevron-right',
+						last: 'fa fa-angle-double-right',
+					}
 				},
 				params: {},
 				filter: null,
@@ -142,10 +151,10 @@
 				this.css.tableClass = 'table table-striped table-bordered';
 			},
 			onAction (action, data, index) {
-				this.$emit(action,{
+				this.$emit(action, {
 					data,
-                    index
-                });
+					index
+				});
 			}
 		}
 	}
