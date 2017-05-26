@@ -10,12 +10,8 @@ window.$ = window.jQuery = require('jquery');
 window.Tether = require('tether');
 require('bootstrap');
 window.datetimepicker = require('eonasdan-bootstrap-datetimepicker');
-/**
- * Vue is a modern JavaScript library for building interactive web interfaces
- * using reactive data binding and reusable components. Vue's API is clean
- * and simple, leaving you to focus on building your next great project.
- */
-
+window.L = require('leaflet/dist/leaflet');
+window.L.leafletgeocoder = require('leaflet-control-geocoder/dist/Control.Geocoder');
 window.axios = require('axios');
 window.axios.defaults.headers.common = {
 	'X-CSRF-TOKEN': window.Laravel.csrfToken,
@@ -23,6 +19,13 @@ window.axios.defaults.headers.common = {
 };
 
 window.moment = require('moment');
+window.swal = require('sweetalert2');
+
+/**
+ * Vue is a modern JavaScript library for building interactive web interfaces
+ * using reactive data binding and reusable components. Vue's API is clean
+ * and simple, leaving you to focus on building your next great project.
+ */
 
 
 window.Vue = require('vue');
@@ -33,9 +36,6 @@ window.Vue = require('vue');
  * allows your team to easily build robust real-time web applications.
  */
 
-window.L = require('leaflet/dist/leaflet');
-
-window.L.leafletgeocoder = require('leaflet-control-geocoder/dist/Control.Geocoder');
 
 // import Echo from "laravel-echo"
 

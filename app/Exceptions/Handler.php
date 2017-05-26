@@ -6,8 +6,10 @@ use App\Models\Errors\Error;
 use App\Models\Errors\PhpError;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Auth;
+use function PHPSTORM_META\type;
 
 class Handler extends ExceptionHandler {
 	/**
@@ -35,7 +37,7 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $exception) {
 
-		if ($this->shouldReport($exception)) {
+		if ($this->shouldReport($exception) && ! $exception instanceof QueryException) {
 			$this->LogException($exception);
 		}
 

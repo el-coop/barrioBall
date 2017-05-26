@@ -3,6 +3,7 @@
 namespace Tests\Feature\Match;
 
 use App\Models\Match;
+use Carbon\Carbon;
 use Faker\Generator;
 use Faker\Provider\Base;
 use Tests\TestCase;
@@ -16,14 +17,14 @@ class SearchTest extends TestCase
 
     public function test_shows_search_page()
     {
-    	$response = $this->get('/search');
+    	$response = $this->get(action('Match\MatchController@showSearch'));
     	$response->assertStatus(200);
 		$response->assertSee("<title>Search Matches");
     }
 
 	public function test_returns_erros_on_input_errors(){
 
-		$response = $this->post('/search',[
+		$response = $this->post(action('Match\MatchController@search'),[
 			'date' => '',
 			'from' => '',
 			'to' => '',
@@ -45,7 +46,7 @@ class SearchTest extends TestCase
 		]);
 
 
-		$response = $this->post('/search',[
+		$response = $this->post(action('Match\MatchController@search'),[
 			'date' => 'notAdate',
 			'from' => 'notAnHour',
 			'to' => 'notAnHour',
@@ -69,7 +70,7 @@ class SearchTest extends TestCase
 	}
 
 	public function test_empty_to_no_matches_found(){
-		$response = $this->post('/search',[
+		$response = $this->post(action('Match\MatchController@search'),[
 			'date' => '17/05/17',
 			'from' => '10:30',
 			'to' => '12:30',
@@ -91,22 +92,23 @@ class SearchTest extends TestCase
 		$faker = new Base(new Generator());
 
 		$matches = factory(Match::class,5)->create([
-			'date' => date('d/m/y'),
+			'date' => date('y/m/d'),
 			'lat' => $faker->randomFloat(15, 0, 5),
 			'lng' => $faker->randomFloat(15, 0, 5),
 		]);
 
-		$response = $this->post('/search',[
+		$response = $this->post(action('Match\MatchController@search'),[
 			'date' => date('d/m/y'),
 			'from' => '00:01',
 			'to' => '23:59',
-			'north' => '5',
-			'east' => '5',
-			'west' => '0',
-			'south' => '0'
+			'north' => 5,
+			'east' => 5,
+			'west' => 0,
+			'south' => 0
 		]);
 
 		$response->assertStatus(200);
+
 		$response->assertJson([
 			'total' => 5
 		]);

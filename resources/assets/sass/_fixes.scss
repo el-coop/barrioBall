@@ -12,6 +12,10 @@ html, body, #app{
 	padding-top: 70px;
 }
 
+.nav-link {
+	cursor: pointer;
+}
+
 @media #{$under-tablet} {
 	.navbar.fixed-top + .container {
 		padding-top: 57px;

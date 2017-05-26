@@ -1,2 +1,6 @@
 @import "datatable";
 @import "treeView";
+
+[v-cloak] {
+	display:none;
+}
