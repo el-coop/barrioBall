@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
     {
 		$this->call(AdminsTableSeeder::class);
 		$this->call(MatchTableSeeder::class);
+		$this->call(ErrorsSeeder::class);
     }
 }

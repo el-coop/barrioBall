@@ -12,6 +12,8 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+use function foo\func;
+
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 	static $password;
 
@@ -48,5 +50,34 @@ $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
         'time' => $faker->time(),
 		'players' => $faker->numberBetween(4, 7) * 2,
 		'description' => $faker->paragraph()
+	];
+});
+
+$factory->define(App\Models\Errors\Error::class, function(Faker\Generator $faker){
+
+	return [
+		'page' => $faker->url,
+		'user_id' => null,
+	];
+});
+
+
+$factory->define(App\Models\Errors\PhpError::class, function(Faker\Generator $faker){
+
+	return [
+		'message' => $faker->sentence,
+		'request' => json_encode([]),
+		'exception' => json_encode([])
+	];
+});
+
+
+$factory->define(App\Models\Errors\JsError::class, function(Faker\Generator $faker){
+
+	return [
+		'class' => $faker->sentence,
+		'user_agent' =>$faker->userAgent,
+		'exception' => json_encode([]),
+		'vm' => json_encode([]),
 	];
 });
