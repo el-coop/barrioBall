@@ -25,6 +25,7 @@ return [
     'rememberMe' => 'Recordarme',
     'forgetMe' => 'Olvidé mi contraseña',
     'alreadyRegistred' => '¿Ya tenés una cuenta?',
+    'Edit' => 'editar usuario'
 
 
 ];

@@ -17,8 +17,8 @@ class CreateJsErrorsTable extends Migration
             $table->increments('id');
 			$table->string('class');
 			$table->string('user_agent');
-			$table->json('exception');
-			$table->json('vm');
+			$table->string('exception');
+			$table->string('vm');
             $table->timestamps();
         });
     }
