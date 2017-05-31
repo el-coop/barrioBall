@@ -49,4 +49,8 @@ class User extends Authenticatable
 	public function isManager(Match $match){
 		return $match->managers->contains($this);
 	}
+
+	public function isAdmin(){
+		return $this->user_type == "Admin";
+	}
 }

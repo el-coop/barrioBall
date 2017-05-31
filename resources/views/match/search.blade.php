@@ -2,9 +2,13 @@
 @section('title','Search Matches')
 
 @section('content')
-    @include('partials.navbar.authorized')
+    @if($user)
+        @include('partials.navbar.authorized')
+    @else
+        @include('partials.navbar.unauthorized')
+    @endif
 
-    <search-page inline-template map-name="@lang('match/search.map')" search-name="@lang('match/search.search')">
+    <search-page inline-template map-name="@lang('match/search.map')" search-name="@lang('match/search.search')" v-cloak>
         <div class="container-fluid sm-full-height"
              :class="{ 'sm-no-side-padding' : mapToggled, 'fixed-loading' : loading}" id="search-page">
             <flipper :flipped="mapToggled">

@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
 use App\Models\Errors\Error;
 use App\Models\Errors\PhpError;
+use App\Models\User;
 use Exception;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -12,12 +14,15 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ErrorTest extends TestCase
 {
-
 	use DatabaseMigrations;
 
 	public function test_shows_errors_page()
 	{
-		$response = $this->get(action('Admin\ErrorController@show'));
+		factory(Admin::class)->create()->each(function($user){
+			$user->user()->save(factory(User::class)->make());
+		});
+
+		$response = $this->actingAs(User::first())->get(action('Admin\ErrorController@show'));
 
 		$response->assertStatus(200);
 		$response->assertSee("<title>Errors Table");

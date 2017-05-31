@@ -15,7 +15,7 @@ class CreateJsErrorsTable extends Migration
     {
         Schema::create('js_errors', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('class');
+			$table->text('class');
 			$table->string('user_agent');
 			$table->json('exception');
 			$table->json('vm');
