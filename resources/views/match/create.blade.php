@@ -2,7 +2,7 @@
 @section('title','Create Match')
 
 @section('content')
-    @include('navbar.authorized')
+    @include('partials.navbar.authorized')
     <div class="container" id="app">
         <h3 class="text-center">
             @lang('create.create')

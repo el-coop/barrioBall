@@ -8,9 +8,17 @@
 
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav mr-auto">
-
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::is('search') ? 'active' : '' }}" href="{{ action('Match\MatchController@showSearch') }}">@lang('navbar.searchLink')</a>
+                </li>
             </ul>
             <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::is('login') ? 'active' : '' }}" href="{{ action('Auth\LoginController@showLoginForm') }}">@lang('navbar.loginLink')</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::is('register') ? 'active' : '' }}" href="{{ action('Auth\RegisterController@showRegistrationForm') }}">@lang('navbar.registerLink')</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">
                         {{ config('languages')[App::getLocale()] }}

@@ -10,8 +10,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ErrorController extends Controller {
-	public function show() {
-		return view('admin.errors');
+	public function show(Request $request) {
+		$user = $request->user();
+		return view('admin.errors', compact('user'));
 	}
 
 	public function getPhpErrors(Request $request) {

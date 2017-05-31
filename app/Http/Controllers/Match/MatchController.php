@@ -13,8 +13,9 @@ use App\Models\Match;
 
 class MatchController extends Controller
 {
-	public function showCreate() {
-		return view('match.create');
+	public function showCreate(Request $request) {
+		$user = $request->user();
+		return view('match.create', compact('user'));
 	}
 
 	public function create(CreateMatchRequest $request) {
@@ -37,8 +38,9 @@ class MatchController extends Controller
 		return redirect('/');
 	}
 
-	public function showSearch() {
-		return view('match.search');
+	public function showSearch(Request $request) {
+		$user = $request->user();
+		return view('match.search',compact('user'));
 	}
 
     public function search(SearchRequest $request){

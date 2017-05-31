@@ -37,11 +37,13 @@ class Handler extends ExceptionHandler {
 	 */
 	public function report(Exception $exception) {
 
-		if ($this->shouldReport($exception) && ! $exception instanceof QueryException) {
-			$this->LogException($exception);
+		if ($this->shouldReport($exception)) {
+			try {
+				$this->LogException($exception);
+			} catch (\Exception $exception1){
+				dump($exception1);
+			}
 		}
-
-
 		parent::report($exception);
 	}
 
@@ -81,7 +83,7 @@ class Handler extends ExceptionHandler {
 		$error = new Error;
 		$phpError = new PhpError;
 		if ($request->user()) {
-			$error->user_id = $request->user->id;
+			$error->user_id = $request->user()->id;
 		}
 		$error->page = $request->fullUrl();
 		$phpError->message = $exception->getMessage();
