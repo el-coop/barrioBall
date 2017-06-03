@@ -1,4 +1,5 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+
     <div class="container mr-0 ml-0 mr-md-auto ml-md-auto sm-position-static">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarContent">
