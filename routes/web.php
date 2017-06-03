@@ -11,9 +11,6 @@
 |
 */
 
-use App\Models\Errors\PhpError;
-use App\Models\Match;
-
 Auth::routes();
 foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
 	require $routeFile;
@@ -27,3 +24,4 @@ Route::get('/', 'HomeController@index');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 
 Route::post('jserror','ErrorController@store');
+
