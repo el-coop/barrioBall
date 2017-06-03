@@ -27,21 +27,3 @@ Route::get('/', 'HomeController@index');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 
 Route::post('jserror','ErrorController@store');
-Route::resource('users', 'UserController');
-
-
-Route::get('user/matches', function () {
-//    return view('user/matches');
-
-    $user =Auth::user();
-    //$match = Match::find(1);
-   // echo $match;
-
-//    echo dd($user->matches);
-
-    foreach ($user->matches as $match){
-
-       echo $match;
-
-    }
-});

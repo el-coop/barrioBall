@@ -8,68 +8,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function edit(Request $request)
     {
-        //
+    	$user = $request->user();
+        return view('user/edit', compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-
-        return view('user/edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
@@ -82,19 +28,29 @@ class UserController extends Controller
         $user->save();
 
        return redirect('/home');
-
-
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
     }
+
+    public function getMatches(Request $request){
+		$matches = $request->user()->matches()->withPivot('role');
+
+		if ($request->has('sort')) {
+			$matches = $matches->orderBy($request->input('sort'));
+		} else {
+			$matches = $matches->latest();
+		}
+
+		if ($request->has('filter')) {
+			$filterVal = "%{$request->input('filter')}%";
+			$matches->where(function ($query) use ($filterVal) {
+				$query->where('name', 'like', $filterVal);
+			})->orWherePivot('role','like',$filterVal);
+		}
+
+		return $matches->paginate($request->input('per_page'));
+	}
 }
