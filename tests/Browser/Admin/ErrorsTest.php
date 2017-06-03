@@ -2,9 +2,11 @@
 
 namespace Tests\Browser\Admin;
 
+use App\Models\Admin;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
+use App\Models\User;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -13,6 +15,18 @@ class ErrorsTest extends DuskTestCase
 {
 	use DatabaseMigrations;
 
+	protected function makeAdmin(){
+		factory(Admin::class)->create()->each(function($user){
+			$user->user()->save(factory(User::class)->make());
+		});
+
+	}
+
+	public function setUp() {
+		parent::setUp();
+		$this->makeAdmin();
+	}
+
     public function test_shows_php_errors()
     {
         $this->browse(function (Browser $browser) {
@@ -20,7 +34,7 @@ class ErrorsTest extends DuskTestCase
 				$error->error()->save(factory(Error::class)->make());
 			});
 
-            $browser->visit(action('Admin\ErrorController@show'))
+            $browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
                     ->waitFor('.vuetable-slot');
 
             foreach ($errors as $error){
@@ -37,7 +51,7 @@ class ErrorsTest extends DuskTestCase
 				$error->error()->save(factory(Error::class)->make());
 			});
 
-			$browser->visit(action('Admin\ErrorController@show'))
+			$browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
 				->waitFor('.vuetable-slot');
 
 			foreach ($errors as $error){
@@ -54,7 +68,7 @@ class ErrorsTest extends DuskTestCase
 				$error->error()->save(factory(Error::class)->make());
 			});
 
-			$browser->visit(action('Admin\ErrorController@show'))
+			$browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
 				->waitFor('.vuetable-slot');
 
 			$browser->click('.btn.btn-success')

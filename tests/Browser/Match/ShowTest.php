@@ -41,11 +41,16 @@ class ShowTest extends DuskTestCase
 		});
 	}
 
+	/**
+	 * @group current
+	 */
+
 	public function test_shows_modal_on_click()
 	{
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs(User::first())->visit(action('Match\MatchController@showMatch', $this->match))
-				->click('.btn.col-12.col-md-4.btn-info.mb-1')
+				->waitFor('.btn-info')
+				->click('.btn-info')
 				->assertVisible('.v-select');
 		});
 	}
