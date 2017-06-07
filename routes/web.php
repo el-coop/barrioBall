@@ -12,6 +12,8 @@
 */
 
 
+use function foo\func;
+
 Auth::routes();
 foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
 	require $routeFile;
@@ -21,7 +23,9 @@ foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
 
 
 Route::get('/home', 'HomeController@index');
-Route::get('/', 'HomeController@index');
+Route::get('/', function(){
+	return view('welcome');
+});
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 
 Route::post('jserror','ErrorController@store');

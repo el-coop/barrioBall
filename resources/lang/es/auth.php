@@ -17,7 +17,7 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'email' => 'Correo Electronico',
     'password' => 'Contraseña',
-    'confirmPassword' => 'Confirmes Contraseña',
+    'confirmPassword' => 'Confirmacion De Contraseña',
     'language' => 'Idioma',
     'login' => 'Ingresar',
     'register' => 'Registrate',

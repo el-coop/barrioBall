@@ -15,7 +15,7 @@ return [
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'email' => 'Email adress',
+    'email' => 'E-Mail adress',
     'password' => 'Password',
     'confirmPassword' => 'Confirm password',
     'language' => 'Language',
@@ -26,6 +26,7 @@ return [
     'alreadyRegistred' => 'Already registred?',
     'forgetMe' => 'forget your password',
     'currentLanguage' => 'English',
-	'username' => 'Username'
+	'username' => 'Username',
+	'resetPassword' => 'Restablecer la contraseña'
 
 ];
