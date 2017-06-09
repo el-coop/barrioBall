@@ -13,9 +13,11 @@ return [
     */
 
     'password' => 'Contraseña tienen que ser al menos seis carácteres.',
-    'reset' => 'Tu contraseña ha sido reinciado!',
-    'sent' => 'Hemos te enviado una encla de reiniciar!',
+    'reset' => 'Su contraseña ha sido reinciado!',
+    'sent' => 'Le hemos enviado un enlace de reiniciar!',
     'token' => 'Este token de restablecimiento de contraseña no es válido.',
-    'user' => "No podemos encontrar un usuario con eso correo electronico.",
+    'user' => "No podemos encontrar un usuario con ese correo electronico.",
+	'resetPassword' => 'Reiniciar la contraseña',
+	'sendResetPasswordLink' => 'Envia enlace de reiniciar',
 
 ];

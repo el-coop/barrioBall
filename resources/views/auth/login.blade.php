@@ -4,17 +4,17 @@
 
 @section('content')
     @include ('partials.navbar.unauthorized')
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="text-center">
-                            @lang('auth.login')/{{config('app.name')}}
+                            @lang('auth.login')
                         </h3>
                     </div>
                     <div class="card-block">
-                        <form role="form" method="POST" action="{{ url('/login') }}">
+                        <form role="form" method="POST" action="{{ action('Auth\LoginController@login') }}">
                             {{ csrf_field() }}
 
                             <div class="form-group row {{ $errors->has('email') ? ' has-danger' : '' }}">
@@ -65,8 +65,8 @@
                                         @lang('auth.login')
                                     </button>
 
-                                    <a class="btn btn-link" href="{{ url('/password/reset')}}">
-                                        Reset Password //todo
+                                    <a class="btn btn-link" href="{{ action('Auth\ResetPasswordController@reset') }}">
+                                        Reset Password
                                     </a>
                                 </div>
                             </div>
