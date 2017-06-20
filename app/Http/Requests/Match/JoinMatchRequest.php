@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
+use App\Events\Match\JoinRequest;
 use App\Events\Match\UserJoined;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -28,20 +29,20 @@ class JoinMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'message' => 'string|max:350|nullable'
         ];
     }
 
 	public function commit(){
-		$message = '';
     	$match = $this->route('match');
     	if($this->user()->isManager($match)){
 			$match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(),$this->route('match')));
+			event(new UserJoined($this->user(),$match));
 		} else {
+			$match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-    		//TODO - send user join request
+			event(new JoinRequest($this->user(),$match, $this->get('message')));
 		}
 
 		return $message;

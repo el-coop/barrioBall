@@ -41,7 +41,7 @@ $factory->define(App\Models\Player::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Match::class, function (Faker\Generator $faker) {
 
 	return [
-		'name' => $faker->firstName . "'s Match",
+		'name' => $faker->unique()->firstName . "'s Match",
 		'address' => $faker->address,
 		'lat' => $faker->randomFloat(15, -34.6376, -34.5728),
 		'lng' => $faker->randomFloat(15, -58.4544, -58.3222),

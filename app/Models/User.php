@@ -38,19 +38,38 @@ class User extends Authenticatable
     }
 
 	public function managedMatches() {
-		return $this->belongsToMany(Match::class)
-			->wherePivot('role','manager');
+		return $this->matches()->wherePivot('role','manager');
+	}
+
+	public function playedMatches() {
+		return $this->matches()->wherePivot('role','player');
 	}
 
 	public function inMatch(Match $match){
-		return $match->registeredPlayers->contains($this);
+		return $this->playedMatches()->whereHas('registeredPlayers',function($query){
+			$query->where('id',$this->id);
+		})->count();
 	}
 
 	public function isManager(Match $match){
-		return $match->managers->contains($this);
+		return $this->managedMatches()->whereHas('managers',function($query){
+			$query->where('id',$this->id);
+		})->count();
 	}
 
 	public function isAdmin(){
 		return $this->user_type == "Admin";
 	}
+
+	public function joinRequests() {
+		return $this->belongsToMany(Match::class,'join_match_requests')
+			->withTimestamps();
+	}
+
+	public function sentRequest(Match $match){
+		return $this->joinRequests()->whereHas('joinRequests',function($query){
+			$query->where('id',$this->id);
+		})->count();
+	}
+
 }
