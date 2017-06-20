@@ -10,8 +10,6 @@
                 <div class="panel-body">
                     You are logged in!
                     <br>
-                    <a href="users/{{auth()->id()}}/edit">edit user</a>
-                    <br>
                     <a href="user/matches">view matches</a>
                 </div>
             </div>
