@@ -1,0 +1,28 @@
+<?php
+return [
+
+    'changeUsername' => 'Change Username',
+    'Username' => 'Username',
+    'Updateusername' =>'Update username',
+    'changeEmail' => 'Change Email',
+    'updateEmail' => 'Update email',
+    'changePassword' => 'Change Password',
+    'updatePassword' => 'Update Password',
+    'changeLanguage' => 'Change Language',
+    'updateLanguage' => 'Update Language',
+    'deleteAccount' => 'Delete account',
+    'deleteWarning' => 'Once you delete your account, there is no going back.',
+    'boldDeleteWarning' => 'Please be certain.',
+    'deleteYourAccount' => 'Delete your account',
+    'others' => 'Others',
+    'viewMessages' => 'View Messages',
+    'latestMatches' => 'Latest Matches',
+    'updatedUsername' => 'Updated Username',
+    'updatedPassword' => 'Updated Password',
+    'updatedEmail' => 'Updated Email',
+    'updatedLanguage' => 'Updated Language',
+    'email' => 'Email address',
+    'password' => 'Password',
+    'confirmPassword' => 'Confirm password',
+    'language' => 'Language',
+];
