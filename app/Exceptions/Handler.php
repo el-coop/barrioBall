@@ -41,14 +41,14 @@ class Handler extends ExceptionHandler {
 	 * @return void
 	 */
 	public function report(Exception $exception) {
-//
-//		if ($this->shouldReport($exception)) {
-//			try {
-//				$this->LogException($exception);
-//			} catch (\Exception $exception1){
-//				dump($exception1);
-//			}
-//		}
+
+		if ($this->shouldReport($exception)) {
+			try {
+				$this->LogException($exception);
+			} catch (\Exception $exception1){
+				dump($exception1);
+			}
+		}
 		parent::report($exception);
 	}
 
