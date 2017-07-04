@@ -36,9 +36,9 @@ class UpdatePasswordRequest extends FormRequest
     }
 
 
-    public function commit(User $user) {
+    public function commit() {
 
-        $user->password = bcrypt($this->input('password'));
-        $user->save();
+        $this->user()->password = bcrypt($this->input('password'));
+        $this->user()->save();
     }
 }

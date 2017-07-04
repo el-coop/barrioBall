@@ -34,9 +34,9 @@ class UpdateUsernameRequest extends FormRequest
         ];
     }
 
-    public function commit(User $user) {
+    public function commit() {
 
-        $user->username = $this->input('username');
-        $user->save();
+        $this->user()->username = $this->input('username');
+        $this->user()->save();
     }
 }

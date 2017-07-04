@@ -33,9 +33,9 @@ class UpdateEmailRequest extends FormRequest
         ];
     }
 
-    public function commit(User $user) {
+    public function commit() {
 
-        $user->email = $this->input('email');
-        $user->save();
+        $this->user()->email = $this->input('email');
+        $this->user()->save();
     }
 }

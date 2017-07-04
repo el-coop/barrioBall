@@ -33,9 +33,9 @@ class UpdateLanguageRequest extends FormRequest
         ];
     }
 
-    public function commit(User $user) {
+    public function commit() {
 
-        $user->language = $this->input('language');
-        $user->save();
+        $this->user()->language = $this->input('language');
+        $this->user()->save();
     }
 }
