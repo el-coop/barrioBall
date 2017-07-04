@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteUserRequest;
 use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdateLanguageRequest;
 use App\Http\Requests\UpdatePasswordRequest;
@@ -18,36 +19,35 @@ class UserController extends Controller {
 
 
 	public function updateUsername(UpdateUsernameRequest $request) {
-		$user = $request->commit($request->user());
+		$request->commit($request->user());
 		$message = __('profile/update.updatedUsername');
-
 		return back()->with('alert', $message);
 	}
 
 	public function updatePassword(UpdatePasswordRequest $request) {
 
-		$user = $request->commit($request->user());
+		$request->commit($request->user());
 		$message = __('profile/update.updatedPassword');
 		return back()->with('alert', $message);
 	}
 
 	public function updateEmail(UpdateEmailRequest $request) {
 
-        $user = $request->commit();
+		$request->commit();
         $message = __('profile/update.updatedEmail');
         return back()->with('alert', $message);
     }
 
 	public function updateLanguage(UpdateLanguageRequest $request) {
 
-        $user = $request->commit();
+		$request->commit();
         $message = __('profile/update.updatedLanguage');
         return back()->with('alert', $message);
     }
 
-	public function destroy() {
-		$user = Auth::user();
-		$user->delete();
+    public function destroy(DeleteUserRequest $request)
+    {
+        $request->commit();
 
 		return redirect('/home');
 	}

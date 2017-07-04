@@ -206,7 +206,7 @@
 
 
                                         <swal-submit class="btn btn-outline-danger"
-                                                     title="@lang('profile/update/show.areYouSure')"
+                                                     title="@lang('match/show.areYouSure')"
                                                      confirm-text=" @lang('profile/update.deleteYourAccount')"
                                                      cancel-text="No"
                                         ><i class="fa fa-times-circle"></i> @lang('profile/update.deleteYourAccount')
