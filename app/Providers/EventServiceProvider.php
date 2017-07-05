@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Events\Match\JoinRequest;
+use App\Events\Match\UserJoined;
+use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
-use Illuminate\Support\Facades\Event;
+use App\Listeners\Match\SendUserJoinedNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -18,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         JoinRequest::class => [
             SendJoinRequestNotification::class,
         ],
+		UserJoined::class => [
+			SendUserJoinedNotification::class,
+			SendJoinRequestAcceptedNotification::class
+		]
     ];
 
     /**

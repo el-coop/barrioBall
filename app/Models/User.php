@@ -46,15 +46,11 @@ class User extends Authenticatable
 	}
 
 	public function inMatch(Match $match){
-		return $this->playedMatches()->whereHas('registeredPlayers',function($query){
-			$query->where('id',$this->id);
-		})->count();
+		return !! $this->playedMatches()->where('id',$match->id)->count();
 	}
 
 	public function isManager(Match $match){
-		return $this->managedMatches()->whereHas('managers',function($query){
-			$query->where('id',$this->id);
-		})->count();
+		return !! $this->managedMatches()->where('id',$match->id)->count();
 	}
 
 	public function isAdmin(){
@@ -67,9 +63,7 @@ class User extends Authenticatable
 	}
 
 	public function sentRequest(Match $match){
-		return $this->joinRequests()->whereHas('joinRequests',function($query){
-			$query->where('id',$this->id);
-		})->count();
+		return !! $this->joinRequests()->where('id',$match->id)->count();
 	}
 
 }

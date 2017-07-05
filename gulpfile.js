@@ -19,6 +19,6 @@ elixir((mix) => {
 		//.phpUnit()
 		.browserSync({
 			proxy: 'barrioball.dev',
+			offline: true
 		});
-	;
 });

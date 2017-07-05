@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Match;
 
+use App\Http\Requests\Match\AcceptJoinRequest;
 use App\Http\Requests\Match\InviteMangersRequest;
 use App\Http\Requests\Match\JoinMatchRequest;
 use App\Http\Requests\Match\LeaveMatchRequest;
@@ -39,5 +40,12 @@ class MatchUsersController extends Controller
 	public function stopManaging(StopManagingRequest $request, Match $match){
 		$request->commit();
 		return back()->with('alert', __('match/show.managementLeft'));
+	}
+
+	public function acceptJoin(AcceptJoinRequest $request, Match $match){
+		if($message = $request->commit()){
+			return back()->with('alert', $message);
+		}
+		return back()->with('error', "The join request was canceled/rejected before you accepted it");
 	}
 }

@@ -13,6 +13,11 @@
         <input v-for="val in values" type="checkbox" :value="val.id" :name="inputName" checked>
     </span>
 </template>
+<style scoped>
+    input[type="checkbox"] {
+        display: none;
+    }
+</style>
 <script>
 	import vSelect from 'vue-select'
     export default{

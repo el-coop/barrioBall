@@ -7,7 +7,7 @@ use App\Notifications\Match\JoinMatchRequest;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendJoinRequestNotification
+class SendJoinRequestNotification implements ShouldQueue
 {
     /**
      * Create the event listener.

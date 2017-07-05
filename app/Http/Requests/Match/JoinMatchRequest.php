@@ -29,7 +29,7 @@ class JoinMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'message' => 'string|max:350|nullable'
+            'message' => 'string|max:500|nullable'
         ];
     }
 
@@ -38,13 +38,12 @@ class JoinMatchRequest extends FormRequest
     	if($this->user()->isManager($match)){
 			$match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(),$match));
+			event(new UserJoined($this->user(),$match, ''));
 		} else {
 			$match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
 			event(new JoinRequest($this->user(),$match, $this->get('message')));
 		}
-
 		return $message;
 	}
 }

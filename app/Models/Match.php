@@ -67,4 +67,8 @@ class Match extends Model {
 		return $this->belongsToMany(User::class, 'join_match_requests')
 			->withTimestamps();
 	}
+
+	public function hasJoinRequest(User $user){
+		return !! $this->joinRequests()->where('id',$user->id)->count();
+	}
 }
