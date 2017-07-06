@@ -66,7 +66,7 @@ class ErrorController extends Controller {
 	}
 
 	public function delete(DeleteErrorRequest $deleteErrorRequest, Error $error){
-		$deleteErrorRequest->commit($error);
+		$deleteErrorRequest->commit();
 		return response()->json([
 			'status' => 'Success'
 		]);

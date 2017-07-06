@@ -42,7 +42,7 @@ class JoinMatchRequest extends FormRequest
 		} else {
 			$match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-			event(new JoinRequest($this->user(),$match, $this->get('message')));
+			event(new JoinRequest($this->user(),$match, $this->input('message')));
 		}
 		return $message;
 	}

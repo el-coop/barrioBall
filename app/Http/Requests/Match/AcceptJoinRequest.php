@@ -37,14 +37,14 @@ class AcceptJoinRequest extends FormRequest
 
 	public function commit() {
 		$match = $this->route('match');
-		$user = User::find($this->get('user'));
+		$user = User::find($this->input('user'));
 		if(! $match->hasJoinRequest($user)){
 			return false;
 		}
 
 		$match->addPlayer($user);
 		$match->joinRequests()->detach($user);
-		event(new UserJoined($user,$match,$this->get('message')));
+		event(new UserJoined($user,$match,$this->input('message')));
 		return "{$user->username} successfully added to the match";
 	}
 }

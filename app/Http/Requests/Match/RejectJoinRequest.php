@@ -37,12 +37,12 @@ class RejectJoinRequest extends FormRequest
 
 	public function commit() {
 		$match = $this->route('match');
-		$user = User::find($this->get('user'));
+		$user = User::find($this->input('user'));
 		if(! $match->hasJoinRequest($user)){
 			return false;
 		}
 		$match->joinRequests()->detach($user);
-		event(new UserRejected($user,$match,$this->get('message')));
+		event(new UserRejected($user,$match,$this->input('message')));
 		return true;
 	}
 }
