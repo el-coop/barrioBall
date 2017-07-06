@@ -15,7 +15,7 @@
                         <button class="btn btn-success" @click="userId={{ $request->id }};user='{{ $request->username }}';toggleModal('acceptRequest')">
                             <i class="fa fa-check"></i>
                         </button>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" @click="userId={{ $request->id }};user='{{ $request->username }}';toggleModal('rejectRequest')">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -34,6 +34,22 @@
                 </div>
                 <button class="btn btn-success btn-block"><i
                             class="fa fa-plus-circle"></i> Add @{{ user }} to match
+                </button>
+            </form>
+        </modal>
+        <modal v-cloak ref="rejectRequest">
+            <form method="post" slot="body" action="{{ action('Match\MatchUsersController@rejectJoin', $match) }}">
+                {{ csrf_field() }}
+                {{ method_field('delete') }}
+                <input type="hidden" :value="userId" name="user">
+                <div class="form-group">
+                    <label for="message">Message @{{ user }}<span
+                                class="text-muted">(500 chars max)</span>:</label>
+                    <textarea class="form-control" name="message" rows="6"
+                              v-model="message" @keyup="limitMessage"></textarea>
+                </div>
+                <button class="btn btn-danger btn-block"><i
+                            class="fa fa-minues-circle"></i> Reject request from @{{ user }}
                 </button>
             </form>
         </modal>

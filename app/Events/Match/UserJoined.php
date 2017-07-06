@@ -2,6 +2,8 @@
 
 namespace App\Events\Match;
 
+use App\Models\Match;
+use App\Models\User;
 use Auth;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -25,7 +27,7 @@ class UserJoined
      *
      * @return void
      */
-    public function __construct($user, $match, $message)
+    public function __construct(User $user, Match $match, $message)
     {
         $this->user = $user;
 		$this->match = $match;

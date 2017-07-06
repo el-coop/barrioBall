@@ -2,6 +2,8 @@
 
 namespace App\Events\Match;
 
+use App\Models\Match;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -23,7 +25,7 @@ class JoinRequest
      *
      * @return void
      */
-    public function __construct($user, $match, $message)
+    public function __construct(User $user, Match $match, $message)
     {
         //
 		$this->user = $user;

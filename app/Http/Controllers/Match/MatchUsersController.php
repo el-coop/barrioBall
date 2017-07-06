@@ -6,6 +6,7 @@ use App\Http\Requests\Match\AcceptJoinRequest;
 use App\Http\Requests\Match\InviteMangersRequest;
 use App\Http\Requests\Match\JoinMatchRequest;
 use App\Http\Requests\Match\LeaveMatchRequest;
+use App\Http\Requests\Match\RejectJoinRequest;
 use App\Http\Requests\Match\StopManagingRequest;
 use App\Models\Match;
 use App\Models\User;
@@ -46,6 +47,14 @@ class MatchUsersController extends Controller
 		if($message = $request->commit()){
 			return back()->with('alert', $message);
 		}
-		return back()->with('error', "The join request was canceled/rejected before you accepted it");
+		return back()->with('error', "The join request was canceled/rejected/accepted before you accepted it");
+	}
+
+	public function rejectJoin(RejectJoinRequest $request, Match $match){
+		if($request->commit()){
+			return back()->with('alert', 'Join request rejected');
+		}
+
+		return back()->with('error', "The join request was canceled/rejected/accepted before you rejected it");
 	}
 }
