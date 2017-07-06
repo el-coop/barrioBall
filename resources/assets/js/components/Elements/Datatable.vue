@@ -82,7 +82,7 @@
 			},
 			detailRow: {
 				type: String,
-				default: false
+				default: null
 			},
 			deleteClass: {
 				type: String,
