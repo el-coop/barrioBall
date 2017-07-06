@@ -41,9 +41,6 @@ class ShowTest extends DuskTestCase
 		});
 	}
 
-	/**
-	 * @group current
-	 */
 
 	public function test_shows_modal_on_click()
 	{

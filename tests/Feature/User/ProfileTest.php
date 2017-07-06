@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProfileTest extends TestCase
 {
+	use DatabaseMigrations;
 
 	public function test_shows_profile_page()
 	{

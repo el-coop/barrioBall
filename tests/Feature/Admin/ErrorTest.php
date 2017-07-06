@@ -38,7 +38,7 @@ class ErrorTest extends TestCase
 			'lineNo' => "1",
 			'trace' => "[]",
 			'userAgent' => 'firefox',
-			'vm' => 'vm'
+			'vm' => "vm"
 		],['HTTP_X-Requested-With' => 'XMLHttpRequest']);
 
 		$this->assertDatabaseHas('errors',[
@@ -49,7 +49,7 @@ class ErrorTest extends TestCase
 		$this->assertDatabaseHas('js_errors',[
 			'class' => 'message',
 			'user_agent' => 'firefox',
-			'vm' => 'vm'
+			'vm' => '"vm"'
 		]);
 	}
 
@@ -74,7 +74,7 @@ class ErrorTest extends TestCase
 		$this->assertDatabaseMissing('js_errors',[
 			'class' => 'message',
 			'user_agent' => 'firefox',
-			'vm' => 'vm'
+			'vm' => '"vm"'
 		]);
 	}
 
