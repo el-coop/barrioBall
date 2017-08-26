@@ -15,5 +15,12 @@ return [
 	'players' => 'Jugadores',
 	'invitePlaceholder' => 'Ingrese nombre de usario',
 	'areYouSure' => "¿Estás seguro?",
-	'login' => 'Inicie session para unirse al partido'
+	'login' => 'Inicie session para unirse al partido',
+	'waitingForResponse' => 'Esperando respuesta',
+	'introduceYourself' => 'Presentese a los gerentes',
+	'joinRequests' => 'Solicitudes de afiliación',
+	'add1' => 'Agrege',
+	'add2' => 'al partido',
+	'rejectRequest' => 'Rechaze la solicitud de'
+
 ];

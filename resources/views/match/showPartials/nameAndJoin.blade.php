@@ -33,7 +33,7 @@
 @elseif($user->sentRequest($match))
     <div class="bm-1">
         <button class="btn btn-info sm-btn-block" disabled><i
-                    class="fa fa-minus-circle"></i> Waiting for response
+                    class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
         </button>
     </div>
 @else
@@ -46,7 +46,7 @@
                   class="mt-1 mb-1" slot="body">
                 {{ csrf_field() }}
                 <div class="form-group">
-                    <label for="message">Introduce yourself to the managers <span
+                    <label for="message">@lang('match/show.introduceYourself')<span
                                 class="text-muted">(500 chars max)</span>:</label>
                     <textarea class="form-control" name="message" rows="6"
                               v-model="message" @keyup="limitMessage"></textarea>

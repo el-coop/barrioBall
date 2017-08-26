@@ -6,7 +6,7 @@
 </div>
 @if($user && $user->isManager($match))
     <div class="list-group mt-2">
-        <div class="list-group-item list-group-item-info"><strong>Join Requests:</strong></div>
+        <div class="list-group-item list-group-item-info"><strong>@lang('match/show.joinRequests'):</strong></div>
         @foreach($match->joinRequests as $request)
             <div class="list-group-item">
                 <div class="d-flex w-100 justify-content-between align-items-center">
@@ -27,13 +27,13 @@
                 {{ csrf_field() }}
                 <input type="hidden" :value="userId" name="user">
                 <div class="form-group">
-                    <label for="message">Message @{{ user }}<span
+                    <label for="message">@lang('global.message') @{{ user }}<span
                                 class="text-muted">(500 chars max)</span>:</label>
                     <textarea class="form-control" name="message" rows="6"
                               v-model="message" @keyup="limitMessage"></textarea>
                 </div>
                 <button class="btn btn-success btn-block"><i
-                            class="fa fa-plus-circle"></i> Add @{{ user }} to match
+                            class="fa fa-plus-circle"></i> @lang('match/show.add1') @{{ user }} @lang('match/show.add2')
                 </button>
             </form>
         </modal>
@@ -43,16 +43,15 @@
                 {{ method_field('delete') }}
                 <input type="hidden" :value="userId" name="user">
                 <div class="form-group">
-                    <label for="message">Message @{{ user }}<span
+                    <label for="message">@lang('global.message') @{{ user }}<span
                                 class="text-muted">(500 chars max)</span>:</label>
                     <textarea class="form-control" name="message" rows="6"
                               v-model="message" @keyup="limitMessage"></textarea>
                 </div>
                 <button class="btn btn-danger btn-block"><i
-                            class="fa fa-minues-circle"></i> Reject request from @{{ user }}
+                            class="fa fa-minues-circle"></i> @lang('match/show.rejectRequest') @{{ user }}
                 </button>
             </form>
         </modal>
-
     </div>
 @endif
