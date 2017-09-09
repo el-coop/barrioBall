@@ -19,7 +19,6 @@ class UserJoined
 
     public $user;
     public $match;
-    public $message;
     public $manager;
 
     /**
@@ -27,11 +26,10 @@ class UserJoined
      *
      * @return void
      */
-    public function __construct(User $user, Match $match, $message)
+    public function __construct(User $user, Match $match, $message = '')
     {
         $this->user = $user;
 		$this->match = $match;
-		$this->message = $message;
 		$this->manager = Auth::user();
     }
 

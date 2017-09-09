@@ -2,28 +2,30 @@
 
 namespace App\Notifications\Match;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Mail\Match\MatchJoined as RequestMail;
 
-class MatchJoined extends Notification
+class MatchJoined extends Notification implements ShouldQueue
 {
     use Queueable;
 
-
 	protected $user;
 	protected $match;
-    /**
+	protected $language;
+
+	/**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user, $match)
+    public function __construct($user, $match, User $recipient)
     {
 		$this->match = $match;
 		$this->user = $user;
+		$this->language = $recipient->language;
     }
 
     /**
@@ -45,7 +47,18 @@ class MatchJoined extends Notification
      */
     public function toMail($notifiable)
     {
-		return (new RequestMail($this->user,$this->match));
+
+		return (new MailMessage)
+			->subject(__('mail/matchJoined.subject',[
+				'match' => $this->match->name
+			], $this->language))
+			->greeting(__('mail/global.hello',[],$this->language) . ',')
+			->line(__('mail/matchJoined.hasBeenAuth',[
+				'name' => $this->user->username,
+				'url' => action('Match\MatchController@showMatch', $this->match),
+				'match' => $this->match->name
+			], $this->language))
+			->salutation(__('mail/global.dontReply',[],$this->language));
     }
 
     /**

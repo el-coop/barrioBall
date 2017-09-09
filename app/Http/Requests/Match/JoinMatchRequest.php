@@ -15,7 +15,7 @@ class JoinMatchRequest extends FormRequest
      */
     public function authorize()
     {
-    	if(! $this->user() || $this->user()->inMatch($this->route('match'))){
+    	if(! $this->user() || $this->user()->inMatch($this->route('match')) || $this->user()->sentRequest($this->route('match'))){
     		return false;
 		}
         return true;
@@ -38,7 +38,7 @@ class JoinMatchRequest extends FormRequest
     	if($this->user()->isManager($match)){
 			$match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(),$match, ''));
+			event(new UserJoined($this->user(),$match));
 		} else {
 			$match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');

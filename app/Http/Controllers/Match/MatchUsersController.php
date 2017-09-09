@@ -52,9 +52,9 @@ class MatchUsersController extends Controller
 
 	public function rejectJoin(RejectJoinRequest $request, Match $match){
 		if($request->commit()){
-			return back()->with('alert', 'Join request rejected');
+			return back()->with('alert', __('match/requests.rejected'));
 		}
 
-		return back()->with('error', "The join request was canceled/rejected/accepted before you rejected it");
+		return back()->with('error',__('match/requests.requestNotExistent'));
 	}
 }

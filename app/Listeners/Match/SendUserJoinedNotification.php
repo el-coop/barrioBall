@@ -27,7 +27,9 @@ class SendUserJoinedNotification implements ShouldQueue {
 	 */
 	public function handle(UserJoined $event) {
 		foreach ($event->match->managers as $manager) {
-			$manager->notify(new MatchJoined($event->user, $event->match, $event->message));
+			if($manager != $event->user){
+				$manager->notify(new MatchJoined($event->user, $event->match, $manager));
+			}
 		}
 	}
 }
