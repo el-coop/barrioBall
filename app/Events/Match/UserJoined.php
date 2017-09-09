@@ -20,8 +20,9 @@ class UserJoined
     public $user;
     public $match;
     public $manager;
+	public $message;
 
-    /**
+	/**
      * Create a new event instance.
      *
      * @return void
@@ -31,6 +32,7 @@ class UserJoined
         $this->user = $user;
 		$this->match = $match;
 		$this->manager = Auth::user();
+		$this->message = $message;
     }
 
     /**

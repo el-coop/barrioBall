@@ -16,7 +16,7 @@ class RejectJoinRequest extends FormRequest
     public function authorize()
     {
 		$match = $this->route('match');
-		if($this->user()->isAdmin($match)){
+		if($this->user() && $this->user()->isAdmin($match)){
 			return true;
 		}
 		return false;

@@ -2,11 +2,10 @@
 
 namespace App\Notifications\Match;
 
-use App\Mail\Match\JoinRequestAccepted as RequestMail;
+use App\Mail\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class JoinRequestAccepted extends Notification
 {
@@ -53,15 +52,27 @@ class JoinRequestAccepted extends Notification
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
+
+	/**
+	 * @param $notifiable
+	 *
+	 * @return MailMessage
+	 */
+	public function toMail($notifiable)
     {
-        return (new RequestMail($this->user,$this->match,$this->message,$this->manager));
+		return (new MailMessage)
+			->subject(__('mail/userAccepted.subject',[
+				'name' => $this->match->name
+			], $this->language))
+			->replyTo($this->manager->email)
+			->greeting(__('mail/global.hello',[],$this->language) . ',')
+			->line(__('mail/userAccepted.youWereAccepted',[
+				'url' => action('Match\MatchController@showMatch', $this->match),
+				'name' => $this->match->name
+			], $this->language))
+			->line(__('mail/global.adminSays',[], $this->language))
+			->quote($this->message)
+			->salutation(__('mail/global.replyToThisEmail',[],$this->language));
     }
 
     /**
