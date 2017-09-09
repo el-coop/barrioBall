@@ -18,7 +18,7 @@ class ErrorController extends Controller {
 	public function getPhpErrors(Request $request) {
 		$errors = PhpError::with('error.user');
 
-		if ($request->has('sort')) {
+		if ($request->filled('sort')) {
 			$sort = explode('|', $request->input('sort'));
 			$errors = $errors->orderBy($sort[0], $sort[1]);
 
@@ -26,7 +26,7 @@ class ErrorController extends Controller {
 			$errors = $errors->latest();
 		}
 
-		if ($request->has('filter')) {
+		if ($request->filled('filter')) {
 			$filterVal = "%{$request->input('filter')}%";
 			$errors->where(function ($query) use ($filterVal) {
 				$query->where('message', 'like', $filterVal)
@@ -44,13 +44,13 @@ class ErrorController extends Controller {
 	public function getJsErrors(Request $request) {
 		$errors = JsError::with('error.user');
 
-		if ($request->has('sort')) {
+		if ($request->filled('sort')) {
 			$errors = $errors->orderBy($request->input('sort'));
 		} else {
 			$errors = $errors->latest();
 		}
 
-		if ($request->has('filter')) {
+		if ($request->filled('filter')) {
 			$filterVal = "%{$request->input('filter')}%";
 			$errors->where(function ($query) use ($filterVal) {
 				$query->where('class', 'like', $filterVal)
