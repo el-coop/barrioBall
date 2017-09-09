@@ -15,5 +15,11 @@ return [
 	'players' => 'Players',
 	'invitePlaceholder' => 'Insert users names',
 	'areYouSure' => "Are you sure?",
-	'login' => 'Login to join match'
+	'login' => 'Login to join match',
+	'waitingForResponse' => 'Waiting for response',
+	'introduceYourself' => 'Introduce yourself to the managers',
+	'joinRequests' => 'Join Requests',
+	'add1' => 'Add',
+	'add2' => 'to match',
+	'rejectRequest' => 'Reject request from'
 ];

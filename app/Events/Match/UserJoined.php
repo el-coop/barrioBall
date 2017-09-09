@@ -2,6 +2,9 @@
 
 namespace App\Events\Match;
 
+use App\Models\Match;
+use App\Models\User;
+use Auth;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,18 +17,22 @@ class UserJoined
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $user;
-    protected $match;
+    public $user;
+    public $match;
+    public $manager;
+	public $message;
 
-    /**
+	/**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user, $match)
+    public function __construct(User $user, Match $match, $message = '')
     {
         $this->user = $user;
-        $this->match = $match;
+		$this->match = $match;
+		$this->manager = Auth::user();
+		$this->message = $message;
     }
 
     /**

@@ -11,7 +11,6 @@
 |
 */
 
-
 Auth::routes();
 foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
 	require $routeFile;

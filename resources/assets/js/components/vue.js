@@ -1,10 +1,11 @@
 import Paginate from 'vuejs-paginate';
-Vue.component('paginate', Paginate);
 import Vuetable from 'vuetable-2/src/components/Vuetable.vue';
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo.vue';
+import TreeView from "vue-json-tree-view";
+
+Vue.component('paginate', Paginate);
 Vue.component('vuetable', Vuetable);
 Vue.component('vuetablePaginationInfo', VuetablePaginationInfo);
-import TreeView from "vue-json-tree-view"
 Vue.use(TreeView);
 
 require('./Pages/pages');

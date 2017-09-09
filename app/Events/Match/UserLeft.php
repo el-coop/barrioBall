@@ -2,6 +2,8 @@
 
 namespace App\Events\Match;
 
+use App\Models\Match;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -22,7 +24,7 @@ class UserLeft
 	 *
 	 * @return void
 	 */
-	public function __construct($user, $match)
+	public function __construct(User $user, Match $match)
 	{
 		$this->user = $user;
 		$this->match = $match;

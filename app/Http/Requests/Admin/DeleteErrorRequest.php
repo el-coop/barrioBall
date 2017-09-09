@@ -29,7 +29,8 @@ class DeleteErrorRequest extends FormRequest
         ];
     }
 
-    public function commit(Error $error){
+    public function commit(){
+    	$error = $this->route('error');
     	$error->errorable->delete();
 	}
 }

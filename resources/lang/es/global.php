@@ -14,6 +14,7 @@ return [
     */
 
 
-    'currentLanguage' => 'Español'
+    'currentLanguage' => 'Español',
+	'message' => 'Mensaje'
 
 ];
