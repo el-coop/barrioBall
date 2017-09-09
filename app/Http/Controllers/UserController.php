@@ -38,13 +38,13 @@ class UserController extends Controller
     public function getMatches(Request $request){
 		$matches = $request->user()->matches()->withPivot('role');
 
-		if ($request->has('sort')) {
+		if ($request->filled('sort')) {
 			$matches = $matches->orderBy($request->input('sort'));
 		} else {
 			$matches = $matches->latest();
 		}
 
-		if ($request->has('filter')) {
+		if ($request->filled('filter')) {
 			$filterVal = "%{$request->input('filter')}%";
 			$matches->where(function ($query) use ($filterVal) {
 				$query->where('name', 'like', $filterVal);

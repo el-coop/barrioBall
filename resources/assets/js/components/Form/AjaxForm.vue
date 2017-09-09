@@ -75,8 +75,8 @@
 					this.$emit(this.event, response.data, data);
 				}, error => {
 					this.showNormalButton();
-					this.errors = error.response.data;
-					this.$emit('error', error.response.data);
+					this.errors = error.response.data.errors;
+					this.$emit('error', error.response.data.errors);
 				});
 			},
 

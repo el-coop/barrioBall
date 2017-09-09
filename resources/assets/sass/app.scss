@@ -2,14 +2,15 @@
 @import "variables";
 
 // Bootstrap
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
 
 // Bootstrap Date Time Picker
-@import "node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker";
+@import "~eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker";
 
 // Sweet Alert
-@import "node_modules/sweetalert2/dist/sweetalert2";
+@import "~sweetalert2/dist/sweetalert2";
 
+@import "~font-awesome/scss/font-awesome";
 //fixes
 @import "fixes";
 
@@ -17,7 +18,6 @@
 @import "leaflet/leaflet";
 @import "leaflet/Control.Geocoder";
 @import "search/search";
-@import "fontAwesome/font-awesome";
 
 
 @import "vue/vue";
