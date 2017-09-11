@@ -3,7 +3,7 @@
 return [
 
 	'createLink' => 'Create Match',
-	'searchLink' => 'Search Match',
+	'searchLink' => 'Search Matches',
 	'adminTitle' => 'Administrator',
 	'errorsLink' => 'Errors',
 	'profileLink' => 'Profile',

@@ -3,7 +3,7 @@
 return [
 
 	'createLink' => 'Crear Partido',
-	'searchLink' => 'Buscar Partido',
+	'searchLink' => 'Buscar Partidos',
 	'adminTitle' => 'Administrador',
 	'errorsLink' => 'Errores',
 	'profileLink' => 'Perfil',

@@ -24,14 +24,9 @@
 
 		data(){
 			return {
-				exception: {},
-				vm: {}
+				exception: this.rowData.exception,
+				vm: JSON.parse(this.rowData.vm)
 			}
 		},
-
-		mounted(){
-			this.exception = this.rowData.exception;
-			this.vm = JSON.parse(this.rowData.vm);
-		}
 	}
 </script>

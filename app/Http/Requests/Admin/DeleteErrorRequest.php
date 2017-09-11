@@ -14,7 +14,11 @@ class DeleteErrorRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+    	if($this->user()->isAdmin()){
+			return true;
+		}
+
+		return false;
     }
 
     /**

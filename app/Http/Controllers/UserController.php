@@ -11,14 +11,12 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-    	$user = $request->user();
-        return view('user/edit', compact('user'));
+        return view('user/edit');
     }
 
 
     public function update(Request $request, $id)
     {
-        //
 
         $user = User::findOrFail($id);
         $password = Hash::make($request['password']);;

@@ -11,8 +11,7 @@ use App\Http\Controllers\Controller;
 
 class ErrorController extends Controller {
 	public function show(Request $request) {
-		$user = $request->user();
-		return view('admin.errors', compact('user'));
+		return view('admin.errors');
 	}
 
 	public function getPhpErrors(Request $request) {

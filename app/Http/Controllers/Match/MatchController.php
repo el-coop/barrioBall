@@ -14,8 +14,7 @@ use App\Models\Match;
 class MatchController extends Controller
 {
 	public function showCreate(Request $request) {
-		$user = $request->user();
-		return view('match.create', compact('user'));
+		return view('match.create');
 	}
 
 	public function create(CreateMatchRequest $request) {
@@ -30,7 +29,7 @@ class MatchController extends Controller
 			$canJoin = false;
 		}
 
-		return view('match.show', compact('match','canJoin', 'user'));
+		return view('match.show', compact('match','canJoin'));
 	}
 
 	public function delete(DeleteMatchRequest $request, Match $match) {
@@ -39,8 +38,7 @@ class MatchController extends Controller
 	}
 
 	public function showSearch(Request $request) {
-		$user = $request->user();
-		return view('match.search',compact('user'));
+		return view('match.search');
 	}
 
     public function search(SearchRequest $request){

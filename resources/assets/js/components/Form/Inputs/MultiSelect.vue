@@ -43,7 +43,7 @@
 			return {
 				values: [],
 				options: [],
-                inputName: ''
+                inputName: this.name + '[]'
 			}
 		},
 
@@ -59,10 +59,6 @@
 				});
             }
         },
-
-		mounted(){
-			this.inputName = this.name + '[]';
-		},
 
 	}
 </script>

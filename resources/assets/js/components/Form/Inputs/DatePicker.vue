@@ -3,7 +3,7 @@
         <span class="input-group-addon" v-if="label">
             {{label}}
         </span>
-        <input type='text' class="form-control" :name="name"/>
+        <input type='text' class="form-control" :class="{}" :name="name"/>
         <span class="input-group-addon">
             <i class="fa fa-calendar"></i>
         </span>

@@ -22,14 +22,9 @@
 
 		data(){
 			return {
-				request: {},
-				exception: {}
+				request: JSON.parse(this.rowData.request),
+				exception: JSON.parse(this.rowData.exception)
 			}
 		},
-
-		mounted(){
-			this.request = JSON.parse(this.rowData.request);
-			this.exception = JSON.parse(this.rowData.exception);
-		}
-	}
+    }
 </script>

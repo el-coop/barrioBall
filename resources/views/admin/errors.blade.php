@@ -5,7 +5,7 @@
     @include('partials.navbar.authorized')
 
     <errors-page inline-template delete-url="/admin/errors">
-        <div class="container-fluid mb-5">
+        <div class="container-fluid mb-5 mt-5">
             <div class="row">
                 <div class="col-12">
                     @component('partials.components.panel')
@@ -19,7 +19,8 @@
                                 ref="phpTable"
                                 delete-class="btn-success"
                                 delete-icon="fa-check"
-                                @delete="onDelete">
+                                @delete="onDelete"
+                                class="mt-3">
                         </datatable>
                     @endcomponent
                 </div>

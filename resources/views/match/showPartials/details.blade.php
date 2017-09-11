@@ -5,7 +5,7 @@
     <strong>
         {{$match->address}}
     </strong>
-    <hr class="hidden-md-up">
+    <hr class="d-md-none">
 </div>
 <div class="col-12 col-md-4 text-center">
     <p>
@@ -14,7 +14,7 @@
     <strong>
         {{$match->date}} {{$match->time}}
     </strong>
-    <hr class="hidden-md-up">
+    <hr class="d-md-none">
 </div>
 <div class="col-12 col-md-4 text-center">
     <p>

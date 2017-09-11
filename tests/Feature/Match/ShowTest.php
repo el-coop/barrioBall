@@ -9,14 +9,12 @@ use App\Events\Match\UserLeft;
 use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowTest extends TestCase
 {
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
 	protected $match;
 
@@ -124,7 +122,7 @@ class ShowTest extends TestCase
 		factory(Admin::class)->create()->each(function($user){
 			$user->user()->save(factory(User::class)->make());
 		});
-		$extraUser = User::find(2);
+		$extraUser = User::find(User::first()->id + 1);
 		$response = $this->actingAs($extraUser)->get(action('Match\MatchController@showMatch', $this->match));
 		$response->assertDontSeeText(__('match/show.deleteMatch'));
 
@@ -145,7 +143,7 @@ class ShowTest extends TestCase
 		factory(Admin::class)->create()->each(function($user){
 			$user->user()->save(factory(User::class)->make());
 		});
-		$extraUser = User::find(2);
+		$extraUser = User::find(User::first()->id + 1);
 		$response = $this->actingAs($extraUser)->get(action('Match\MatchController@showMatch', $this->match));
 		$response->assertDontSeeText(__('match/show.inviteManagers'));
 
@@ -157,7 +155,7 @@ class ShowTest extends TestCase
 		factory(Admin::class)->create()->each(function($user){
 			$user->user()->save(factory(User::class)->make());
 		});
-		$extraManager = User::find(2);
+		$extraManager = User::find(User::first()->id + 1);
 		$this->match->addManager($extraManager);
 		$user = User::first();
 
@@ -182,7 +180,7 @@ class ShowTest extends TestCase
 		factory(Admin::class)->create()->each(function($user){
 			$user->user()->save(factory(User::class)->make());
 		});
-		$extraUser = User::find(2);
+		$extraUser = User::find(User::first()->id + 1);
 
 		$response = $this->actingAs($extraUser)->get(action('Match\MatchController@showMatch', $this->match));
 		$response->assertDontSeeText(__('match/show.stopManaging'));
