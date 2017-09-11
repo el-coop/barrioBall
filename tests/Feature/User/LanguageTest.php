@@ -4,14 +4,12 @@ namespace Tests\Feature\User;
 
 use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LanguageTest extends TestCase {
 
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
 	public function test_it_shows_english_text_for_english_language_user() {
 		factory(Admin::class)->create()->each(function ($user) {

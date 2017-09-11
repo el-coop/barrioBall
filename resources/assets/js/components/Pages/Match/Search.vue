@@ -23,16 +23,13 @@
                 searchParams: null,
                 pages: 0,
                 mapToggled: false,
-				mapBtn: 'Map',
+				mapBtn: this.mapName,
                 selectedResult: null,
                 loading: false,
                 errors: {}
             }
         },
 
-        mounted(){
-    	    this.mapBtn = this.mapName;
-        },
 
         methods: {
 			submit(){

@@ -4,24 +4,32 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Admin;
 use App\Models\Errors\Error;
+use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
 use App\Models\User;
-use Exception;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ErrorTest extends TestCase
 {
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
-	public function test_shows_errors_page()
-	{
+	protected $jserror;
+
+	public function setUp() {
+		parent::setUp();
+		factory(JsError::class)->create()->each(function($error){
+			$error->error()->save(factory(Error::class)->make());
+		});
 		factory(Admin::class)->create()->each(function($user){
 			$user->user()->save(factory(User::class)->make());
 		});
 
+
+	}
+
+	public function test_shows_errors_page()
+	{
 		$response = $this->actingAs(User::first())->get(action('Admin\ErrorController@show'));
 
 		$response->assertStatus(200);
@@ -31,6 +39,7 @@ class ErrorTest extends TestCase
 
 	public function test_logs_js_errors()
 	{
+
 		$this->post(action('ErrorController@store'),[
 			'page' => "/",
 			'message' => "message",
@@ -44,7 +53,7 @@ class ErrorTest extends TestCase
 		$this->assertDatabaseHas('errors',[
 			'page' => '/',
 			'errorable_type' => 'JSError',
-			'errorable_id' => '1'
+			'errorable_id' => JsError::first()->id + 1
 		]);
 		$this->assertDatabaseHas('js_errors',[
 			'class' => 'message',
@@ -68,7 +77,7 @@ class ErrorTest extends TestCase
 		$this->assertDatabaseMissing('errors',[
 			'page' => '/',
 			'errorable_type' => 'JSError',
-			'errorable_id' => '1'
+			'errorable_id' =>  JsError::first()->id + 1
 		]);
 
 		$this->assertDatabaseMissing('js_errors',[
@@ -78,15 +87,19 @@ class ErrorTest extends TestCase
 		]);
 	}
 
+
+
 	public function test_resolves_error()
 	{
-		$error = factory(PhpError::class)->create()->each(function($error){
+		factory(PhpError::class)->create()->each(function($error){
 			$error->error()->save(factory(Error::class)->make());
 		});
 
-		$this->delete( action('Admin\ErrorController@delete', $error));
-		$this->assertDatabaseMissing('errors',['id' => 1]);
-		$this->assertDatabaseMissing('php_errors',['id' => 1]);
+		$error = PhpError::first()->error;
+
+		$this->actingAs(User::first())->delete(action('Admin\ErrorController@delete', $error));
+		$this->assertDatabaseMissing('errors',['id' => $error->id]);
+		$this->assertDatabaseMissing('php_errors',['id' => $error->errorable_id]);
 	}
 
 

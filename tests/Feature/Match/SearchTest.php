@@ -3,17 +3,14 @@
 namespace Tests\Feature\Match;
 
 use App\Models\Match;
-use Carbon\Carbon;
 use Faker\Generator;
 use Faker\Provider\Base;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class SearchTest extends TestCase
 {
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
     public function test_shows_search_page()
     {

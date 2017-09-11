@@ -4,15 +4,13 @@ namespace Tests\Feature\Partials;
 
 use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class Navbar extends TestCase
 {
 
- 	use DatabaseMigrations;
+ 	use RefreshDatabase;
     /**
      * A basic test example.
      *

@@ -17,15 +17,13 @@ use App\Models\Player;
 use App\Models\User;
 use App\Notifications\Match\JoinMatchRequest;
 use App\Notifications\Match\MatchJoined;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Notification;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class JoinTest extends TestCase {
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
 	protected $match;
 	protected $player;

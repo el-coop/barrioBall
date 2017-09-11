@@ -33,8 +33,7 @@
 		data(){
 			return {
 				map: null,
-				markers: [],
-                startPos: null,
+				markers: []
 			}
 		},
 

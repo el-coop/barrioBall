@@ -10,7 +10,7 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.webpackConfig({ devtool: "source-map" })
-	.js('resources/assets/js/app.js', 'public/js')
+mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')
+	.sourceMaps(true)
 	.browserSync('barrioball.dev');

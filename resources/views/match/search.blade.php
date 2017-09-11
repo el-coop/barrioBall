@@ -14,7 +14,7 @@
             <flipper :flipped="mapToggled">
                 <div class="content-static-right" slot="front">
                     <div class="row mb-4">
-                        <div class="col-12 mt-2">
+                        <div class="col-12 mt-3">
                             <ajax-form class="form-inline justify-content-center" :auto-submit="false"
                                        v-on:submit-clicked="submit"
                                        v-on:search-completed="searchResults" v-on:error="showErrors" :errors-box="false"
@@ -45,7 +45,7 @@
                             </ajax-form>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mr-md-1">
                         <div class="col-12" v-if="matches != null && !matches.length">
                             <h4 class="text-center">
                                 @lang('match/search.noMatchesFound')
@@ -101,7 +101,7 @@
                 </div>
             </flipper>
             <div class="search-toggle text-center">
-                <span class="btn-group hidden-md-up">
+                <span class="btn-group d-md-none">
                     <button class="btn btn-primary" @click="toggleMap">@{{mapBtn}}</button>
                 </span>
             </div>

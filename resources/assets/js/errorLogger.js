@@ -1,6 +1,6 @@
 let errorsCount = 0;
 
-function errorLog(message, source, lineNo, colno, trace){
+function errorLog(message, source, lineNo, colno, trace) {
 	if (errorsCount < 3) {
 		errorsCount++;
 		axios.post('/jserror', {
@@ -15,29 +15,35 @@ function errorLog(message, source, lineNo, colno, trace){
 	}
 }
 
-$('window').on('error',errorLog);
+$('window').on('error', errorLog);
 
-function classify(str){
+function classify(str) {
 	return str.replace(/(?:^|[-_])(\w)/g, c => c.toUpperCase())
 		.replace(/[-_]/g, '');
 }
 
-function formatComponentName(vm, includeFile){
+function formatComponentName(vm, includeFile) {
 	if (vm.$root === vm) {
 		return '<Root>'
 	}
-	let name = typeof vm === 'string'
-		? vm
-		: typeof vm === 'function' && vm.options
-			? vm.options.name
-			: vm._isVue
-				? vm.$options.name || vm.$options._componentTag
-				: vm.name
 
-	const file = vm._isVue && vm.$options.__file
+	let name = '';
+
+	if (typeof vm === 'string') {
+		name = vm;
+	} else if (typeof vm === 'function' && vm.options) {
+		name = vm.options.name;
+	} else if (vm._isVue) {
+		name = vm.$options.name || vm.$options._componentTag;
+	} else {
+		name = vm.name;
+	}
+
+
+	const file = vm._isVue && vm.$options.__file;
 	if (!name && file) {
-		const match = file.match(/([^/\\]+)\.vue$/)
-		name = match && match[1]
+		const match = file.match(/([^/\\]+)\.vue$/);
+		name = match && match[1];
 	}
 
 	return (
@@ -45,9 +51,10 @@ function formatComponentName(vm, includeFile){
 		(file && includeFile !== false ? ` at ${file}` : '')
 	)
 }
-if(process.env.NODE_ENV === 'production'){
+
+if (process.env.NODE_ENV === 'production') {
 	Vue.config.errorHandler = function (err, vm, info) {
-		axios.post('/jserror',{
+		axios.post('/jserror', {
 			page: window.location.href,
 			userAgent: navigator.userAgent,
 			message: `Error in ${info}: "${err.toString()}" - ${formatComponentName(vm)}`,

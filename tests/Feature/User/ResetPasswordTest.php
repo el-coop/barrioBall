@@ -6,16 +6,14 @@ use App\Models\Admin;
 use App\Models\User;
 use DB;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Notification;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ResetPasswordTest extends TestCase
 {
-	use DatabaseMigrations;
+	use RefreshDatabase;
 
 	protected $user;
 

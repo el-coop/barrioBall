@@ -9,7 +9,7 @@
     @endif
     <show-page inline-template>
         <div class="container">
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-12 col-md-6">
                     @include('match.showPartials.nameAndJoin')
                 </div>

@@ -6,7 +6,7 @@
     <a href="#">{{ $manager->username }}</a>@if (!$loop->last), @endif
 @endforeach
 @if(! $user)
-    <div class="mb-1">
+    <div class="mt-1 mb-1">
         <a href="{{ action("Auth\LoginController@login") }}">
             <button class="btn btn-success sm-btn-block"><i
                         class="fa fa-plus-circle"></i> @lang('match/show.login')
@@ -15,7 +15,7 @@
     </div>
 @elseif($user->inMatch($match))
     <form method="post" action="{{ action('Match\MatchUsersController@leaveMatch', $match) }}"
-          class="mb-1">
+          class="mt-1 mb-1">
         {{ csrf_field() }}
         {{ method_field('delete') }}
         <button class="btn btn-warning sm-btn-block"><i
@@ -31,7 +31,7 @@
         </button>
     </form>
 @elseif($user->sentRequest($match))
-    <div class="bm-1">
+    <div class="mt-1 bm-1">
         <button class="btn btn-info sm-btn-block" disabled><i
                     class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
         </button>
