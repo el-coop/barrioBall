@@ -4,8 +4,8 @@ namespace Tests\Feature\User;
 
 use App\Models\Admin;
 use App\Models\User;
+use App\Notifications\User\ResetPassword;
 use DB;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Notification;

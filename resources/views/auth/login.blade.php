@@ -8,10 +8,8 @@
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">
+                    <div class="card-header text-center">
                             @lang('auth.login')
-                        </h3>
                     </div>
                     <div class="card-block pt-3 container-fluid">
                         <form role="form" method="POST" action="{{ action('Auth\LoginController@login') }}">

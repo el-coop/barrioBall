@@ -1,8 +1,7 @@
-html, body, #app{
+html, body, #app {
 	height: 100%;
 	width: 100%;
 }
-
 
 .navbar.fixed-top + .container {
 	padding-top: 70px;
@@ -25,7 +24,7 @@ html, body, #app{
 		padding-top: 55px;
 	}
 
-	.w-100-sm-down{
+	.w-100-sm-down {
 		width: 100%;
 	}
 }
@@ -34,4 +33,25 @@ html, body, #app{
 	.form-group {
 		vertical-align: top;
 	}
+}
+
+.is-invalid {
+	> .invalid-feedback {
+		display: block;
+	}
+
+	> .input-group {
+		> * {
+
+			border-top-color: #dc3545;
+			border-bottom-color: #dc3545;
+			&:last-child {
+				border-right-color: #dc3545;
+			}
+			&:first-child {
+				border-left-color: #dc3545;
+			}
+		}
+	}
+
 }
