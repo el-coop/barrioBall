@@ -4,7 +4,11 @@
 		    deleteUrl: {
 		    	type: String,
                 required: true
-            }
+            },
+			translate: {
+				type: Object,
+				required: true
+			}
         },
 
 		data(){
@@ -12,7 +16,7 @@
 				jsErrorFields: [
 					{
 						name: 'class',
-						title: 'Error',
+						title: this.translate.error,
 						sortField: 'class'
 					},
 					{
@@ -21,17 +25,17 @@
 					},
 					{
 						name: 'error.user',
-						title: 'User'
+						title: this.translate.user
 					},
 					{
 						name: 'created_at',
-						title: 'Date and Time',
+						title: this.translate.date,
 						sortField: 'created_at'
 
 					},
 					{
 						name: '__slot:actions',
-						title: 'Actions',
+						title: this.translate.resolve,
 						dataClass: 'text-center'
 					}
 
@@ -39,7 +43,7 @@
 				phpErrorFields: [
 					{
 						name: 'message',
-						title: 'Error',
+						title: this.translate.error,
 						sortField: 'message'
                     },
 					{
@@ -48,16 +52,16 @@
 					},
 					{
 						name: 'error.user',
-						title: 'User'
+						title: this.translate.user
 					},
 					{
 						name: 'created_at',
-						title: 'Date and Time',
+						title: this.translate.date,
 						sortField: 'created_at'
 					},
                     {
 						name: '__slot:actions',
-						title: 'Resolve',
+						title: this.translate.resolve,
 						dataClass: 'text-center'
 					}
 				],

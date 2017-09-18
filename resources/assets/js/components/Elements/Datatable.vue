@@ -94,9 +94,9 @@
             },
             perPageOptions: {
 				type: Array,
-                default: [
-                	10,20,50,100
-                ]
+                default(){
+					return [10,20,50,100];
+				}
             },
             extraParams: {
 				type: Object,
