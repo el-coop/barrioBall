@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-md-6">
-                <div class="form-group form-inline">
+                <div class="form-group" :class="{ 'form-inline' : inlineForms}">
                     <label>Search:&nbsp;&nbsp;</label>
                     <div class="input-group">
                         <input type="text" class="form-control" v-model="filter" @keyup.enter="updateParams">
@@ -15,13 +15,10 @@
                 </div>
             </div>
             <div class="col-12 col-md-6">
-                <div class="form-inline form-group float-md-right">
+                <div class="form-group float-md-right" :class="{ 'form-inline' : inlineForms}">
                     <label>Per Page:&nbsp;&nbsp;</label>
                     <select v-model="perPage" class="form-control" @change="updateParams">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
+                        <option v-for="perPageOption in perPageOptions" :value="perPageOption">{{perPageOption}}</option>
                     </select>
                 </div>
             </div>
@@ -51,18 +48,18 @@
                         </template>
                     </vuetable>
                 </div>
-                <div class="row text-center text-md-left">
-                    <div class="col-12 col-md-6">
-                        <vuetable-pagination-info ref="paginationInfo">
-                        </vuetable-pagination-info>
-                    </div>
-                    <div class="col-12 col-md-6 d-flex d-md-block">
-                        <vuetable-pagination ref="pagination"
-                                             :css="cssPagination"
-                                             @vuetable-pagination:change-page="changePage">
-                        </vuetable-pagination>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class="row text-center text-md-left">
+            <div class="col-12"  :class="{ 'col-md-6' : inlineForms}">
+                <vuetable-pagination-info ref="paginationInfo">
+                </vuetable-pagination-info>
+            </div>
+            <div class="col-12 d-flex d-md-block" :class="{ 'col-md-6' : inlineForms}">
+                <vuetable-pagination ref="pagination"
+                                     :css="cssPagination"
+                                     @vuetable-pagination:change-page="changePage">
+                </vuetable-pagination>
             </div>
         </div>
     </div>
@@ -91,7 +88,22 @@
 			deleteIcon: {
 				type: String,
 				default: 'fa-trash'
-			}
+			},
+            inlineForms: {
+				default: true
+            },
+            perPageOptions: {
+				type: Array,
+                default: [
+                	10,20,50,100
+                ]
+            },
+            extraParams: {
+				type: Object,
+                default(){
+					return {};
+                }
+            }
 		},
 
 		data(){
@@ -116,17 +128,15 @@
 						last: 'fa fa-angle-double-right',
 					}
 				},
-				params: {},
+				params: this.extraParams,
 				filter: null,
-				perPage: 10
+				perPage: this.perPageOptions[0]
 			}
 		},
 
 		methods: {
 			updateParams(){
-				this.params = {
-					filter: this.filter
-				};
+				this.params.filter = this.filter;
 				Vue.nextTick(() => {
 					this.$refs.table.refresh()
 				})

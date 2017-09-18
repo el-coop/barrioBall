@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\User;
 use App\Notifications\User\ResetPassword;
 use DB;
+use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Notification;
@@ -81,5 +82,7 @@ class ResetPasswordTest extends TestCase
 
 		$response->assertSessionHas('status','Your password has been reset!');
 		$response->assertRedirect(action('HomeController@index'));
+		dump(User::first());
+		$this->assertTrue(Hash::check('123456', User::first()->password));
 	}
 }

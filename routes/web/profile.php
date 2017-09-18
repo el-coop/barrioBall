@@ -1,8 +1,8 @@
 <?php
 
-Route::group(['prefix' => 'user'],function(){
-	Route::get('/', 'UserController@edit');
-	Route::delete('/', 'UserController@destroy');
+Route::group(['prefix' => 'profile', 'middleware' => ['auth']],function(){
+	Route::get('/', 'UserController@show');
+	Route::delete('/', 'UserController@deleteUser');
 	Route::get('/matches', 'UserController@getMatches');
 	Route::patch('/username','UserController@updateUsername');
     Route::patch('/email','UserController@updateEmail');

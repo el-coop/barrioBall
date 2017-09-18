@@ -2,8 +2,8 @@
 return [
 
     'changeUsername' => 'Change Username',
-    'Username' => 'Username',
-    'Updateusername' =>'Update username',
+    'newUsername' => 'New Username',
+    'updateUsername' =>'Update username',
     'changeEmail' => 'Change Email',
     'updateEmail' => 'Update email',
     'changePassword' => 'Change Password',
@@ -12,11 +12,10 @@ return [
     'updateLanguage' => 'Update Language',
     'deleteAccount' => 'Delete account',
     'deleteWarning' => 'Once you delete your account, there is no going back.',
-    'boldDeleteWarning' => 'Please be certain.',
     'deleteYourAccount' => 'Delete your account',
     'others' => 'Others',
-    'viewMessages' => 'View Messages',
-    'latestMatches' => 'Latest Matches',
+	'playedMatches' => 'You play',
+	'mangedMatches' => 'You manage',
     'updatedUsername' => 'Updated Username',
     'updatedPassword' => 'Updated Password',
     'updatedEmail' => 'Updated Email',
@@ -25,4 +24,6 @@ return [
     'password' => 'Password',
     'confirmPassword' => 'Confirm password',
     'language' => 'Language',
+	'view' => 'View Match',
+	'requests' => 'Requests',
 ];

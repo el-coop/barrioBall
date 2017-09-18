@@ -1,29 +1,51 @@
 <script>
     export default{
+    	props: {
+    	    titles: {
+    	    	type: Object,
+    	    	required: true
+            }
+        },
+
         data(){
             return {
-                userMatchFields: [
+				playedMatchesFields: [
+					{
+						name: 'name',
+						title: this.titles.name,
+						dataClass: 'align-middle'
+					},
+					{
+						name: 'id',
+						title: this.titles.view,
+						dataClass: 'text-center',
+						callback: this.link,
+					},
+				],
+				managedMatchesFields: [
+					{
+						name: 'name',
+						title: this.titles.name,
+						dataClass: 'align-middle'
+					},
                     {
-                        name: 'name',
-                        title: 'Name'
+                    	name: 'join_requests_count',
+                        title: this.titles.requests,
+						dataClass: 'text-center align-middle'
                     },
-                    {
-                        name: 'pivot.role',
-                        title: 'Role'
-                    },
-                    {
-                        name: 'id',
-                        title: 'View Match',
-                        callback:this.link,
-                    },
-                ]
+					{
+						name: 'id',
+						title: this.titles.view,
+						dataClass: 'text-center',
+						callback: this.link,
+					},
+				]
             }
         },
 
         methods: {
             link (value) {
-                console.log(this);
-                return "<a href='/matches/" + value + "'><i class='fa fa-search' ></i></a>";
+                return "<a href='/matches/" + value + "'><button class='btn btn-dark'><i class='fa fa-search' ></button></i></a>";
             }
         }
 

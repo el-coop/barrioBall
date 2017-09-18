@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUsernameRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,6 +19,7 @@ class UpdateUsernameRequest extends FormRequest
             return true;
         }
         return false;
+
     }
 
     /**
@@ -29,14 +30,15 @@ class UpdateUsernameRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|max:255|unique:users'
             //
+            'password' => 'required|min:6|confirmed'
         ];
     }
 
+
     public function commit() {
 
-        $this->user()->username = $this->input('username');
+        $this->user()->password = bcrypt($this->input('password'));
         $this->user()->save();
     }
 }

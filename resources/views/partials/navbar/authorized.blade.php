@@ -25,8 +25,8 @@
                 <i class="fa fa-user" aria-hidden="true"></i> |
                 {{ $user->username }}
             </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{ action('UserController@edit') }}">@lang('navbar.profileLink')</a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="{{ action('UserController@show') }}">@lang('navbar.profileLink')</a>
                 <div class="dropdown-divider"></div>
                 <form method="post" action="{{ action("Auth\LoginController@logout") }}">
                     {{ csrf_field() }}

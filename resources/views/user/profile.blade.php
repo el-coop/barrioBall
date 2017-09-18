@@ -4,258 +4,198 @@
 
 @section('content')
     @include('partials.navbar.authorized')
-    <profile-page inline-template>
-        <div class="container">
+    <profile-page inline-template
+                  :titles="{
+                    name: '@lang('create.name')',
+                    view: '@lang('profile/page.view')',
+                    requests: '@lang('profile/page.requests')'
+
+                  }">
+        <div class="container mb-5 mt-5">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-5">
+                    <div class="card mb-2">
+                        @component('partials.components.panel')
+                            @slot('title')
+                                <h4>@lang('profile/page.playedMatches')</h4>
+                            @endslot
+                            <datatable
+                                    url="{{ action('UserController@getMatches')}}"
+                                    :fields="playedMatchesFields"
+                                    :inline-forms="false"
+                                    :per-page-options="[5,10]"
+                                    class="mt-3">
+                            </datatable>
+                        @endcomponent
+                    </div>
 
-                    <form role="form" method="post" action="{{ action('UserController@updateUsername') }}">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="_method" value="PATCH">
+                    @if($user->managedMatches()->count() > 0)
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="text-center">
-                                    @lang('profile/update.changeUsername')
-                                </h4>
-                            </div>
-                            <div class="card-block">
-                                <div class="form-group row">
-                                    <label for="username"
-                                           class="col-md-4 col-form-label text-md-right"><strong>@lang('profile/update.Username')
-                                            :</strong></label>
+                            @component('partials.components.panel')
+                                @slot('title')
+                                    <h4>@lang('profile/page.mangedMatches')</h4>
+                                @endslot
+                                <datatable
+                                        url="{{ action('UserController@getMatches')}}"
+                                        :fields="managedMatchesFields"
+                                        :inline-forms="false"
+                                        :per-page-options="[5,10]"
+                                        :extra-params="{
+                                        managed: true
+                                    }"
+                                        class="mt-3">
+                                </datatable>
+                            @endcomponent
+                        </div>
+                    @endif
+                </div>
 
-                                    <div class="col-md-6">
-                                        <input id="username" type="text" class="form-control" name="username"
-                                               value="{{$user->username}}" required>
+                <div class="col-12 col-md-7">
+                    <form method="post" action="{{ action('UserController@updateUsername') }}">
+                        {{ csrf_field() }}
+                        {{ method_field('patch') }}
+                        <h4 class="">
+                            @lang('profile/page.changeUsername')
+                        </h4>
+                        <hr>
+                        <div class="form-group">
+                            <label for="username">
+                                <strong>@lang('profile/page.newUsername'):</strong>
+                            </label>
+
+                            <input id="username" type="text" class="form-control" name="username"
+                                   value="{{$user->username}}" required>
 
 
-                                    </div>
-                                </div>
+                        </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-4">
-
-                                        <button type="submit" class="btn btn-primary">
-                                            @lang('profile/update.Updateusername')
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('profile/page.updateUsername')
+                            </button>
                         </div>
                     </form>
 
-                    <form role="form" method="post" action="{{ action('UserController@updateEmail') }}">
+                    <form method="post" action="{{ action('UserController@updateEmail') }}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="_method" value="PATCH">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="text-center">
-                                    @lang('profile/update.changeEmail')
-                                </h4>
-                            </div>
-                            <div class="card-block">
-                                <div class="form-group row{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label for="email"
-                                           class="col-md-4 col-form-label text-md-right"><strong>@lang('profile/update.email')
-                                            :</strong></label>
+                        {{ method_field('patch') }}
+                        <h4>
+                            @lang('profile/page.changeEmail')
+                        </h4>
+                        <hr>
+                        <div class="form-group">
+                            <label for="email">
+                                <strong>@lang('profile/page.email'):</strong>
+                            </label>
 
-                                    <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control" name="email"
-                                               value="{{$user->email}}" required>
+                            <input id="email" type="email"
+                                   class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email"
+                                   value="{{$user->email}}" required>
 
-                                        @if ($errors->has('email'))
-                                            <span class="form-control-feedback">
-                                            {{ $errors->first('email') }}
-                                        </span>
-                                        @endif
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-4">
-
-                                        <button type="submit" class="btn btn-primary">
-                                            @lang('profile/update.updateEmail')
-
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            @if ($errors->has('email'))
+                                <span class="invlid-feedback">
+                                    {{ $errors->first('email') }}
+                                </span>
+                            @endif
                         </div>
-
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('profile/page.updateEmail')
+                            </button>
+                        </div>
                     </form>
-                    <form role="form" method="post" action="{{ action('UserController@updatePassword') }}">
+
+                    <form method="post" action="{{ action('UserController@updatePassword') }}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="_method" value="PATCH">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="text-center">
-                                    @lang('profile/update.changePassword')
-                                </h4>
-                            </div>
-                            <div class="card-block">
-                                <div class="form-group row{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label for="password"
-                                           class="col-md-4 col-form-label text-md-right"><strong>New @lang('profile/update.password')
-                                            :</strong></label>
-
-                                    <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control" name="password"
-                                               required>
-
-                                        @if ($errors->has('password'))
-                                            <span class="form-control-feedback">
-     {{ $errors->first('password') }}
- </span>
-                                        @endif
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group row">
-                                    <label for="password-confirm"
-                                           class="col-md-4 col-form-label text-md-right"><strong>@lang('profile/update.confirmPassword')
-                                            :</strong></label>
-
-                                    <div class="col-md-6">
-                                        <input id="password-confirm" type="password" class="form-control"
-                                               name="password_confirmation" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-4">
-
-                                        <button type="submit" class="btn btn-primary">
-                                            @lang('profile/update.updatePassword')
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </div>
+                        {{ method_field('patch') }}
+                        <h4>
+                            @lang('profile/page.changePassword')
+                        </h4>
+                        <hr>
+                        <div class="form-group">
+                            <label for="password">
+                                <strong>New @lang('profile/page.password'):</strong>
+                            </label>
+                            <input id="password" type="password"
+                                   class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                   name="password"
+                                   required>
+                            @if ($errors->has('password'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('password') }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            <label for="password-confirm">
+                                <strong>@lang('profile/page.confirmPassword'):</strong>
+                            </label>
+                            <input id="password-confirm" type="password" class="form-control"
+                                   name="password_confirmation" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                @lang('profile/page.updatePassword')
+                            </button>
                         </div>
                     </form>
                     <form role="form" method="post" action="{{ action('UserController@updateLanguage') }}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="_method" value="PATCH">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="text-center">
-                                    @lang('profile/update.changeLanguage')
-                                </h4>
+                        {{ method_field('patch') }}
+                        <h4>
+                            @lang('profile/page.changeLanguage')
+                        </h4>
+                        <hr>
+
+                        <div class="form-group">
+                            <label for="language">
+                                <strong>@lang('profile/page.language'):</strong>
+                            </label>
+
+
+                            <div class="form-group">
+                                <select id="language" name='language'
+                                        class="form-control{{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                    @foreach (config('languages') as $lang => $language)
+                                        <option value="{{$lang}}"{{ $user->language == $lang ? ' selected' : ''}}>{{ $language }}</option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('language'))
+                                    <span class="invalid-feedback">
+                                        {{ $errors->first('language') }}
+                                    </span>
+                                @endif
                             </div>
-                            <div class="card-block">
-
-
-                                <div class="form-group row{{ $errors->has('language') ? ' has-danger' : '' }}">
-                                    <label for="language"
-                                           class="col-md-4 col-form-label text-md-right"><strong>@lang('profile/update.language')
-                                            :</strong></label>
-
-                                    <div class="col-md-6">
-                                        <select id="language" name='language' class="form-control">
-
-                                            <?php
-
-                                            if($user->language == "en"){
-                                            ?>
-                                            <option value="en">English</option>
-                                            <option value="es">Español</option>
-
-                                            <?php
-                                            } else {
-                                            ?>
-                                            <option value="es">Español</option>
-                                            <option value="en">English</option>
-
-                                            <?php  }  ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-4">
-
-                                        <button type="submit" class="btn btn-primary">
-                                            @lang('profile/update.updateLanguage')
-                                        </button>
-
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    @lang('profile/page.updateLanguage')
+                                </button>
                             </div>
                         </div>
 
                     </form>
-                    <form role="form" method="post" action="/user ">
+                    <form method="post" action="{{ action('UserController@deleteUser') }}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="_method" value="DELETE">
-                        <div class="card">
-                            <div class="card-header alert-danger">
-                                <h4 class="text-center">
-                                    @lang('profile/update.deleteAccount')
-                                </h4>
-                            </div>
-                            <div class="card-block">
+                        {{ method_field('delete') }}
+                        <h4>
+                            @lang('profile/page.deleteAccount')
+                        </h4>
+                        <hr>
 
+                        <div class="form-group">
+                            <p>@lang('profile/page.deleteWarning')</p>
 
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-4"><p>@lang('profile/update.deleteWarning')
-                                            <strong>@lang('profile/update.boldDeleteWarning')</strong></p>
+                            <swal-submit class="btn btn-outline-danger"
+                                         title="@lang('match/show.areYouSure')"
+                                         confirm-text=" @lang('profile/page.deleteYourAccount')"
+                                         cancel-text="No"
+                            ><i class="fa fa-times-circle"></i> @lang('profile/page.deleteYourAccount')
+                            </swal-submit>
 
-
-                                        <swal-submit class="btn btn-outline-danger"
-                                                     title="@lang('match/show.areYouSure')"
-                                                     confirm-text=" @lang('profile/update.deleteYourAccount')"
-                                                     cancel-text="No"
-                                        ><i class="fa fa-times-circle"></i> @lang('profile/update.deleteYourAccount')
-                                        </swal-submit>
-
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                     </form>
-
-                </div>
-
-                <div class="col-md-4 ">
-                    <div class="card ">
-                        <div class="card-header">
-                            <h4 class="text-center">
-                                @lang('profile/update.others')
-                            </h4>
-                        </div>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="/user/matches ">
-                                    @lang('profile/update.viewMessages')
-                                </a></li>
-                        </ul>
-                    </div>
-
-                    <br>
-                    <div class="card ">
-                        <div class="card-header">
-                            <h4 class="text-center">
-                                @lang('profile/update.latestMatches')
-                            </h4>
-                        </div>
-
-                        <ul class="list-group">
-
-                            @foreach($user->matches()->orderBy('created_at', 'decs')->first()->take(10)->get() as $match)
-                                <li class="list-group-item">
-                                    <a href="{{ action('Match\MatchController@showMatch',$match->id) }}">
-                                        {{$match->name}}
-                                    </a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    {{--</div>--}}
                 </div>
             </div>
         </div>
@@ -264,21 +204,21 @@
 @section('scripts')
     @if(Session::has('alert'))
         <script>
-            swal({
-                title: 'Success',
-                text: '{{ Session::get('alert') }}',
-                type: 'success',
-                timer: 2000
-            });
+			swal({
+				title: 'Success',
+				text: '{{ Session::get('alert') }}',
+				type: 'success',
+				timer: 2000
+			});
         </script>
     @elseif(count($errors) > 0)
         <script>
-            swal({
-                title: 'Error',
-                text: '{{ $errors->first() }}',
-                type: 'error',
-                timer: 2000
-            });
+			swal({
+				title: 'Error',
+				text: '{{ $errors->first() }}',
+				type: 'error',
+				timer: 2000
+			});
         </script>
     @endif
 @endsection

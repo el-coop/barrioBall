@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLanguageRequest extends FormRequest
+class UpdateEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,14 +28,14 @@ class UpdateLanguageRequest extends FormRequest
     public function rules()
     {
         return [
+            'email' => 'required|email|max:255|unique:users'
             //
-            'language' => 'required|in:en,es'
         ];
     }
 
     public function commit() {
 
-        $this->user()->language = $this->input('language');
+        $this->user()->email = $this->input('email');
         $this->user()->save();
     }
 }

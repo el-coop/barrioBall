@@ -8,7 +8,7 @@ return [
 	'managementLeft' => 'Usted ya no es un gerente',
 	'managedBy' => 'Gestionado por',
 	'joinRequest' => 'Únase',
-	'leaveMatch' => 'Dejese',
+	'leaveMatch' => 'Deje el partido',
 	'inviteManagers' => 'Invitar gerentes',
 	'stopManaging' => 'Bajarse de la gestión',
 	'deleteMatch' => 'Borrar el partido',
