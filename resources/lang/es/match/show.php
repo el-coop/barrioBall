@@ -14,7 +14,7 @@ return [
 	'deleteMatch' => 'Borrar el partido',
 	'players' => 'Jugadores',
 	'invitePlaceholder' => 'Ingrese nombre de usario',
-	'areYouSure' => "¿Estás seguro?",
+	'areYouSure' => "¿Está seguro?",
 	'login' => 'Inicie session para unirse al partido',
 	'waitingForResponse' => 'Esperando respuesta',
 	'introduceYourself' => 'Presentese a los gerentes',
