@@ -58,7 +58,7 @@ class ErrorTest extends TestCase
 		$this->assertDatabaseHas('js_errors',[
 			'class' => 'message',
 			'user_agent' => 'firefox',
-			'vm' => '"vm"'
+			'vm' => 'vm'
 		]);
 	}
 

@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Match;
 
 use App\Http\Requests\Match\CreateMatchRequest;
 use App\Http\Requests\Match\DeleteMatchRequest;
-use App\Http\Requests\Match\JoinMatchRequest;
-use App\Http\Requests\Match\leaveMatchRequest;
 use App\Http\Requests\Match\SearchRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

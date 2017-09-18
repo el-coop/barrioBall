@@ -21,12 +21,11 @@ return [
     'language' => 'Idioma',
     'login' => 'Ingresar',
     'register' => 'Registrate',
-    'notMemberYet' => 'Todavía no tenés una cuenta',
+    'notMemberYet' => '¿Todavía no tienes una cuenta?',
     'rememberMe' => 'Recordarme',
     'forgetMe' => 'Olvidé mi contraseña',
     'alreadyRegistred' => '¿Ya tienes una cuenta?',
 	'username' => 'Nombre de usuario',
-    'alreadyRegistred' => '¿Ya tenés una cuenta?',
     'Edit' => 'editar usuario'
 
 

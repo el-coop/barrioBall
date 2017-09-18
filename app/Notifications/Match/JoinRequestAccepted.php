@@ -26,6 +26,7 @@ class JoinRequestAccepted extends Notification
 	 * @var
 	 */
 	protected $manager;
+	protected $language;
 
 	/**
      * Create a new notification instance.
@@ -38,6 +39,7 @@ class JoinRequestAccepted extends Notification
 		$this->user = $user;
 		$this->match = $match;
 		$this->message = $message;
+		$this->language = $this->user->language;
 		$this->manager = $manager;
 	}
 

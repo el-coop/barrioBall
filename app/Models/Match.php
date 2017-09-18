@@ -11,14 +11,12 @@ class Match extends Model {
 
 	public function getDateAttribute($value) {
 		$date = new Carbon($value);
-
 		return $date->format('d/m/y');
 	}
 
 
 	public function getTimeAttribute($value) {
 		$date = new Carbon($value);
-
 		return $date->format('H:i');
 	}
 
