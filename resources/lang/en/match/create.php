@@ -12,13 +12,16 @@ return [
     |
     */
 
-    'create' => 'Create a new Match',
+    'create' => 'Create Match',
+	'coordinateError' => 'An error occurred calculating the map co-ordinates, please try again.',
+	'chooseOnMap' => 'Please choose location on the <a @click="toggleMap" href="#">map</a>.',
+	'locationTooltip' => 'Right click on desktop, long press on touch screen',
+	'confirmAddress' => 'Please confirm the address',
     'name' => 'Match Name',
     'map' => 'Map',
     'address' => 'Address',
     'date' => 'Date',
-    'from' => 'From',
-    'public' => 'Public',
+    'startTime' => 'Time',
     'players' => 'Number of Players',
     'description' => 'Description'
 

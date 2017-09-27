@@ -73,9 +73,9 @@
             toggleMap(){
 				this.mapToggled = ! this.mapToggled;
 				if(this.mapToggled){
-					this.mapBtn = this.searchName;;
+					this.mapBtn = this.searchName;
                 } else {
-					this.mapBtn = this.mapName;;
+					this.mapBtn = this.mapName;
                 }
             },
 

@@ -2,7 +2,7 @@
     <div class="map">
     </div>
 </template>
-<style>
+<style scoped>
     .map {
         width: 100%;
         height: 100%;
@@ -68,6 +68,10 @@
 				}
 				this.map.zoomControl.disable()
 				this.$el.style.cursor='default';
+            },
+
+            rightClick(ev){
+            	this.$emit('right-click',ev);
             }
 		},
 
@@ -100,6 +104,10 @@
 					iconSize: [30, 30]
 				})});
 				this.addMarker(marker);
+            });
+
+			this.map.on('contextmenu',(ev) => {
+				this.rightClick(ev);
             });
 		}
 

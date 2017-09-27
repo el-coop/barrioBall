@@ -16,8 +16,8 @@ class MatchController extends Controller
 	}
 
 	public function create(CreateMatchRequest $request) {
-		$match = $request->commit($request->user());
-		return redirect()->action('Match\PagesController@welcome');
+		$match = $request->commit();
+		return redirect()->action('Match\MatchController@showMatch', $match);
 	}
 
 	public function showMatch(Request $request, Match $match){
