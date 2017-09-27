@@ -82,7 +82,6 @@ class ResetPasswordTest extends TestCase
 
 		$response->assertSessionHas('status','Your password has been reset!');
 		$response->assertRedirect(action('HomeController@index'));
-		dump(User::first());
 		$this->assertTrue(Hash::check('123456', User::first()->password));
 	}
 }

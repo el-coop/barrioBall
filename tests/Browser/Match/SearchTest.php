@@ -31,10 +31,6 @@ class SearchTest extends DuskTestCase {
 		});
 	}
 
-	/**
-	 * @group current
-	 */
-
 	public function test_shows_search_results(){
 		$this->browse(function (Browser $browser) {
 
@@ -48,6 +44,7 @@ class SearchTest extends DuskTestCase {
 
 			$browser->visit(action('Match\MatchController@showSearch'))
 				->waitFor('.leaflet-map-pane', 20)
+				->type('date',date('d/m/y'))
 				->type('from','00:01')
 				->type('to','23:59')
 				->click('.sm-btn-block');
