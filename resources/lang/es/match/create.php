@@ -12,13 +12,17 @@ return [
     |
     */
 
-    'create' => 'Crear Nuevo Partido',
-    'name' => 'Nombre',
+    'create' => 'Crear Partido',
+
+	'coordinateError' => 'Se ha ocurrido un error al calcular las coordenadas del mapa. Inténtelo de nuevo.',
+	'chooseOnMap' => 'Elija la ubicación en el <a @click="toggleMap" href="#"> mapa</a>.',
+	'locationTooltip' => 'Haga clic con el botón derecho en el escritorio, presione larga en la pantalla táctil',
+	'confirmAddress' => 'Por favor, confirme la dirección',
+	'name' => 'Nombre',
     'map' => 'Mapa',
     'address' => 'Dirección',
     'date' => 'Fecha',
-    'from' => 'De',
-    'public' => 'Publico',
+    'from' => 'Hora',
     'players' => 'Numero de Jugadores',
     'description' => 'Descripción'
 

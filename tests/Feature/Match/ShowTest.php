@@ -65,7 +65,8 @@ class ShowTest extends TestCase
 		$response->assertDontSeeText(__('match/show.joinRequest'));
 
 		$response = $this->post( action('Match\MatchUsersController@joinMatch', $this->match));
-		$response->assertStatus(403);
+		$response->assertStatus(302);
+		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
 	public function test_joined_cant_join_match(){
@@ -104,8 +105,8 @@ class ShowTest extends TestCase
 		$response->assertDontSeeText(__('match/show.leaveMatch'));
 
 		$response = $this->delete( action('Match\MatchUsersController@leaveMatch', $this->match));
-
-		$response->assertStatus(403);
+		$response->assertStatus(302);
+		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
 	public function test_delete_match(){

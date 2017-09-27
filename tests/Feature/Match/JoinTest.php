@@ -115,7 +115,8 @@ class JoinTest extends TestCase {
 			'match_id' => Match::first()->id
 		]);
 
-		$response->assertStatus(403);
+		$response->assertStatus(302);
+		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
 	public function test_sends_email_when_request_sent() {
@@ -172,7 +173,8 @@ class JoinTest extends TestCase {
 			'message' => 'bla'
 		]);
 
-		$response->assertStatus(403);
+		$response->assertStatus(302);
+		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 		$this->assertDatabaseHas('join_match_requests', [
 			'user_id' => $this->player->user->id,
 			'match_id' => Match::first()->id
@@ -252,7 +254,9 @@ class JoinTest extends TestCase {
 			'message' => 'bla'
 		]);
 
-		$response->assertStatus(403);
+		$response->assertStatus(302);
+		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
+
 		$this->assertDatabaseHas('join_match_requests', [
 			'user_id' => $this->player->user->id,
 			'match_id' => Match::first()->id

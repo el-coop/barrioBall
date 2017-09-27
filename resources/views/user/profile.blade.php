@@ -6,7 +6,7 @@
     @include('partials.navbar.authorized')
     <profile-page inline-template
                   :titles="{
-                    name: '@lang('create.name')',
+                    name: '@lang('match/create.name')',
                     view: '@lang('profile/page.view')',
                     requests: '@lang('profile/page.requests')'
 

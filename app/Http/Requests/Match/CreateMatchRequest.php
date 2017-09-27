@@ -27,26 +27,31 @@ class CreateMatchRequest extends FormRequest {
 	 */
 	public function rules() {
 		return [
-			'name' => 'required',
-			'address' => 'required',
-			'lat' => 'required',
-			'lng' => 'required',
-			'players' => 'required|int|min:8|max:22'
+			'name' => 'required|min:3',
+			'address' => 'required|min:3',
+			'description' => 'required|min:3',
+			'lat' => 'required|numeric',
+			'lng' => 'required|numeric',
+			'players' => 'required|int|min:8|max:22',
+			'date' => 'required|date_format:d/m/y',
+			'time' => 'required|date_format:H:i',
 		];
 	}
 
-	public function commit(User $user) {
+	public function commit() {
 		$match = new Match();
 		$match->name = $this->input('name');
 		$match->address = $this->input('address');
 		$match->lat = $this->input('lat');
 		$match->lng = $this->input('lng');
-		$match->public = $this->has('public');
+		$match->public = 1;
 		$match->players = $this->input('players');
 		$match->description = $this->input('description');
 		$match->date = $this->input('date');
 		$match->time = $this->input('time');
 		$match->save();
-		$match->addManager($user);
+		$match->addManager($this->user());
+
+		return $match;
 	}
 }
