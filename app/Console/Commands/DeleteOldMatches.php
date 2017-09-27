@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Match;
+use App\Notifications\Match\OldMatchDeleted;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -13,7 +14,7 @@ class DeleteOldMatches extends Command
      *
      * @var string
      */
-    protected $signature = 'matches:deleteOld';
+    protected $signature = 'match:deleteOld';
 
     /**
      * The console command description.
@@ -39,24 +40,13 @@ class DeleteOldMatches extends Command
      */
     public function handle()
     {
-        echo 'hello';
-        $matches = Match::all();
-        // dump($matches);
-        echo "\r\n";
+        $matches = Match::where('date', '<', new Carbon("7 days ago"))->get();
 
-        $date = new Carbon("7 days ago");
-        dump($date);
-        echo $date->format('d/m/y');
-
-        /*
-        foreach ($matches as $match) {
-            if ($match->date < '24/06/17') {
-                echo $match->name;
-                echo " - on ";
-                echo $match->date;
-                echo "\r\n";
-            }
-        } */
-
+        foreach($matches as $match){
+			$match->managers->each(function ($manager,$index) use($match){
+				$manager->notify(new OldMatchDeleted($match,$manager));
+			});
+			$match->delete();
+		}
     }
 }
