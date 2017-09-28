@@ -1,8 +1,8 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section('title','Errors Table')
 
 @section('content')
-    @include('partials.navbar.authorized')
+    @parent
 
     <errors-page inline-template
                  delete-url="/admin/errors"

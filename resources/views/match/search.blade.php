@@ -1,12 +1,8 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section('title','Search Matches')
 
 @section('content')
-    @if($user)
-        @include('partials.navbar.authorized')
-    @else
-        @include('partials.navbar.unauthorized')
-    @endif
+    @parent
 
     <search-page inline-template map-name="@lang('match/search.map')" search-name="@lang('match/search.search')" v-cloak>
         <div class="container-fluid sm-full-height"

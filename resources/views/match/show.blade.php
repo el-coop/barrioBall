@@ -1,12 +1,8 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section('title',$match->name)
 
 @section('content')
-    @if($user)
-        @include('partials.navbar.authorized')
-    @else
-        @include('partials.navbar.unauthorized')
-    @endif
+    @parent
     <show-page inline-template>
         <div class="container">
             <div class="row mt-2">

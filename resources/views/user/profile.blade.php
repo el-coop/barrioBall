@@ -1,9 +1,9 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section ('title','Profile')
 
 
 @section('content')
-    @include('partials.navbar.authorized')
+    @parent
     <profile-page inline-template
                   :titles="{
                     name: '@lang('match/create.name')',

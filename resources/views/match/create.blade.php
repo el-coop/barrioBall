@@ -1,8 +1,8 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section('title','Create Match')
 
 @section('content')
-    @include('partials.navbar.authorized')
+    @parent
     <create-page inline-template
                  map-name="@lang('match/search.map')"
                  search-name="@lang('match/create.create')"
