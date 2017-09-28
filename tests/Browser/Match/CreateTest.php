@@ -26,7 +26,7 @@ class CreateTest extends DuskTestCase {
 		$this->browse(function (Browser $browser) {
 			$browser->resize(320, 640)
 				->loginAs($this->user->user)
-				->visit(action('Match\MatchController@create'))
+				->visit(action('Match\MatchController@showCreate'))
 				->assertVisible('.flipper:not(.flipped)')
 				->click('.btn.btn-primary')
 				->assertVisible('.flipper.flipped')
@@ -41,7 +41,7 @@ class CreateTest extends DuskTestCase {
 	public function test_gets_address_confirmation_dialog(){
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->user->user)
-				->visit(action('Match\MatchController@create'))
+				->visit(action('Match\MatchController@showCreate'))
 				->assertVisible('.fa.fa-info-circle')
 				->rightClick('.leaflet-proxy.leaflet-zoom-animated')
 				->waitFor('.swal2-container.swal2-shown', null)
@@ -55,7 +55,7 @@ class CreateTest extends DuskTestCase {
 	public function test_shows_error_messages(){
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->user->user)
-				->visit(action('Match\MatchController@create'))
+				->visit(action('Match\MatchController@showCreate'))
 				->assertVisible('.fa.fa-info-circle')
 				->rightClick('.leaflet-proxy.leaflet-zoom-animated')
 				->waitFor('.swal2-container.swal2-shown', null)
@@ -77,7 +77,7 @@ class CreateTest extends DuskTestCase {
 	public function test_creates_match(){
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->user->user)
-				->visit(action('Match\MatchController@create'))
+				->visit(action('Match\MatchController@showCreate'))
 				->assertVisible('.fa.fa-info-circle')
 				->rightClick('.leaflet-proxy.leaflet-zoom-animated')
 				->waitFor('.swal2-container.swal2-shown', null)
