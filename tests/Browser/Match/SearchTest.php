@@ -3,6 +3,7 @@
 namespace Tests\Browser\Match;
 
 use App\Models\Match;
+use Carbon\Carbon;
 use Faker\Generator;
 use Faker\Provider\Base;
 use Tests\DuskTestCase;
@@ -37,14 +38,14 @@ class SearchTest extends DuskTestCase {
 			$faker = new Base(new Generator());
 
 			$matches = factory(Match::class,5)->create([
-				'date' => date('y/m/d'),
+				'date' => (new Carbon())->addDay()->format('y/m/d'),
 				'lat' => $faker->randomFloat(15, 0, 5),
 				'lng' => $faker->randomFloat(15, 0, 5),
 			]);
 
 			$browser->visit(action('Match\MatchController@showSearch'))
 				->waitFor('.leaflet-map-pane', 20)
-				->type('date',date('d/m/y'))
+				->type('date',(new Carbon())->addDay()->format('d/m/y'))
 				->type('from','00:01')
 				->type('to','23:59')
 				->click('.sm-btn-block');

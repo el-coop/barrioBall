@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.5 on 2017-09-19.
+ * Generated for Laravel 5.5.13 on 2017-10-01.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -8922,6 +8922,18 @@ namespace Illuminate\Support\Facades {
         public static function getLastGroupPrefix()
         {
             return \Illuminate\Routing\Router::getLastGroupPrefix();
+        }
+        
+        /**
+         * Return the response returned by the given route.
+         *
+         * @param string $name
+         * @return mixed 
+         * @static 
+         */ 
+        public static function respondWithRoute($name)
+        {
+            return \Illuminate\Routing\Router::respondWithRoute($name);
         }
         
         /**

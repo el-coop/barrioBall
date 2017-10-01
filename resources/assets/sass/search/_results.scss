@@ -21,20 +21,6 @@
 .search-result-map {
 	width: 100%;
 	min-height: 200px;
-	position: relative;
-
-	& > .map {
-		position: absolute;
-		z-index: 1;
-		opacity: 0.2;
-	}
-
-	& > div {
-		z-index: 2;
-		color: #000000;
-		padding: 10px;
-
-	}
 }
 
 #search-page {

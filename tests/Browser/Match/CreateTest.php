@@ -5,6 +5,7 @@ namespace Tests\Browser\Match;
 use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -84,7 +85,7 @@ class CreateTest extends DuskTestCase {
 				->type('.swal2-input','test')
 				->click('.swal2-confirm.swal2-styled')
 				->type('name','test')
-				->type('date','30/09/17')
+				->type('date',(new Carbon())->addDay()->format('d/m/y'))
 				->type('time','20:00')
 				->type('description','test')
 				->click('.btn.btn-primary.btn-block')

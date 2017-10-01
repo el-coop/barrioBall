@@ -1,80 +1,22 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 @section('title','Search Matches')
 
 @section('content')
-    @if($user)
-        @include('partials.navbar.authorized')
-    @else
-        @include('partials.navbar.unauthorized')
-    @endif
+    @parent
 
-    <search-page inline-template map-name="@lang('match/search.map')" search-name="@lang('match/search.search')" v-cloak>
+    <search-page inline-template map-name="@lang('match/search.map')" search-name="@lang('match/search.search')"
+                 v-cloak>
         <div class="container-fluid sm-full-height"
              :class="{ 'sm-no-side-padding' : mapToggled, 'fixed-loading' : loading}" id="search-page">
             <flipper :flipped="mapToggled">
                 <div class="content-static-right" slot="front">
                     <div class="row mb-4">
                         <div class="col-12 mt-3">
-                            <ajax-form class="form-inline justify-content-center" :auto-submit="false"
-                                       v-on:submit-clicked="submit"
-                                       v-on:search-completed="searchResults" v-on:error="showErrors" :errors-box="false"
-                                       btn-wrapper-class="sm-btn-block align-self-baseline"
-                                       ref="form">
-                                <div class="mb-2 mr-sm-2 w-100-sm-down align-self-baseline"
-                                     :class="{'is-invalid' : errors.hasOwnProperty('date')}"
-                                     id="date_group">
-                                    <date-picker label="@lang('match/search.date'):" name="date"></date-picker>
-                                    <span class="invalid-feedback"
-                                          v-if="errors.hasOwnProperty('to')">* @{{ errors.date[0]}}</span>
-                                </div>
-                                <div class="mb-2 mr-sm-2 w-100-sm-down align-self-baseline"
-                                     :class="{'is-invalid' : errors.hasOwnProperty('from')}"
-                                     id="start_time_group">
-                                    <time-picker label="@lang('match/search.from'):" name="from"></time-picker>
-                                    <span class="invalid-feedback"
-                                          v-if="errors.hasOwnProperty('from')">* @{{ errors.from[0] }}</span>
-                                </div>
-                                <div class="mb-2 mr-sm-2 w-100-sm-down align-self-baseline"
-                                     :class="{'is-invalid' : errors.hasOwnProperty('to')}"
-                                     id="end_time_group">
-                                    <time-picker label="@lang('match/search.to'):" name="to"></time-picker>
-                                    <span class="invalid-feedback"
-                                          v-if="errors.hasOwnProperty('to')">* @{{ errors.to[0]}}</span>
-                                </div>
-                                <i class="fa fa-search" slot="submit"></i>
-                            </ajax-form>
+                            @include('match.searchPartials.form')
                         </div>
                     </div>
                     <div class="row mr-md-1">
-                        <div class="col-12" v-if="matches != null && !matches.length">
-                            <h4 class="text-center">
-                                @lang('match/search.noMatchesFound')
-                            </h4>
-                        </div>
-                        <div class="col-12 col-md-6 mb-3" v-for="(match, index) in matches">
-                            <div class="card" :class="{ selected: selectedResult == index}"
-                                 :ref="'result' + index" @mouseenter="resultHover(index)"
-                                 @mouseleave="stopHover(index)">
-                                <div class="card-header bg-white">
-                                    <a :href="'matches/' + match.id">@{{ match.name  }}</a>
-                                    <span class="pull-right">@{{ match.date }} @{{ match.time }}</span>
-                                </div>
-                                <div class="card-block search-result-map-wrapper">
-                                    <div class="search-result-map">
-                                        <leaflet-map :interactive="false" :zoom="13" :center="[match.lat,match.lng]">
-                                        </leaflet-map>
-                                        <div class="row">
-                                            <div class="col-7"><strong>@{{ match.address }}</strong></div>
-                                            <div class="col-5 text-right">
-                                                <strong>@{{ match.players }} @lang('match/search.players')</strong></div>
-                                            <div class="col-12">
-                                                <p>@{{ match.description }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @include('match.searchPartials.results')
                     </div>
                     <div class="row mb-5 mb-md-2" v-if="pages">
                         <div class="col-12 d-flex">

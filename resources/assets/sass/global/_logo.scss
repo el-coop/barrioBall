@@ -1,0 +1,18 @@
+.logo {
+	width: 600px;
+	max-width: 100%;
+	position: relative;
+
+	& > h3 {
+		position: absolute;
+		color: white;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+}
+
+.navbar-logo {
+	width: 30px;
+	vertical-align: top;
+}

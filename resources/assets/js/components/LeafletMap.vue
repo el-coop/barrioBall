@@ -2,12 +2,6 @@
     <div class="map">
     </div>
 </template>
-<style scoped>
-    .map {
-        width: 100%;
-        height: 100%;
-    }
-</style>
 <script>
 	export default{
 		props: {

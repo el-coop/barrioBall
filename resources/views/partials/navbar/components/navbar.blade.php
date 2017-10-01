@@ -2,7 +2,10 @@
     @if($container ?? false)
         <div class="container">
             @endif
-            <a class="navbar-brand" href="/">{{config('app.name')}}</a>
+            <a class="navbar-brand" href="/">
+                <img src="{{ asset('images/logo.png') }}" class="navbar-logo">
+                {{config('app.name')}}
+            </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                     data-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>

@@ -12,7 +12,8 @@
     <title>@yield('title') | {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ asset('images/logo.png') }}">
 
     <!-- Scripts -->
     <script>
@@ -29,7 +30,7 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/app.js"></script>
+<script src="{{ mix('/js/app.js') }}"></script>
 @yield('scripts')
 </body>
 </html>

@@ -1,9 +1,9 @@
-@extends('layouts.plain')
+@extends('layouts.app')
 
 @section('title','Reset Password')
 
 @section('content')
-    @include ('partials.navbar.unauthorized')
+    @parent
     <div class="container my-5">
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
