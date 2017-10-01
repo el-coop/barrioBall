@@ -7,17 +7,17 @@
     <errors-page inline-template
                  delete-url="/admin/errors"
                  :translate="{
-                    error: '@lang('Admin/errors.error')',
-                    user: '@lang('Admin/errors.user')',
-                    date: '@lang('Admin/errors.date')',
-                    resolve: '@lang('Admin/errors.resolve')'
+                    error: '@lang('admin/errors.error')',
+                    user: '@lang('admin/errors.user')',
+                    date: '@lang('admin/errors.date')',
+                    resolve: '@lang('admin/errors.resolve')'
                  }">
         <div class="container-fluid mb-5 mt-5">
             <div class="row">
                 <div class="col-12">
                     @component('partials.components.panel')
                         @slot('title')
-                            <h4>@lang('Admin/errors.phpErrors')</h4>
+                            <h4>@lang('admin/errors.phpErrors')</h4>
                         @endslot
                         <datatable
                                 url="{{ action('Admin\ErrorController@getPhpErrors')}}"
@@ -41,7 +41,7 @@
                 <div class="col-12">
                     @component('partials.components.panel')
                         @slot('title')
-                            <h4>@lang('Admin/errors.jsErrors')</h4>
+                            <h4>@lang('admin/errors.jsErrors')</h4>
                         @endslot
                         <datatable
                                 url="{{ action('Admin\ErrorController@getJsErrors') }}"

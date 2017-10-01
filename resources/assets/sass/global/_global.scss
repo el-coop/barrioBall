@@ -1,0 +1,11 @@
+@import "map";
+@import "logo";
+@import "hero";
+
+.opaque {
+	opacity: 0.2;
+}
+
+.footer {
+	background-color: darken($body-bg, 4%);
+}
