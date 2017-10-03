@@ -8,6 +8,10 @@
 		.card-header {
 			background-color: #1a69a4 !important;
 			color: white;
+
+			> a {
+				color: #fff;
+			}
 		}
 	}
 }
