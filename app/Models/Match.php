@@ -77,4 +77,11 @@ class Match extends Model {
 	public function addJoinRequest(User $user){
 		return $this->joinRequests()->save($user);
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isFull(): bool {
+		return $this->registeredPlayers()->count() >= $this->players;
+	}
 }

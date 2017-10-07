@@ -21,5 +21,6 @@ return [
 	'joinRequests' => 'Join Requests',
 	'add1' => 'Add',
 	'add2' => 'to match',
-	'rejectRequest' => 'Reject request from'
+	'rejectRequest' => 'Reject request from',
+	'matchFull' => 'Match is full',
 ];

@@ -6,44 +6,46 @@ use App\Events\Match\JoinRequestSent;
 use App\Events\Match\UserJoined;
 use Illuminate\Foundation\Http\FormRequest;
 
-class JoinMatchRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-    	if(! $this->user() || $this->user()->inMatch($this->route('match')) || $this->user()->sentRequest($this->route('match'))){
-    		return false;
+class JoinMatchRequest extends FormRequest {
+	protected $match;
+
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize() {
+		$this->match = $this->route('match');
+
+		if (!$this->user() || $this->user()->inMatch($this->match) || $this->user()->sentRequest($this->match) || $this->match->isFull()) {
+			return false;
 		}
-        return true;
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            'message' => 'string|max:500|nullable'
-        ];
-    }
+		return true;
+	}
 
-	public function commit(){
-    	$match = $this->route('match');
-    	if($this->user()->isManager($match)){
-			$match->addPlayer($this->user());
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules() {
+		return [
+			'message' => 'string|max:500|nullable',
+		];
+	}
+
+	public function commit() {
+		if ($this->user()->isManager($this->match)) {
+			$this->match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(),$match));
+			event(new UserJoined($this->user(), $this->match));
 		} else {
-			$match->joinRequests()->save($this->user());
+			$this->match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-			event(new JoinRequestSent($this->user(),$match, $this->input('message')));
+			event(new JoinRequestSent($this->user(), $this->match, $this->input('message')));
 		}
+
 		return $message;
 	}
 }

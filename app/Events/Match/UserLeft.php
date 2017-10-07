@@ -16,8 +16,8 @@ class UserLeft
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	protected $user;
-	protected $match;
+	public $user;
+	public $match;
 
 	/**
 	 * Create a new event instance.

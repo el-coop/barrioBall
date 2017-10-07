@@ -22,6 +22,18 @@
                     class="fa fa-minus-circle"></i> @lang('match/show.leaveMatch')
         </button>
     </form>
+@elseif($user->sentRequest($match))
+    <div class="mt-1 bm-1">
+        <button class="btn btn-info sm-btn-block" disabled><i
+                    class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
+        </button>
+    </div>
+@elseif($match->isFull())
+    <div class="mt-1 bm-1">
+        <button class="btn btn-info sm-btn-block" disabled><i
+                    class="fa fa-info-circle"></i> @lang('match/show.matchFull')
+        </button>
+    </div>
 @elseif($user->isManager($match))
     <form method="post" action="{{ action('Match\MatchUsersController@joinMatch', $match) }}"
           class="mt-1 mb-1">
@@ -30,12 +42,6 @@
                     class="fa fa-plus-circle"></i> @lang('match/show.joinRequest')
         </button>
     </form>
-@elseif($user->sentRequest($match))
-    <div class="mt-1 bm-1">
-        <button class="btn btn-info sm-btn-block" disabled><i
-                    class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
-        </button>
-    </div>
 @else
     <div class="mt-1 mb-1">
         <button class="btn btn-success sm-btn-block" @click="toggleModal('joinRequest')"><i

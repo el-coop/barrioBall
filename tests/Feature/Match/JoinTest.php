@@ -57,6 +57,35 @@ class JoinTest extends TestCase {
 	/**
 	 * @test
 	 */
+	public function test_admin_cant_repeat_join(): void {
+		$this->match->addPlayer($this->manager);
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(UserJoined::class);
+	}
+
+	/**
+	 * @test
+	 */
+	public function test_admin_cant_join_full_match(): void {
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(UserJoined::class);
+	}
+
+	/**
+	 * @test
+	 */
 	public function test_sends_email_to_admins_when_user_joins(): void {
 		Notification::fake();
 
@@ -72,7 +101,7 @@ class JoinTest extends TestCase {
 	public function test_player_can_send_join_request(): void {
 		Event::fake();
 		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -93,8 +122,25 @@ class JoinTest extends TestCase {
 		Event::fake();
 
 		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(JoinRequestSent::class);
+	}
+
+
+	/**
+	 * @test
+	 */
+	public function test_player_cant_send_join_request_to_full_match(): void {
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
 
 		$response->assertStatus(403);
 		Event::assertNotDispatched(JoinRequestSent::class);
@@ -106,7 +152,7 @@ class JoinTest extends TestCase {
 	public function test_not_loged_in_cant_send_join_request(): void {
 		Event::fake();
 		$response = $this->post(action('Match\MatchUsersController@joinMatch', $this->match), [
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$this->assertFalse($this->match->hasJoinRequest($this->player));
@@ -137,7 +183,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -158,7 +204,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -177,7 +223,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 		$response = $this->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -207,7 +253,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -226,11 +272,11 @@ class JoinTest extends TestCase {
 	/**
 	 * @test
 	 */
-	public function test_cant_accept_non_existent_request(): void{
+	public function test_cant_accept_non_existent_request(): void {
 		Event::fake();
 		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -251,7 +297,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 		$response = $this->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'bla'
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
@@ -271,11 +317,11 @@ class JoinTest extends TestCase {
 	/**
 	 * @test
 	 */
-	public function test_user_is_notified_when_request_is_accepted(): void{
+	public function test_user_is_notified_when_request_is_accepted(): void {
 		Notification::fake();
 
 		$listener = new SendJoinRequestAcceptedNotification();
-		$listener->handle(new UserJoined($this->player, $this->match,'Test'));
+		$listener->handle(new UserJoined($this->player, $this->match, 'Test'));
 
 		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
 	}

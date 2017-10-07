@@ -21,6 +21,7 @@ return [
 	'joinRequests' => 'Solicitudes de afiliación',
 	'add1' => 'Agrege',
 	'add2' => 'al partido',
-	'rejectRequest' => 'Rechaze la solicitud de'
+	'rejectRequest' => 'Rechaze la solicitud de',
+	'matchFull' => 'El partido está lleno',
 
 ];
