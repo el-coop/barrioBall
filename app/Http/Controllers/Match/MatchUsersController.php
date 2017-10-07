@@ -66,7 +66,6 @@ class MatchUsersController extends Controller {
 	public function removePlayer(RemovePlayerRequest $request, Match $match) {
 		$request->commit();
 
-		return back()->with('alert', 'The user was removed from the match');
-
+		return back()->with('alert', __('match/removePlayer.removed'));
 	}
 }

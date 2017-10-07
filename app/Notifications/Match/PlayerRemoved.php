@@ -45,9 +45,14 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 	 */
 	public function toMail($notifiable) {
 		return (new MailMessage)
-			->subject('You were removed from ' . $this->match->name)
+			->subject(__('mail/playerRemoved.subject',[
+				'match' => $this->match->name
+			], $this->language))
 			->greeting(__('mail/global.hello', [], $this->language) . ',')
-			->line('You were removed from ' . $this->match->name)
+			->line(__('mail/playerRemoved.youWereRemoved',[
+				'url' => action('Match\MatchController@showMatch', $this->match),
+				'match' => $this->match->name
+			], $this->language))
 			->line(__('mail/global.adminSays', [], $this->language))
 			->quote($this->message)
 			->salutation(__('mail/global.dontReply', [], $this->language));

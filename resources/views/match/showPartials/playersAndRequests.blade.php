@@ -75,14 +75,14 @@
             <input type="hidden" :value="userId" name="user">
             <div class="form-group">
                 <label for="message">
-                    Remove @{{ user }} from match?
+                    @lang('global.message') @{{ user }}
                     <span class="text-muted">(500 chars max)</span>:
                 </label>
                 <textarea class="form-control" name="message" rows="6" v-model="message"
                           @keyup="limitMessage"></textarea>
             </div>
             <button class="btn btn-danger btn-block">
-                <i class="fa fa-minus-circle"></i> Kick @{{user}} from match
+                <i class="fa fa-minus-circle"></i> @lang('match/removePlayer.confirm')
             </button>
         </form>
     </modal>
