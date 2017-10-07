@@ -80,11 +80,11 @@ class MatchUsersController extends Controller {
 	 * @return RedirectResponse
 	 */
 	public function acceptJoin(AcceptJoinRequest $request, Match $match): RedirectResponse {
-		if ($message = $request->commit()) {
-			return back()->with('alert', $message);
-		}
+		$request->commit();
 
-		return back()->with('error', "The join request was canceled/rejected/accepted before you accepted it");
+		return back()->with('alert', __('match/requests.accepted'));
+
+
 	}
 
 	/**

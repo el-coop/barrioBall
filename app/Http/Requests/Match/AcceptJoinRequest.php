@@ -50,7 +50,5 @@ class AcceptJoinRequest extends FormRequest {
 		$this->match->addPlayer($user);
 		$this->match->joinRequests()->detach($user);
 		event(new UserJoined($user, $this->match, $this->input('message')));
-
-		return "{$user->username} successfully added to the match";
 	}
 }

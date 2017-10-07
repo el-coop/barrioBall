@@ -6,6 +6,13 @@ use App;
 use Closure;
 
 class Language {
+
+	/**
+	 * @param $request
+	 * @param Closure $next
+	 *
+	 * @return mixed
+	 */
 	public function handle($request, Closure $next) {
 		if ($user = $request->user()) {
 			App::setLocale($user->language);

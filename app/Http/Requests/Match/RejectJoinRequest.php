@@ -51,6 +51,5 @@ class RejectJoinRequest extends FormRequest
 		$user = User::find($this->input('user'));
 		$this->match->joinRequests()->detach($user);
 		event(new UserRejected($user,$this->match,$this->input('message')));
-		return true;
 	}
 }
