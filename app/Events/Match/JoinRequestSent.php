@@ -27,7 +27,7 @@ class JoinRequestSent
 	 * @param Match $match
 	 * @param string $message
 	 */
-    public function __construct(User $user, Match $match, $message = '')
+    public function __construct(User $user, Match $match,?string $message = '')
     {
 		$this->user = $user;
 		$this->match = $match;
