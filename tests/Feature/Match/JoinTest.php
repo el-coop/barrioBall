@@ -208,7 +208,7 @@ class JoinTest extends TestCase {
 		]);
 
 		$response->assertStatus(302);
-		$response->assertSessionHas('error');
+		$response->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(UserRejected::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
@@ -280,7 +280,7 @@ class JoinTest extends TestCase {
 		]);
 
 		$response->assertStatus(302);
-		$response->assertSessionHas('error');
+		$response->assertSessionHasErrors('request');
 
 		$this->assertFalse($this->match->hasPlayer($this->player));
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Match;
 use App\Http\Requests\Match\CreateMatchRequest;
 use App\Http\Requests\Match\DeleteMatchRequest;
 use App\Http\Requests\Match\SearchRequest;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,17 +43,33 @@ class MatchController extends Controller {
 		return view('match.show', compact('match'));
 	}
 
-	public function delete(DeleteMatchRequest $request, Match $match) {
+	/**
+	 * @param DeleteMatchRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function delete(DeleteMatchRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
 		return redirect('/');
 	}
 
-	public function showSearch(Request $request) {
+	/**
+	 * @param Request $request
+	 *
+	 * @return View
+	 */
+	public function showSearch(Request $request): View {
 		return view('match.search');
 	}
 
-	public function search(SearchRequest $request) {
+	/**
+	 * @param SearchRequest $request
+	 *
+	 * @return LengthAwarePaginator
+	 */
+	public function search(SearchRequest $request): LengthAwarePaginator {
 		return $request->commit();
 	}
 }

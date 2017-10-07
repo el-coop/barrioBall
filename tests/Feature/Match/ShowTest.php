@@ -2,14 +2,8 @@
 
 namespace Tests\Feature\Match;
 
-use App\Events\Match\ManagerLeft;
-use App\Events\Match\MatchDeleted;
-use App\Events\Match\UserJoined;
-use App\Events\Match\UserLeft;
-use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
-use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
