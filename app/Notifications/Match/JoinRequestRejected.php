@@ -30,7 +30,6 @@ class JoinRequestRejected extends Notification implements ShouldQueue
      */
     public function __construct($user, $match, $message)
     {
-        //
 		$this->language = $user->language;
 		$this->match = $match;
 		$this->message = $message;

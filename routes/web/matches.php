@@ -3,6 +3,7 @@
 Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 
 	Route::get('/{match}', 'MatchController@showMatch');
+
 	Route::group(['middleware' => ['auth']],function(){
 		Route::get('/', 'MatchController@showCreate');
 		Route::post('/', 'MatchController@create');
@@ -10,6 +11,8 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 		Route::get('/{match}/users','MatchUsersController@searchUsers');
 		Route::post('/{match}/players', 'MatchUsersController@joinMatch');
 		Route::delete('/{match}/players', 'MatchUsersController@leaveMatch');
+
+		Route::delete('/{match}/player','MatchUsersController@removePlayer');
 
 		Route::post('/{match}/joinRequests','MatchUsersController@acceptJoin');
 		Route::delete('/{match}/joinRequests','MatchUsersController@rejectJoin');
