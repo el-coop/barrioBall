@@ -20,11 +20,13 @@ class UserRejected
 	public $message;
 
 	/**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(User $user, Match $match, $message)
+	 * Create a new event instance.
+	 *
+	 * @param User $user
+	 * @param Match $match
+	 * @param string $message
+	 */
+    public function __construct(User $user, Match $match,string $message)
     {
         //
 		$this->user = $user;

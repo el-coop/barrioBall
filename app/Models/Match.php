@@ -67,6 +67,14 @@ class Match extends Model {
 	}
 
 	public function hasJoinRequest(User $user){
-		return !! $this->joinRequests()->where('id',$user->id)->count();
+		return $this->joinRequests()->exists($user);
+	}
+
+	public function hasPlayer(User $user){
+		return $this->registeredPlayers()->exists($user);
+	}
+
+	public function addJoinRequest(User $user){
+		return $this->joinRequests()->save($user);
 	}
 }

@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\Match\DeletedOldMatch;
-use App\Events\Match\JoinRequest;
+use App\Events\Match\JoinRequestSent;
 use App\Events\Match\PlayerRemoved;
 use App\Events\Match\UserRejected;
 use App\Events\Match\UserJoined;
@@ -22,7 +22,7 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		JoinRequest::class => [
+		JoinRequestSent::class => [
 			SendJoinRequestNotification::class,
 		],
 		UserJoined::class => [

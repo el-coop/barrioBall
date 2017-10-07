@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\JoinRequest;
+use App\Events\Match\JoinRequestSent;
 use App\Events\Match\UserJoined;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -42,7 +42,7 @@ class JoinMatchRequest extends FormRequest
 		} else {
 			$match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-			event(new JoinRequest($this->user(),$match, $this->input('message')));
+			event(new JoinRequestSent($this->user(),$match, $this->input('message')));
 		}
 		return $message;
 	}

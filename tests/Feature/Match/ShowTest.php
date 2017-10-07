@@ -17,30 +17,27 @@ class ShowTest extends TestCase
 	use RefreshDatabase;
 
 	protected $match;
+	protected $manager;
 
-	protected function setMatch(){
-		factory(Admin::class)->create()->each(function($user){
-			$user->user()->save(factory(User::class)->make());
-		});
-
-		factory(Match::class)->create()->each(function($match){
-			$match->addManager(User::first());
-		});
-
-		return Match::first();
-	}
 
 	public function setUp() {
 		parent::setUp();
-		$this->match = $this->setMatch();
+		$this->match = factory(Match::class)->create();
+		$this->manager = factory(User::class)->create();
+
+		$this->match->addManager($this->manager);
 	}
 
-	public function test_shows_match_page()
+	/**
+	 * @test
+	 * @group showTest
+	 */
+	public function test_shows_match_page(): void
 	{
-		$response = $this->get(action('Match\MatchController@showMatch', $this->match));
+		$this->match = Match::find($this->match->id);
+		$response = $this->get($this->match->url);
 		$response->assertStatus(200);
 		$response->assertSee("<title>" . htmlentities ($this->match->name, ENT_QUOTES));
-		$response->assertSee(htmlentities($this->match->address, ENT_QUOTES));
 		$response->assertSee("{$this->match->date} {$this->match->time}");
 		$response->assertSee("{$this->match->registeredPlayers()->count()}/{$this->match->players}");
 	}

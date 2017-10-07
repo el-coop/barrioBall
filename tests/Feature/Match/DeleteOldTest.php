@@ -30,7 +30,7 @@ class DeleteOldTest extends TestCase {
 	}
 
 	/**
-	 * @param string $date
+	 * @param string $date - the date of the match
 	 */
 	protected function createManagedMatch(string $date = 'today'): void {
 		$this->user = factory(User::class)->create();

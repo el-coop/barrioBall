@@ -3,6 +3,7 @@
 namespace App\Events\Match;
 
 use App\Models\Match;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -15,17 +16,21 @@ class MatchDeleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	protected $match;
-	protected $user;
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct($user, Match $match)
+	public $match;
+	public $user;
+
+	/**
+	 * Create a new event instance.
+	 *
+	 * @param User $user
+	 * @param Match $match
+	 */
+    public function __construct(User $user, Match $match)
     {
+
         $this->match = $match;
-    }
+		$this->user = $user;
+	}
 
     /**
      * Get the channels the event should broadcast on.
