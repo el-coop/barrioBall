@@ -33,7 +33,9 @@ class DeleteUserRequest extends FormRequest {
 	 *
 	 */
 	public function commit(): void {
-		$this->user()->Delete();
+		$extended = $this->user()->user;
+		$this->user()->delete();
+		$extended->delete();
 	}
 
 }

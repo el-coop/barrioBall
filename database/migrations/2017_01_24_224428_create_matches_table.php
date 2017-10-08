@@ -19,7 +19,7 @@ class CreateMatchesTable extends Migration
             $table->string('address');
             $table->double('lat',20,16);
             $table->double('lng',20,16);
-            $table->boolean('public')->default(false);
+            $table->boolean('public')->default(true);
             $table->integer('players');
             $table->text('description')->nullable();
             $table->date('date');

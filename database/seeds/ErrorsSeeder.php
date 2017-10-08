@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Errors\Error;
 use Illuminate\Database\Seeder;
 
 class ErrorsSeeder extends Seeder
@@ -11,13 +12,6 @@ class ErrorsSeeder extends Seeder
      */
     public function run()
     {
-		factory(\App\Models\Errors\PhpError::class,15)->create()->each(function($error){
-			$error->error()->save(factory(App\Models\Errors\Error::class)->make());
-		});
-
-		factory(\App\Models\Errors\JsError::class,15)->create()->each(function($error){
-			$error->error()->save(factory(App\Models\Errors\Error::class)->make());
-		});
-
+    	factory(Error::class,30)->create();
 	}
 }
