@@ -41,7 +41,8 @@ class InviteManagersTest extends TestCase {
 	 * @group inviteManagers
 	 */
 	public function test_non_manager_cant_invite_others(): void {
-		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@inviteManagers', $this->match));
-		$response->assertStatus(403);
+		$this->actingAs($this->player)
+			->post(action('Match\MatchUsersController@inviteManagers', $this->match))
+			->assertStatus(403);
 	}
 }

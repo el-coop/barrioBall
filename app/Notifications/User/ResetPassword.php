@@ -23,11 +23,11 @@ class ResetPassword extends Notification implements ShouldQueue {
 	/**
 	 * Create a notification instance.
 	 *
-	 * @param  string  $token
+	 * @param  string $token
+	 *
 	 * @return void
 	 */
-	public function __construct($token, User $recipient)
-	{
+	public function __construct($token, User $recipient) {
 		$this->token = $token;
 		$this->recipient = $recipient;
 		$this->language = $recipient->language;
@@ -36,27 +36,27 @@ class ResetPassword extends Notification implements ShouldQueue {
 	/**
 	 * Get the notification's channels.
 	 *
-	 * @param  mixed  $notifiable
+	 * @param  mixed $notifiable
+	 *
 	 * @return array|string
 	 */
-	public function via($notifiable)
-	{
+	public function via($notifiable) {
 		return ['mail'];
 	}
 
 	/**
 	 * Build the mail representation of the notification.
 	 *
-	 * @param  mixed  $notifiable
+	 * @param  mixed $notifiable
+	 *
 	 * @return \Illuminate\Notifications\Messages\MailMessage
 	 */
-	public function toMail($notifiable)
-	{
+	public function toMail($notifiable) {
 		return (new MailMessage)
 			->language($this->language)
-			->subject(__('mail/passwordReset.subject',[],$this->language))
-			->line(__('mail/passwordReset.firstLine',[],$this->language))
-			->action(__('mail/passwordReset.button',[],$this->language), url(config('app.url').route('password.reset', $this->token, false)))
-			->line(__('mail/passwordReset.lastLine',[],$this->language));
+			->subject(__('mail/passwordReset.subject', [], $this->language))
+			->line(__('mail/passwordReset.firstLine', [], $this->language))
+			->action(__('mail/passwordReset.button', [], $this->language), url(config('app.url') . route('password.reset', $this->token, false)))
+			->line(__('mail/passwordReset.lastLine', [], $this->language));
 	}
 }

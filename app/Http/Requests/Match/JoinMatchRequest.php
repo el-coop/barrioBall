@@ -14,14 +14,14 @@ class JoinMatchRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
+	public function authorize(): bool {
 		$this->match = $this->route('match');
 
-		if (!$this->user() || $this->user()->inMatch($this->match) || $this->user()->sentRequest($this->match) || $this->match->isFull()) {
-			return false;
+		if ($this->user() && $this->user()->canJoin($this->match)) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -29,13 +29,16 @@ class JoinMatchRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'message' => 'string|max:500|nullable',
 		];
 	}
 
-	public function commit() {
+	/**
+	 * @return string
+	 */
+	public function commit(): string {
 		if ($this->user()->isManager($this->match)) {
 			$this->match->addPlayer($this->user());
 			$message = __('match/show.joined');

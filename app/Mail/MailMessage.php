@@ -6,27 +6,42 @@ namespace App\Mail;
 use Illuminate\Notifications\Action;
 use Illuminate\Notifications\Messages\MailMessage as MailParent;
 
-class MailMessage extends MailParent
-{
+class MailMessage extends MailParent {
 	public $quote;
 	public $language;
 
 
-	public function language($language){
+	/**
+	 * @param string $language
+	 *
+	 * @return MailMessage
+	 */
+	public function language(string $language): self {
 		$this->language = $language;
+
 		return $this;
 	}
 
-	public function quote($quote){
+	/**
+	 * @param string $quote
+	 *
+	 * @return MailMessage
+	 */
+	public function quote(string $quote): self {
 		$this->quote = $quote;
+
 		return $this;
 	}
 
-	public function with($line)
-	{
+	/**
+	 * @param array|Action|string $line
+	 *
+	 * @return MailMessage
+	 */
+	public function with($line): self {
 		if ($line instanceof Action) {
 			$this->action($line->text, $line->url);
-		} elseif (! $this->actionText && ! $this->quote) {
+		} else if (!$this->actionText && !$this->quote) {
 			$this->introLines[] = $this->formatLine($line);
 		} else {
 			$this->outroLines[] = $this->formatLine($line);
@@ -40,8 +55,7 @@ class MailMessage extends MailParent
 	 *
 	 * @return array
 	 */
-	public function toArray()
-	{
+	public function toArray(): array {
 		return [
 			'level' => $this->level,
 			'subject' => $this->subject,
@@ -52,7 +66,7 @@ class MailMessage extends MailParent
 			'actionText' => $this->actionText,
 			'actionUrl' => $this->actionUrl,
 			'quote' => $this->quote,
-			'language' => $this->language
+			'language' => $this->language,
 		];
 	}
 

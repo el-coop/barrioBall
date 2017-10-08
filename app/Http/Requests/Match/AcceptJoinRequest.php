@@ -5,10 +5,12 @@ namespace App\Http\Requests\Match;
 use App\Events\Match\UserJoined;
 use App\Models\Match;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AcceptJoinRequest extends FormRequest {
 	protected $match;
+	protected $user;
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -29,26 +31,31 @@ class AcceptJoinRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'user' => 'required|numeric|exists:users,id',
 			'message' => 'string|max:500|nullable',
 		];
 	}
 
-	public function withValidator($validator) {
-		$user = User::find($this->input('user'));
-		$validator->after(function ($validator) use ($user) {
-			if (!$this->match->hasJoinRequest($user)) {
+	/**
+	 * @param Validator $validator
+	 */
+	public function withValidator(Validator $validator): void {
+		$this->user = User::find($this->input('user'));
+		$validator->after(function ($validator) {
+			if (!$this->match->hasJoinRequest($this->user)) {
 				$validator->errors()->add('request', __('match/requests.requestNotExistent'));
 			}
 		});
 	}
 
-	public function commit() {
-		$user = User::find($this->input('user'));
-		$this->match->addPlayer($user);
-		$this->match->joinRequests()->detach($user);
-		event(new UserJoined($user, $this->match, $this->input('message')));
+	/**
+	 *
+	 */
+	public function commit(): void {
+		$this->match->addPlayer($this->user);
+		$this->match->joinRequests()->detach($this->user);
+		event(new UserJoined($this->user, $this->match, $this->input('message')));
 	}
 }

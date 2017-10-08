@@ -5,37 +5,37 @@ namespace App\Http\Requests\User;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLanguageRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        if ($this->user()->exists()) {
-            return true;
-        }
-        return false;
-    }
+class UpdateLanguageRequest extends FormRequest {
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize(): bool {
+		if ($this->user() && $this->user()->exists()) {
+			return true;
+		}
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-            'language' => 'required|in:en,es'
-        ];
-    }
+		return false;
+	}
 
-    public function commit() {
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules(): array {
+		return [
+			'language' => 'required|in:en,es',
+		];
+	}
 
-        $this->user()->language = $this->input('language');
-        $this->user()->save();
-    }
+	/**
+	 *
+	 */
+	public function commit(): void {
+
+		$this->user()->language = $this->input('language');
+		$this->user()->save();
+	}
 }

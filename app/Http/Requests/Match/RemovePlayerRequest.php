@@ -15,7 +15,7 @@ class RemovePlayerRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
+	public function authorize(): bool {
 		$this->match = $this->route('match');
 		if ($this->user() && $this->user()->isAdmin($this->match)) {
 			return true;
@@ -29,18 +29,20 @@ class RemovePlayerRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'user' => 'required|numeric|exists:users,id',
-			'message' => 'string|max:500|nullable'
+			'message' => 'string|max:500|nullable',
 		];
 	}
 
-	public function commit() {
+	/**
+	 *
+	 */
+	public function commit(): void {
 		$user = User::find($this->input('user'));
 		$this->match->removePlayer($user);
 
-		event(new PlayerRemoved($user,$this->match,$this->input('message')));
-		return true;
+		event(new PlayerRemoved($user, $this->match, $this->input('message')));
 	}
 }
