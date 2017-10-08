@@ -13,13 +13,10 @@ use Tests\TestCase;
 class ErrorTest extends TestCase {
 	use RefreshDatabase;
 
-	protected $jserror;
+	protected $jsError;
 
 	public function setUp() {
 		parent::setUp();
-		factory(JsError::class)->create()->each(function ($error) {
-			$error->error()->save(factory(Error::class)->make());
-		});
 		factory(Admin::class)->create()->each(function ($user) {
 			$user->user()->save(factory(User::class)->make());
 		});
@@ -52,8 +49,8 @@ class ErrorTest extends TestCase {
 
 		$this->assertDatabaseHas('errors', [
 			'page' => '/',
-			'errorable_type' => 'JSError',
-			'errorable_id' => JsError::first()->id + 1,
+			'errorable_type' => 'JsError',
+			'errorable_id' => JsError::first()->id,
 		]);
 		$this->assertDatabaseHas('js_errors', [
 			'class' => 'message',
@@ -76,7 +73,6 @@ class ErrorTest extends TestCase {
 		$this->assertDatabaseMissing('errors', [
 			'page' => '/',
 			'errorable_type' => 'JSError',
-			'errorable_id' => JsError::first()->id + 1,
 		]);
 
 		$this->assertDatabaseMissing('js_errors', [

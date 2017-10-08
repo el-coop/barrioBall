@@ -17,7 +17,7 @@ class RemovePlayerRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isAdmin($this->match)) {
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
 
