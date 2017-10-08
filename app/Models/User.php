@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\User\ResetPassword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -27,28 +29,47 @@ class User extends Authenticatable {
 		'password', 'remember_token',
 	];
 
-	public function user() {
+	/**
+	 * @return MorphTo
+	 */
+	public function user(): MorphTo {
 		return $this->morphTo();
 	}
 
-	public function isManager(Match $match) {
-		return !!$this->managedMatches()->where('id', $match->id)->count();
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function isManager(Match $match): bool {
+		return $this->managedMatches()->exists($match);
 	}
 
-	public function managedMatches() {
+	/**
+	 * @return BelongsToMany
+	 */
+	public function managedMatches(): BelongsToMany {
 		return $this->matches()->wherePivot('role', 'manager');
 	}
 
-	public function matches() {
-
+	/**
+	 * @return BelongsToMany
+	 */
+	public function matches(): BelongsToMany {
 		return $this->belongsToMany(Match::class);
 	}
 
-	public function isAdmin() {
+	/**
+	 * @return bool
+	 */
+	public function isAdmin(): bool {
 		return $this->user_type == "Admin";
 	}
 
-	public function sendPasswordResetNotification($token) {
+	/**
+	 * @param string $token
+	 */
+	public function sendPasswordResetNotification($token): void {
 		$this->notify(new ResetPassword($token, $this));
 	}
 
@@ -61,19 +82,35 @@ class User extends Authenticatable {
 		return !$this->inMatch($match) && !$this->sentRequest($match) && !$match->isFull();
 	}
 
-	public function inMatch(Match $match) {
-		return !!$this->playedMatches()->where('id', $match->id)->count();
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function inMatch(Match $match): bool {
+		return $this->playedMatches()->exists($match);
 	}
 
-	public function playedMatches() {
+	/**
+	 * @return BelongsToMany
+	 */
+	public function playedMatches(): BelongsToMany {
 		return $this->matches()->wherePivot('role', 'player');
 	}
 
-	public function sentRequest(Match $match) {
-		return !!$this->joinRequests()->where('id', $match->id)->count();
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function sentRequest(Match $match): bool {
+		return $this->joinRequests()->exists($match);
 	}
 
-	public function joinRequests() {
+	/**
+	 * @return BelongsToMany
+	 */
+	public function joinRequests(): BelongsToMany {
 		return $this->belongsToMany(Match::class, 'join_match_requests')
 			->withTimestamps();
 	}

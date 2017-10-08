@@ -9,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OldMatchDeleted extends Notification {
+class OldMatchDeleted extends Notification implements ShouldQueue {
 	use Queueable;
 	/**
 	 * @var Match
