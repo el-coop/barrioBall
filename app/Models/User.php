@@ -114,4 +114,13 @@ class User extends Authenticatable {
 		return $this->belongsToMany(Match::class, 'join_match_requests')
 			->withTimestamps();
 	}
+
+	/**
+	 * @return bool|null
+	 */
+	public function delete(): ?bool {
+		$this->user->delete();
+
+		return parent::delete();
+	}
 }

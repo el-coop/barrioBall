@@ -70,7 +70,7 @@ class UserController extends Controller {
 	public function updateLanguage(UpdateLanguageRequest $request): RedirectResponse {
 
 		$request->commit();
-		$message = __('profile/page.updatedLanguage');
+		$message = __('profile/page.updatedLanguage',[], $request->get('language'));
 
 		return back()->with('alert', $message);
 	}

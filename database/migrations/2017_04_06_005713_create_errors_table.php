@@ -20,7 +20,6 @@ class CreateErrorsTable extends Migration
 			$table->integer('errorable_id')->unsigned();
 			$table->string('errorable_type');
 			$table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
