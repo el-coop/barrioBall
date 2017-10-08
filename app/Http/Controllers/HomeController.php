@@ -20,7 +20,7 @@ class HomeController extends Controller
 	 */
 	public function welcome(): View
 	{
-		return view('welcome');
+		return view('welcome.welcome');
 	}
 	
 }
