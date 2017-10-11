@@ -31,7 +31,7 @@
 
         methods: {
         	confirm(){
-				swal({
+				this.$swal({
 					title: this.title,
 					text: this.text,
 					type: this.type,

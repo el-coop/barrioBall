@@ -11,71 +11,72 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ErrorsTest extends DuskTestCase
-{
+class ErrorsTest extends DuskTestCase {
 	use DatabaseMigrations;
 
-	protected function makeAdmin(){
-		factory(Admin::class)->create()->each(function($user){
-			$user->user()->save(factory(User::class)->make());
-		});
-
-	}
+	protected $admin;
 
 	public function setUp() {
 		parent::setUp();
-		$this->makeAdmin();
+		$this->admin = factory(User::class)->create([
+			'user_id' => function () {
+				return factory(Admin::class)->create()->id;
+			},
+			'user_type' => 'Admin',
+		]);
 	}
 
-    public function test_shows_php_errors()
-    {
-        $this->browse(function (Browser $browser) {
-			$errors = factory(PhpError::class,5)->create()->each(function($error){
-				$error->error()->save(factory(Error::class)->make());
-			});
-
-            $browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
-                    ->waitFor('.vuetable-slot');
-
-            foreach ($errors as $error){
-				$browser->assertSee($error->error->page);
-				$browser->assertSee($error->message);
-			}
-        });
-    }
-
-	public function test_shows_js_errors()
-	{
+	public function test_shows_php_errors() {
 		$this->browse(function (Browser $browser) {
-			$errors = factory(JsError::class,5)->create()->each(function($error){
-				$error->error()->save(factory(Error::class)->make());
-			});
+			$errors = factory(Error::class, 5)->create();
+
+			$browser->loginAs($this->admin)->visit(action('Admin\ErrorController@show'))
+				->waitFor('.vuetable-slot');
+			foreach ($errors as $error) {
+				$browser->assertSee($error->page);
+				$browser->assertSee($error->errorable->message);
+			}
+		});
+	}
+
+	public function test_shows_js_errors() {
+		$this->browse(function (Browser $browser) {
+			$errors = factory(Error::class, 5)->create([
+				'errorable_id' => function () {
+					return factory(JsError::class);
+				},
+				'errorable_type' => 'JSError',
+			]);
 
 			$browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
 				->waitFor('.vuetable-slot');
 
-			foreach ($errors as $error){
-				$browser->assertSee($error->error->page);
-				$browser->assertSee($error->class);
+			foreach ($errors as $error) {
+				$browser->assertSee($error->page);
+				$browser->assertSee($error->errorable->class);
 			}
 		});
 	}
 
-	public function test_button_resolves_errors()
-	{
+	public function test_button_resolves_errors() {
 		$this->browse(function (Browser $browser) {
-			factory(PhpError::class)->create()->each(function($error){
-				$error->error()->save(factory(Error::class)->make());
-			});
+			factory(Error::class)->create();
 
 			$browser->loginAs(User::first())->visit(action('Admin\ErrorController@show'))
 				->waitFor('.vuetable-slot');
 
 			$browser->click('.btn.btn-success')
-					->waitUntilMissing('.btn.btn-success');
+				->waitUntilMissing('.btn.btn-success');
 
-			$this->assertDatabaseMissing('errors',['id' => 1]);
-			$this->assertDatabaseMissing('php_errors',['id' => 1]);
+			$this->assertDatabaseMissing('errors', ['id' => 1]);
+			$this->assertDatabaseMissing('php_errors', ['id' => 1]);
 		});
+	}
+
+	protected function makeAdmin() {
+		factory(Admin::class)->create()->each(function ($user) {
+			$user->user()->save(factory(User::class)->make());
+		});
+
 	}
 }

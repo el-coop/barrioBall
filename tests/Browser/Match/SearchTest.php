@@ -26,6 +26,7 @@ class SearchTest extends DuskTestCase {
 				->clear('from')
 				->clear('to')
 				->click('.sm-btn-block')
+				->waitFor('.invalid-feedback',2)
 				->assertSee('* The date field is required.')
 				->assertSee('* The from field is required.')
 				->assertSee('* The to field is required.');
@@ -48,7 +49,8 @@ class SearchTest extends DuskTestCase {
 				->type('date', (new Carbon())->addDay()->format('d/m/y'))
 				->type('from', '00:01')
 				->type('to', '23:59')
-				->click('.sm-btn-block');
+				->click('.sm-btn-block')
+				->waitFor('.card-header',2);
 
 			$i = 0;
 			foreach ($matches as $match) {

@@ -12,7 +12,9 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
 		'password' => $password ?: $password = bcrypt('secret'),
 		'remember_token' => str_random(10),
 		'language' => $faker->randomElement(['en', 'es']),
-		'user_id' => factory(Player::class)->create()->id,
+		'user_id' => function () {
+			return factory(Player::class)->create()->id;
+		},
 		'user_type' => 'Player',
 	];
 });

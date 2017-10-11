@@ -5,11 +5,11 @@
 @section('content')
     @parent
     <profile-page inline-template
+                  @include('partials.swal')
                   :titles="{
                     name: '@lang('match/create.name')',
                     view: '@lang('profile/page.view')',
                     requests: '@lang('profile/page.requests')'
-
                   }">
         <div class="container mb-5 mt-5">
             <div class="row">
@@ -45,7 +45,4 @@
             </div>
         </div>
     </profile-page>
-@endsection
-@section('scripts')
-    @include('partials.swal)
 @endsection

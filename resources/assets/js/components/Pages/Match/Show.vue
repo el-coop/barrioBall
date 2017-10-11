@@ -1,5 +1,7 @@
 <script>
-    export default{
+	import swal from '../../Mixins/swal.vue'
+	export default{
+		mixins: [swal],
         data(){
             return{
             	message: '',

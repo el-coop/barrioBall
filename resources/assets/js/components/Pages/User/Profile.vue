@@ -1,5 +1,8 @@
 <script>
+    import swal from '../../Mixins/swal.vue'
+
     export default{
+    	mixins: [swal],
     	props: {
     	    titles: {
     	    	type: Object,

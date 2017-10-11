@@ -68,7 +68,7 @@
                 		this.address = '';
                     }
 					this.calcAddress = false;
-					swal({
+					this.$swal({
 						title: this.translate.confirmAddress,
 						input: 'text',
 						type: 'question',

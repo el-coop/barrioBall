@@ -3,7 +3,9 @@
 
 @section('content')
     @parent
-    <show-page inline-template>
+    <show-page inline-template
+            @include('partials.swal')
+            >
         <div class="container">
             <div class="row mt-2">
                 <div class="col-12 col-md-6">
@@ -40,8 +42,4 @@
             </div>
         </div>
     </show-page>
-@endsection
-
-@section('scripts')
-    @include('partials.swal')
 @endsection

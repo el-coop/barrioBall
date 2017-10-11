@@ -12,14 +12,15 @@ class AdminsTableSeeder extends Seeder {
 	 * @return void
 	 */
 	public function run() {
-		factory(Admin::class, 1)->create()->each(function ($user) {
-			$user->user()->save(factory(User::class)->make([
-				'username' => 'admin',
-				'email' => 'admin@barrioball.dev',
-				'language' => 'en',
-				'password' => bcrypt('123456'),
-			]));
-			Player::first()->delete();
-		});
+		factory(User::class)->create([
+			'username' => 'admin',
+			'email' => 'admin@barrioball.dev',
+			'language' => 'en',
+			'password' => bcrypt('123456'),
+			'user_id' => function () {
+				return factory(Admin::class)->create()->id;
+			},
+			'user_type' => 'Admin',
+		]);
 	}
 }
