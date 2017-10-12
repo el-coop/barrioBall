@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LogErrorRequest;
-use App\Models\Errors\Error;
-use App\Models\Errors\JsError;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ErrorController extends Controller
 {
-    public function store(LogErrorRequest $logErrorRequest){
+	/**
+	 * @param LogErrorRequest $logErrorRequest
+	 *
+	 * @return JsonResponse
+	 */
+	public function store(LogErrorRequest $logErrorRequest): JsonResponse{
 		$logErrorRequest->commit();
 
 		return response()->json([

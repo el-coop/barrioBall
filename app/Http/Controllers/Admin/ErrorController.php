@@ -6,15 +6,27 @@ use App\Http\Requests\Admin\DeleteErrorRequest;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ErrorController extends Controller {
-	public function show(Request $request) {
+
+	/**
+	 * @return View
+	 */
+	public function show(): View {
 		return view('admin.errors');
 	}
 
-	public function getPhpErrors(Request $request) {
+	/**
+	 * @param Request $request
+	 *
+	 * @return LengthAwarePaginator
+	 */
+	public function getPhpErrors(Request $request): LengthAwarePaginator {
 		$errors = PhpError::with('error.user');
 
 		if ($request->filled('sort')) {
@@ -40,7 +52,12 @@ class ErrorController extends Controller {
 		return $errors->paginate($request->input('per_page'));
 	}
 
-	public function getJsErrors(Request $request) {
+	/**
+	 * @param Request $request
+	 *
+	 * @return LengthAwarePaginator
+	 */
+	public function getJsErrors(Request $request): LengthAwarePaginator {
 		$errors = JsError::with('error.user');
 
 		if ($request->filled('sort')) {
@@ -64,7 +81,13 @@ class ErrorController extends Controller {
 		return $errors->paginate($request->input('per_page'));
 	}
 
-	public function delete(DeleteErrorRequest $deleteErrorRequest, Error $error){
+	/**
+	 * @param DeleteErrorRequest $deleteErrorRequest
+	 * @param Error $error
+	 *
+	 * @return JsonResponse
+	 */
+	public function delete(DeleteErrorRequest $deleteErrorRequest, Error $error): JsonResponse{
 		$deleteErrorRequest->commit();
 		return response()->json([
 			'status' => 'Success'

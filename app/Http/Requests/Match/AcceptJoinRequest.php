@@ -5,46 +5,57 @@ namespace App\Http\Requests\Match;
 use App\Events\Match\UserJoined;
 use App\Models\Match;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AcceptJoinRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize(){
-    	$match = $this->route('match');
-    	if($this->user() && $this->user()->isAdmin($match)){
+class AcceptJoinRequest extends FormRequest {
+	protected $match;
+	protected $user;
+
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize(): bool {
+		$this->match = $this->route('match');
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
+
 		return false;
-    }
+	}
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules(): array {
+		return [
 			'user' => 'required|numeric|exists:users,id',
-			'message' => 'string|max:500|nullable'
-        ];
-    }
+			'message' => 'string|max:500|nullable',
+		];
+	}
 
-	public function commit() {
-		$match = $this->route('match');
-		$user = User::find($this->input('user'));
-		if(! $match->hasJoinRequest($user)){
-			return false;
-		}
+	/**
+	 * @param Validator $validator
+	 */
+	public function withValidator(Validator $validator): void {
+		$this->user = User::find($this->input('user'));
+		$validator->after(function ($validator) {
+			if (!$this->match->hasJoinRequest($this->user)) {
+				$validator->errors()->add('request', __('match/requests.requestNotExistent'));
+			}
+		});
+	}
 
-		$match->addPlayer($user);
-		$match->joinRequests()->detach($user);
-		event(new UserJoined($user,$match,$this->input('message')));
-		return "{$user->username} successfully added to the match";
+	/**
+	 *
+	 */
+	public function commit(): void {
+		$this->match->addPlayer($this->user);
+		$this->match->joinRequests()->detach($this->user);
+		event(new UserJoined($this->user, $this->match, $this->input('message')));
 	}
 }

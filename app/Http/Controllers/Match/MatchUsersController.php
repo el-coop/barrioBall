@@ -11,17 +11,31 @@ use App\Http\Requests\Match\RemovePlayerRequest;
 use App\Http\Requests\Match\StopManagingRequest;
 use App\Models\Match;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class MatchUsersController extends Controller {
-	public function joinMatch(JoinMatchRequest $request, Match $match) {
+
+	/**
+	 * @param JoinMatchRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function joinMatch(JoinMatchRequest $request, Match $match): RedirectResponse {
 		$message = $request->commit();
 
 		return back()->with('alert', $message);
 	}
 
-	public function leaveMatch(LeaveMatchRequest $request, Match $match) {
+	/**
+	 * @param LeaveMatchRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function leaveMatch(LeaveMatchRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
 		return back()->with('alert', __('match/show.left'));
@@ -35,35 +49,63 @@ class MatchUsersController extends Controller {
 			})->get();
 	}
 
-	public function inviteManagers(InviteMangersRequest $request, Match $match) {
+	/**
+	 * @param InviteMangersRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function inviteManagers(InviteMangersRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
 		return back()->with('alert', __('match/show.invitationSent'));
 	}
 
-	public function stopManaging(StopManagingRequest $request, Match $match) {
+	/**
+	 * @param StopManagingRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function stopManaging(StopManagingRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
 		return back()->with('alert', __('match/show.managementLeft'));
 	}
 
-	public function acceptJoin(AcceptJoinRequest $request, Match $match) {
-		if ($message = $request->commit()) {
-			return back()->with('alert', $message);
-		}
+	/**
+	 * @param AcceptJoinRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function acceptJoin(AcceptJoinRequest $request, Match $match): RedirectResponse {
+		$request->commit();
 
-		return back()->with('error', "The join request was canceled/rejected/accepted before you accepted it");
+		return back()->with('alert', __('match/requests.accepted'));
+
+
 	}
 
-	public function rejectJoin(RejectJoinRequest $request, Match $match) {
-		if ($request->commit()) {
-			return back()->with('alert', __('match/requests.rejected'));
-		}
+	/**
+	 * @param RejectJoinRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function rejectJoin(RejectJoinRequest $request, Match $match): RedirectResponse {
+		$request->commit();
 
-		return back()->with('error', __('match/requests.requestNotExistent'));
+		return back()->with('alert', __('match/requests.rejected'));
 	}
 
-	public function removePlayer(RemovePlayerRequest $request, Match $match) {
+	/**
+	 * @param RemovePlayerRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function removePlayer(RemovePlayerRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
 		return back()->with('alert', __('match/removePlayer.removed'));

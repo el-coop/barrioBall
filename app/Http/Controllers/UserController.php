@@ -7,24 +7,41 @@ use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdateLanguageRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUsernameRequest;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller {
 
-	public function show(Request $request) {
+	/**
+	 * @param Request $request
+	 *
+	 * @return View
+	 */
+	public function show(Request $request): View {
 		return view('user.profile');
 	}
 
-	public function updateUsername(UpdateUsernameRequest $request) {
+	/**
+	 * @param UpdateUsernameRequest $request
+	 *
+	 * @return RedirectResponse
+	 */
+	public function updateUsername(UpdateUsernameRequest $request): RedirectResponse {
 		$request->commit();
 		$message = __('profile/page.updatedUsername');
 
 		return back()->with('alert', $message);
 	}
 
-	public function updatePassword(UpdatePasswordRequest $request) {
+	/**
+	 * @param UpdatePasswordRequest $request
+	 *
+	 * @return RedirectResponse
+	 */
+	public function updatePassword(UpdatePasswordRequest $request): RedirectResponse {
 
 		$request->commit();
 		$message = __('profile/page.updatedPassword');
@@ -32,7 +49,12 @@ class UserController extends Controller {
 		return back()->with('alert', $message);
 	}
 
-	public function updateEmail(UpdateEmailRequest $request) {
+	/**
+	 * @param UpdateEmailRequest $request
+	 *
+	 * @return RedirectResponse
+	 */
+	public function updateEmail(UpdateEmailRequest $request): RedirectResponse {
 
 		$request->commit();
 		$message = __('profile/page.updatedEmail');
@@ -40,21 +62,36 @@ class UserController extends Controller {
 		return back()->with('alert', $message);
 	}
 
-	public function updateLanguage(UpdateLanguageRequest $request) {
+	/**
+	 * @param UpdateLanguageRequest $request
+	 *
+	 * @return RedirectResponse
+	 */
+	public function updateLanguage(UpdateLanguageRequest $request): RedirectResponse {
 
 		$request->commit();
-		$message = __('profile/page.updatedLanguage');
+		$message = __('profile/page.updatedLanguage',[], $request->get('language'));
 
 		return back()->with('alert', $message);
 	}
 
-	public function deleteUser(DeleteUserRequest $request) {
+	/**
+	 * @param DeleteUserRequest $request
+	 *
+	 * @return RedirectResponse
+	 */
+	public function deleteUser(DeleteUserRequest $request): RedirectResponse {
 		$request->commit();
 
 		return redirect('/home');
 	}
 
-	public function getMatches(Request $request){
+	/**
+	 * @param Request $request
+	 *
+	 * @return LengthAwarePaginator
+	 */
+	public function getMatches(Request $request): LengthAwarePaginator{
 		if($request->has('managed')){
 			$matches = $request->user()->managedMatches()->withCount('joinRequests');
 		} else {

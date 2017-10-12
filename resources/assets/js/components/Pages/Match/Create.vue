@@ -68,7 +68,7 @@
                 		this.address = '';
                     }
 					this.calcAddress = false;
-					swal({
+					this.$swal({
 						title: this.translate.confirmAddress,
 						input: 'text',
 						type: 'question',
@@ -78,7 +78,7 @@
 						this.lat = ev.latlng.lat;
 						this.lng = ev.latlng.lng;
 						this.address = text;
-                    });
+                    }).catch(this.$swal.noop);
 				});
 
 			}

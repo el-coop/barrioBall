@@ -4,36 +4,36 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteUserRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        if ($this->user()->exists()) {
-            return true;
-        }
-        return false;
-    }
+class DeleteUserRequest extends FormRequest {
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize(): bool {
+		if ($this->user() && $this->user()->exists()) {
+			return true;
+		}
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
-    }
+		return false;
+	}
 
-    public function commit() {
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules(): array {
+		return [
+			//
+		];
+	}
 
-        $this->user()->Delete();
-    }
+	/**
+	 *
+	 */
+	public function commit(): void {
+		$this->user()->delete();
+	}
 
 }

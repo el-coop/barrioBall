@@ -13,36 +13,35 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserJoined
-{
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+class UserJoined {
+	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
-    public $match;
-    public $manager;
+	public $user;
+	public $match;
+	public $manager;
 	public $message;
 
 	/**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(User $user, Match $match, $message = '')
-    {
-        $this->user = $user;
+	 * Create a new event instance.
+	 *
+	 * @param User $user
+	 * @param Match $match
+	 * @param string $message
+	 */
+	public function __construct(User $user, Match $match, ?string $message = '') {
+		$this->user = $user;
 		$this->match = $match;
 		$this->manager = Auth::user();
 		$this->message = $message;
-    }
+	}
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return Channel|array
+	 */
+	public function broadcastOn() {
+		return new PrivateChannel('channel-name');
+	}
 
 }

@@ -17,10 +17,9 @@ class CreateErrorsTable extends Migration
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->nullable();
 			$table->string('page');
-			$table->integer('errorable_id');
+			$table->integer('errorable_id')->unsigned();
 			$table->string('errorable_type');
 			$table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

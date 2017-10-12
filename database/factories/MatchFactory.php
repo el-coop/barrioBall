@@ -12,6 +12,6 @@ $factory->define(App\Models\Match::class, function (Faker $faker) {
 		'date' => $faker->dateTimeBetween('now', '+1 week'),
 		'time' => $faker->time(),
 		'players' => $faker->numberBetween(4, 7) * 2,
-		'description' => $faker->paragraph()
+		'description' => $faker->paragraph(),
 	];
 });

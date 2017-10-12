@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class JoinRequest
+class JoinRequestSent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,13 +21,14 @@ class JoinRequest
 	public $message;
 
 	/**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(User $user, Match $match, $message)
+	 * Create a new event instance.
+	 *
+	 * @param User $user
+	 * @param Match $match
+	 * @param string $message
+	 */
+    public function __construct(User $user, Match $match,?string $message = '')
     {
-        //
 		$this->user = $user;
 		$this->match = $match;
 		$this->message = $message;

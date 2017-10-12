@@ -10,8 +10,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class RemovePlayerTest extends DuskTestCase
-{
+class RemovePlayerTest extends DuskTestCase {
 	use DatabaseMigrations;
 
 	protected $match;
@@ -21,36 +20,33 @@ class RemovePlayerTest extends DuskTestCase
 	public function setUp() {
 		parent::setUp();
 		$this->match = factory(Match::class)->create();
-		factory(Admin::class)->create();
 		$this->admin = factory(User::class)->create([
-			'user_id' => Admin::first()->id,
-			'user_type' => 'Admin'
+			'user_id' => function () {
+				return factory(Admin::class)->create();
+			},
+			'user_type' => 'Admin',
 		]);
-		factory(Player::class)->create();
-		$this->player = factory(User::class)->create([
-			'user_id' => Player::first()->id,
-			'user_type' => 'Player'
-		]);
+		$this->player = factory(User::class)->create();
 		$this->match->addManager($this->admin);
 		$this->match->addPlayer($this->admin);
 		$this->match->addPlayer($this->player);
 
 	}
 
-    public function test_remove_player_process_works()
-    {
+	public function test_remove_player_process_works() {
 
-        $this->browse(function (Browser $browser) {
+		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->admin)
-				->visit(action('Match\MatchController@showMatch',$this->match))
+				->visit(action('Match\MatchController@showMatch', $this->match))
 				->click('.list-group-item > .btn.btn-danger')
-				->type('#remove-user .form-control','I hate you')
-				->press('#remove-user .btn.btn-danger.btn-block')
-				->assertSee('The user was removed from the match');
-        });
+				->waitFor('#listsModal .form-control',2)
+				->type('#listsModal .form-control', 'I hate you')
+				->press('#listsModal .btn.btn-danger.btn-block')
+				->assertSee(__('match/removePlayer.removed',[],$this->admin->language));
+		});
 
 
 		$this->assertFalse($this->player->inMatch($this->match));
-    }
+	}
 }
 

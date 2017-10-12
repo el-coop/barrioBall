@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\User\ResetPassword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -27,45 +29,98 @@ class User extends Authenticatable {
 		'password', 'remember_token',
 	];
 
-	public function user() {
+	/**
+	 * @return MorphTo
+	 */
+	public function user(): MorphTo {
 		return $this->morphTo();
 	}
 
-	public function inMatch(Match $match) {
-		return !!$this->playedMatches()->where('id', $match->id)->count();
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function isManager(Match $match): bool {
+		return $this->managedMatches()->exists($match);
 	}
 
-	public function playedMatches() {
-		return $this->matches()->wherePivot('role', 'player');
-	}
-
-	public function matches() {
-
-		return $this->belongsToMany(Match::class);
-	}
-
-	public function isManager(Match $match) {
-		return !!$this->managedMatches()->where('id', $match->id)->count();
-	}
-
-	public function managedMatches() {
+	/**
+	 * @return BelongsToMany
+	 */
+	public function managedMatches(): BelongsToMany {
 		return $this->matches()->wherePivot('role', 'manager');
 	}
 
-	public function isAdmin() {
+	/**
+	 * @return BelongsToMany
+	 */
+	public function matches(): BelongsToMany {
+		return $this->belongsToMany(Match::class);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAdmin(): bool {
 		return $this->user_type == "Admin";
 	}
 
-	public function sentRequest(Match $match) {
-		return !!$this->joinRequests()->where('id', $match->id)->count();
+	/**
+	 * @param string $token
+	 */
+	public function sendPasswordResetNotification($token): void {
+		$this->notify(new ResetPassword($token, $this));
 	}
 
-	public function joinRequests() {
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function canJoin(Match $match): bool {
+		return !$this->inMatch($match) && !$this->sentRequest($match) && !$match->isFull();
+	}
+
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function inMatch(Match $match): bool {
+		return $this->playedMatches()->exists($match);
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function playedMatches(): BelongsToMany {
+		return $this->matches()->wherePivot('role', 'player');
+	}
+
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function sentRequest(Match $match): bool {
+		return $this->joinRequests()->exists($match);
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function joinRequests(): BelongsToMany {
 		return $this->belongsToMany(Match::class, 'join_match_requests')
 			->withTimestamps();
 	}
 
-	public function sendPasswordResetNotification($token) {
-		$this->notify(new ResetPassword($token, $this));
+	/**
+	 * @return bool|null
+	 */
+	public function delete(): ?bool {
+		$this->user->delete();
+
+		return parent::delete();
 	}
 }

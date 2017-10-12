@@ -15,6 +15,5 @@ return [
 
 
     'currentLanguage' => 'English',
-	'message' => 'Message'
 
 ];

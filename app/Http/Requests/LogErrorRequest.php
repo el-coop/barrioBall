@@ -12,7 +12,7 @@ class LogErrorRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
+	public function authorize(): bool {
 
 		if ($this->ajax()) {
 			return true;
@@ -26,13 +26,16 @@ class LogErrorRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			//
 		];
 	}
 
-	public function commit() {
+	/**
+	 *
+	 */
+	public function commit(): void {
 		$error = new Error;
 		$jsError = new JsError;
 		if ($this->user()) {

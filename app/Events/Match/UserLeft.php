@@ -16,13 +16,14 @@ class UserLeft
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	protected $user;
-	protected $match;
+	public $user;
+	public $match;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @return void
+	 * @param User $user
+	 * @param Match $match
 	 */
 	public function __construct(User $user, Match $match)
 	{

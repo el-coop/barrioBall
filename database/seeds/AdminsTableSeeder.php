@@ -1,23 +1,26 @@
 <?php
 
+use App\Models\Admin;
+use App\Models\Player;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class AdminsTableSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(App\Models\Admin::class,1)->create()->each(function($user){
-        	$user->user()->save(factory(App\Models\User::class)->make([
-        		'username' => 'admin',
-        		'email' => 'admin@barrioball.dev',
-				'language' => 'en',
-				'password' => bcrypt('123456')
-			]));
-		});
-    }
+class AdminsTableSeeder extends Seeder {
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run() {
+		factory(User::class)->create([
+			'username' => 'admin',
+			'email' => 'admin@barrioball.dev',
+			'language' => 'en',
+			'password' => bcrypt('123456'),
+			'user_id' => function () {
+				return factory(Admin::class)->create()->id;
+			},
+			'user_type' => 'Admin',
+		]);
+	}
 }

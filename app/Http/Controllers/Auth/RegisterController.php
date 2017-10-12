@@ -9,80 +9,76 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-class RegisterController extends Controller
-{
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
+class RegisterController extends Controller {
+	/*
+	|--------------------------------------------------------------------------
+	| Register Controller
+	|--------------------------------------------------------------------------
+	|
+	| This controller handles the registration of new users as well as their
+	| validation and creation. By default this controller uses a trait to
+	| provide this functionality without requiring any additional code.
+	|
+	*/
 
-    use RegistersUsers;
+	use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+	/**
+	 * Where to redirect users after registration.
+	 *
+	 * @var string
+	 */
+	protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->middleware('guest');
+	}
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
+	/**
+	 * Get a validator for an incoming registration request.
+	 *
+	 * @param  array $data
+	 *
+	 * @return \Illuminate\Contracts\Validation\Validator
+	 */
+	protected function validator(array $data) {
+		return Validator::make($data, [
 			'email' => 'required|email|max:255|unique:users',
 			'username' => 'required|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'language' => 'required|in:en,es'
-        ]);
-    }
+			'password' => 'required|min:6|confirmed',
+			'language' => 'required|in:en,es',
+		]);
+	}
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function create(array $data)
-    {
-        $base = new User;
+	/**
+	 * Create a new user instance after a valid registration.
+	 *
+	 * @param  array $data
+	 *
+	 * @return User
+	 */
+	protected function create(array $data): User {
+
+		$base = new User;
 		$base->email = $data['email'];
 		$base->username = $data['username'];
-        $base->password = bcrypt($data['password']);
-        $base->language = $data['language'];
+		$base->password = bcrypt($data['password']);
+		$base->language = $data['language'];
 
-        if(User::count() == 0){
-            //Create Admin
-            $newUser = new Admin();
+		if (User::count() == 0) {
+			$newUser = new Admin();
+		} else {
+			$newUser = new Player();
 
-        } else {
-            $newUser = new Player();
+		}
+		$newUser->save();
+		$newUser->user()->save($base);
 
-        }
-        $newUser->save();
-
-        $newUser->user()->save($base);
-
-        return $base;
-    }
+		return $base;
+	}
 }

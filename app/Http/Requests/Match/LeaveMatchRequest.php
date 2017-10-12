@@ -5,36 +5,39 @@ namespace App\Http\Requests\Match;
 use App\Events\Match\UserLeft;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LeaveMatchRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-		if(! $this->user() || ! $this->user()->inMatch($this->route('match'))){
-			return false;
+class LeaveMatchRequest extends FormRequest {
+	protected $match;
+
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize(): bool {
+		$this->match = $this->route('match');
+		if ($this->user() && $this->user()->inMatch($this->match)) {
+			return true;
 		}
-		return true;
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
-    }
+		return false;
+	}
 
-	public function commit() {
-		$this->route('match')->removePlayer($this->user());
-		event(new UserLeft($this->user(),$this->route('match')));
-		return true;
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return arrays
+	 */
+	public function rules(): array {
+		return [
+			//
+		];
+	}
+
+	/**
+	 *
+	 */
+	public function commit(): void {
+		$this->match->removePlayer($this->user());
+		event(new UserLeft($this->user(), $this->match));
 	}
 }

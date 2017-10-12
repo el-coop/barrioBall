@@ -12,8 +12,8 @@ class CreateMatchRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
-		if ($this->user()->exists()) {
+	public function authorize(): bool {
+		if ($this->user() && $this->user()->exists()) {
 			return true;
 		}
 
@@ -25,7 +25,7 @@ class CreateMatchRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'name' => 'required|min:3',
 			'address' => 'required|min:3',
@@ -38,7 +38,10 @@ class CreateMatchRequest extends FormRequest {
 		];
 	}
 
-	public function commit() {
+	/**
+	 * @return Match
+	 */
+	public function commit(): Match {
 		$match = new Match();
 		$match->name = $this->input('name');
 		$match->address = $this->input('address');

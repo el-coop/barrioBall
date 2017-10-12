@@ -44,5 +44,3 @@ if (token) {
 window.datetimepicker = require('eonasdan-bootstrap-datetimepicker');
 window.L = require('leaflet/dist/leaflet');
 window.L.leafletgeocoder = require('leaflet-control-geocoder/dist/Control.Geocoder');
-window.moment = require('moment');
-window.swal = require('sweetalert2');

@@ -48,6 +48,7 @@ class ShowTest extends DuskTestCase
 			$browser->loginAs(User::first())->visit(action('Match\MatchController@showMatch', $this->match))
 				->waitFor('.btn-info')
 				->click('.btn-info')
+				->waitFor('.v-select',2)
 				->assertVisible('.v-select');
 		});
 	}

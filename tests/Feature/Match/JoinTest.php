@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Match;
 
-use App\Events\Match\JoinRequest;
+use App\Events\Match\JoinRequestSent;
 use App\Events\Match\UserJoined;
 use App\Events\Match\UserRejected;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
@@ -11,9 +11,7 @@ use App\Listeners\Match\SendJoinRequestRejectedNotification;
 use App\Listeners\Match\SendUserJoinedNotification;
 use App\Notifications\Match\JoinRequestAccepted;
 use App\Notifications\Match\JoinRequestRejected;
-use App\Models\Admin;
 use App\Models\Match;
-use App\Models\Player;
 use App\Models\User;
 use App\Notifications\Match\JoinMatchRequest;
 use App\Notifications\Match\MatchJoined;
@@ -27,161 +25,213 @@ class JoinTest extends TestCase {
 
 	protected $match;
 	protected $player;
+	protected $manager;
 
 	public function setUp() {
 		parent::setUp();
-		$this->match = $this->setMatch();
-		$this->player = factory(Player::class)->create();
-		$this->player->user()->save(factory(User::class)->make());
+		$this->manager = factory(User::class)->create();
+		$this->match = factory(Match::class)->create();
+		$this->player = factory(User::class)->create();
+		$this->match->addManager($this->manager);
 	}
 
-	protected function setMatch() {
-		factory(Admin::class)->create()->each(function ($user) {
-			$user->user()->save(factory(User::class)->make());
-		});
 
-		factory(Match::class)->create()->each(function ($match) {
-			$match->addManager(User::first());
-		});
-
-		return Match::first();
-	}
-
-	public function test_admin_joins_automatically() {
+	/**
+	 * @test
+	 */
+	public function test_admin_joins_automatically(): void {
 		Event::fake();
 
-		$response = $this->actingAs(Admin::first()->user)->post(action('Match\MatchUsersController@joinMatch', Match::first()), []);
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
 
 		$response->assertStatus(302);
 		$response->assertSessionHas('alert', __('match/show.joined'));
 
-		$this->assertDatabaseHas('match_user', [
-			'user_id' => Admin::first()->user->id,
-			'match_id' => Match::first()->id,
-			'role' => 'player',
-		]);
+		$this->assertTrue($this->match->hasPlayer($this->manager));
 
 		Event::assertDispatched(UserJoined::class, function ($event) {
-			return $event->user->id === Admin::first()->id;
+			return $event->user->id === $this->manager->id;
 		});
 	}
 
-	public function test_sends_email_to_admins_when_user_joins() {
+	/**
+	 * @test
+	 */
+	public function test_admin_cant_repeat_join(): void {
+		$this->match->addPlayer($this->manager);
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(UserJoined::class);
+	}
+
+	/**
+	 * @test
+	 */
+	public function test_admin_cant_join_full_match(): void {
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(UserJoined::class);
+	}
+
+	/**
+	 * @test
+	 */
+	public function test_sends_email_to_admins_when_user_joins(): void {
 		Notification::fake();
 
 		$listener = new SendUserJoinedNotification();
-		$listener->handle(new UserJoined($this->player->user, Match::first()));
+		$listener->handle(new UserJoined($this->player, $this->match));
 
-		Notification::assertSentTo(Admin::first()->user, MatchJoined::class);
+		Notification::assertSentTo($this->manager, MatchJoined::class);
 	}
 
-	public function test_player_can_send_join_request() {
+	/**
+	 * @test
+	 */
+	public function test_player_can_send_join_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->player->user)->post(action('Match\MatchUsersController@joinMatch', Match::first()), [
-			'message' => 'bla'
+		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
 		$response->assertSessionHas('alert', __('match/show.joinMatchSent'));
 
-		$this->assertDatabaseHas('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
-		Event::assertDispatched(JoinRequest::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+		Event::assertDispatched(JoinRequestSent::class, function ($event) {
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
-	public function test_player_cant_repeat_send_join_request() {
-		Match::first()->joinRequests()->save($this->player->user);
-		$this->doesntExpectEvents(JoinRequest::class);
-		$response = $this->actingAs($this->player->user)->post(action('Match\MatchUsersController@joinMatch', Match::first()), [
-			'message' => 'bla'
+	/**
+	 * @test
+	 */
+	public function test_player_cant_repeat_send_join_request(): void {
+		$this->match->addJoinRequest($this->player);
+		Event::fake();
+
+		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(403);
+		Event::assertNotDispatched(JoinRequestSent::class);
 	}
 
-	public function test_not_loged_in_cant_send_join_request() {
-		$this->doesntExpectEvents(JoinRequest::class);
-		$response = $this->post(action('Match\MatchUsersController@joinMatch', Match::first()), [
-			'message' => 'bla'
+
+	/**
+	 * @test
+	 */
+	public function test_player_cant_send_join_request_to_full_match(): void {
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		Event::fake();
+
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+
+		$response->assertStatus(403);
+		Event::assertNotDispatched(JoinRequestSent::class);
+	}
+
+	/**
+	 * @test
+	 */
+	public function test_not_loged_in_cant_send_join_request(): void {
+		Event::fake();
+		$response = $this->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
 		]);
 
-		$this->assertDatabaseMissing('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
+		$this->assertFalse($this->match->hasJoinRequest($this->player));
 
 		$response->assertStatus(302);
 		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
+		Event::assertNotDispatched(JoinRequestSent::class);
+
 	}
 
-	public function test_sends_email_when_request_sent() {
+	/**
+	 * @test
+	 */
+	public function test_sends_email_when_request_sent(): void {
 		Notification::fake();
 
 		$listener = new SendJoinRequestNotification();
-		$listener->handle(new JoinRequest($this->player->user, Match::first(), 'Test Mail'));
+		$listener->handle(new JoinRequestSent($this->manager, $this->match, 'Test Mail'));
 
-		Notification::assertSentTo(Admin::first()->user, JoinMatchRequest::class);
+		Notification::assertSentTo($this->manager, JoinMatchRequest::class);
 	}
 
-	public function test_can_reject_user_request() {
-		Match::first()->joinRequests()->save($this->player->user);
+	/**
+	 * @test
+	 */
+	public function test_can_reject_user_request(): void {
+		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->actingAs($this->match->managers()->first())->delete(action('Match\MatchUsersController@rejectJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
 		$response->assertSessionHas('alert');
 
-		$this->assertDatabaseMissing('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
+		$this->assertFalse($this->match->hasJoinRequest($this->player));
 
 		Event::assertDispatched(UserRejected::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
 
-	public function test_cant_reject_non_existent_user_request() {
+	/**
+	 * @test
+	 */
+	public function test_cant_reject_non_existent_user_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->match->managers()->first())->delete(action('Match\MatchUsersController@rejectJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
-		$response->assertSessionHas('error');
+		$response->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(UserRejected::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
-	public function test_cant_reject_when_not_logged_in() {
-		Match::first()->joinRequests()->save($this->player->user);
+	/**
+	 * @test
+	 */
+	public function test_cant_reject_when_not_logged_in(): void {
+		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->delete(action('Match\MatchUsersController@rejectJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
 		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-		$this->assertDatabaseHas('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
 		Event::assertNotDispatched(UserRejected::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
@@ -190,97 +240,89 @@ class JoinTest extends TestCase {
 		Notification::fake();
 
 		$listener = new SendJoinRequestRejectedNotification();
-		$listener->handle(new UserRejected($this->player->user, Match::first(), 'Test Mail'));
+		$listener->handle(new UserRejected($this->player, $this->match, 'Test Mail'));
 
-		Notification::assertSentTo($this->player->user, JoinRequestRejected::class);
+		Notification::assertSentTo($this->player, JoinRequestRejected::class);
 	}
 
-	public function test_can_accept_user_join_request() {
-		Match::first()->joinRequests()->save($this->player->user);
+	/**
+	 * @test
+	 */
+	public function test_can_accept_user_join_request(): void {
+		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->actingAs($this->match->managers()->first())->post(action('Match\MatchUsersController@acceptJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
 		$response->assertSessionHas('alert');
 
-		$this->assertDatabaseMissing('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
-
-		$this->assertDatabaseHas('match_user', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id,
-			'role' => 'player',
-		]);
+		$this->assertfalse($this->match->hasJoinRequest($this->player));
+		$this->assertTrue($this->match->hasPlayer($this->player));
 
 
 		Event::assertDispatched(UserJoined::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 
 	}
 
-	public function test_cant_accept_non_existent_request(){
+	/**
+	 * @test
+	 */
+	public function test_cant_accept_non_existent_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->match->managers()->first())->post(action('Match\MatchUsersController@acceptJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
-		$response->assertSessionHas('error');
+		$response->assertSessionHasErrors('request');
 
-		$this->assertDatabaseMissing('match_user', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id,
-			'role' => 'player',
-		]);
-
+		$this->assertFalse($this->match->hasPlayer($this->player));
 
 		Event::assertNotDispatched(UserJoined::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
-	public function test_cant_accept_when_not_logged_in() {
-		Match::first()->joinRequests()->save($this->player->user);
+	/**
+	 * @test
+	 */
+	public function test_cant_accept_when_not_logged_in(): void {
+		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->post(action('Match\MatchUsersController@acceptJoin', Match::first()), [
-			'user' => $this->player->user->id,
-			'message' => 'bla'
+		$response = $this->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
 		]);
 
 		$response->assertStatus(302);
 		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
-		$this->assertDatabaseHas('join_match_requests', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id
-		]);
 
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
+		$this->assertFalse($this->match->hasPlayer($this->player));
 
-		$this->assertDatabaseMissing('match_user', [
-			'user_id' => $this->player->user->id,
-			'match_id' => Match::first()->id,
-			'role' => 'player',
-		]);
 
 		Event::assertNotDispatched(UserJoined::class, function ($event) {
-			return $event->user->id === $this->player->user->id && $event->message = 'bla';
+			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
 
 
-	public function test_user_is_notified_when_request_is_accepted(){
+	/**
+	 * @test
+	 */
+	public function test_user_is_notified_when_request_is_accepted(): void {
 		Notification::fake();
 
 		$listener = new SendJoinRequestAcceptedNotification();
-		$listener->handle(new UserJoined($this->player->user, Match::first(),'Test'));
+		$listener->handle(new UserJoined($this->player, $this->match, 'Test'));
 
-		Notification::assertSentTo($this->player->user, JoinRequestAccepted::class);
+		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
 	}
 }

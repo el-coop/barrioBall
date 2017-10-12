@@ -1,10 +1,14 @@
 <script>
-    export default{
+	import swal from '../../Mixins/swal.vue'
+	export default{
+		mixins: [swal],
         data(){
             return{
             	message: '',
-                user: '',
-                userId: 0
+                userId: 0,
+                modal: {
+
+                }
             }
         },
 
@@ -15,8 +19,16 @@
                 }
             },
 
-			toggleModal(ref){
-        		this.$refs[ref].toggleModal();
+			toggleModal(modal){
+
+        		if(_.isString(modal)){
+					this.$refs[modal].toggleModal();
+					return;
+        		}
+
+				this.modal = modal;
+				this.$refs.modal.toggleModal();
+
             }
         }
     }

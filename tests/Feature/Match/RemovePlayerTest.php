@@ -42,7 +42,7 @@ class RemovePlayerTest extends TestCase {
 	public function test_shows_remove_button_to_manager() {
 		$this->actingAs($this->admin)
 			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertSee('ref="removeUser"')
+			->assertSee("url: '" . action('Match\MatchUsersController@removePlayer', $this->match). "'")
 			->assertSee('<button class="btn btn-danger"');
 	}
 
