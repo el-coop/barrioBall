@@ -2,11 +2,11 @@
 
 namespace App\Notifications\Match;
 
+use App\Mail\MailMessage;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class MatchJoined extends Notification implements ShouldQueue {
 	use Queueable;

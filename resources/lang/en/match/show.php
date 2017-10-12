@@ -19,8 +19,9 @@ return [
 	'waitingForResponse' => 'Waiting for response',
 	'introduceYourself' => 'Introduce yourself to the managers',
 	'joinRequests' => 'Join Requests',
-	'add1' => 'Add',
-	'add2' => 'to match',
-	'rejectRequest' => 'Reject request from',
+	'add' => 'Add :user to match',
+	'rejectRequest' => 'Reject request from :user',
 	'matchFull' => 'Match is full',
+	'charLimit' => '500 chars max',
+	'message' => 'Send message'
 ];

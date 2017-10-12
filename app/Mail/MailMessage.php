@@ -27,7 +27,7 @@ class MailMessage extends MailParent {
 	 *
 	 * @return MailMessage
 	 */
-	public function quote(string $quote): self {
+	public function quote(?string $quote): self {
 		$this->quote = $quote;
 
 		return $this;

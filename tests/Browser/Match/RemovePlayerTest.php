@@ -39,9 +39,9 @@ class RemovePlayerTest extends DuskTestCase {
 			$browser->loginAs($this->admin)
 				->visit(action('Match\MatchController@showMatch', $this->match))
 				->click('.list-group-item > .btn.btn-danger')
-				->waitFor('#remove-user .form-control',2)
-				->type('#remove-user .form-control', 'I hate you')
-				->press('#remove-user .btn.btn-danger.btn-block')
+				->waitFor('#listsModal .form-control',2)
+				->type('#listsModal .form-control', 'I hate you')
+				->press('#listsModal .btn.btn-danger.btn-block')
 				->assertSee(__('match/removePlayer.removed',[],$this->admin->language));
 		});
 

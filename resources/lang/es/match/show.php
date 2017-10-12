@@ -19,9 +19,10 @@ return [
 	'waitingForResponse' => 'Esperando respuesta',
 	'introduceYourself' => 'Presentese a los gerentes',
 	'joinRequests' => 'Solicitudes de afiliación',
-	'add1' => 'Agrege',
-	'add2' => 'al partido',
-	'rejectRequest' => 'Rechaze la solicitud de',
+	'add' => 'Agrege :user al partido',
+	'rejectRequest' => 'Rechaze la solicitud de :user',
 	'matchFull' => 'El partido está lleno',
+	'charLimit' => '500 caracteres max',
+	'message' => 'Envia mensaje'
 
 ];

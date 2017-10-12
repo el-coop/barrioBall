@@ -78,7 +78,7 @@
 						this.lat = ev.latlng.lat;
 						this.lng = ev.latlng.lng;
 						this.address = text;
-                    });
+                    }).catch(this.$swal.noop);
 				});
 
 			}
