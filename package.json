@@ -21,18 +21,18 @@
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "laravel-mix": "^1.4.5",
+    "laravel-mix": "^1.5.0",
     "leaflet": "^1.2.0",
     "leaflet-control-geocoder": "^1.5.5",
     "lodash": "^4.17.4",
     "popper.js": "^1.12.5",
     "vue": "^2.4.4",
     "vue-json-tree-view": "^2.1.1",
-    "vue-multiselect": "^2.0.2",
+    "vue-multiselect": "^2.0.3",
     "vue-select": "^2.3.0",
     "vue-sweetalert2": "^1.0.7",
     "vue-template-compiler": "^2.4.4",
     "vuejs-paginate": "^0.8.4",
-    "vuetable-2": "^1.6.5"
+    "vuetable-2": "^1.6.6"
   }
 }

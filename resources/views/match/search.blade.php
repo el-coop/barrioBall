@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Search Matches')
+@section('title',__('navbar.searchLink'))
 
 @section('content')
     @parent

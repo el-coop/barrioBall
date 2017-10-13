@@ -29,6 +29,7 @@ class DeleteTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
 	 * @group deleteMatch
 	 */
 	public function test_manager_can_delete_match(): void {
@@ -39,18 +40,18 @@ class DeleteTest extends TestCase {
 
 		$this->assertDatabaseMissing('matches', ['id' => $this->match->id]);
 		Event::assertDispatched(MatchDeleted::class);
-
 	}
 
 	/**
 	 * @test
+	 * @group match
 	 * @group deleteMatch
 	 */
 	public function test_non_manager_cant_delete_match(): void {
 		Event::fake();
 
-		$response = $this->actingAs($this->player)->delete(action('Match\MatchController@delete', $this->match));
-		$response->assertStatus(403);
+		$this->actingAs($this->player)->delete(action('Match\MatchController@delete', $this->match))
+			->assertStatus(403);
 		
 		Event::assertNotDispatched(MatchDeleted::class);
 

@@ -1,6 +1,7 @@
 <?php
 return [
 
+	'pageTitle' => 'Welcome',
 	'title' => 'Welcome to Barrio-Ball',
 	'subtitle' => "Play football in your neighbourhood",
 	'links' => 'Useful Links',

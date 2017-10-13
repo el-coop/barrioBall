@@ -1,26 +1,23 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Users;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
 
-class RedirectIfAuthenticated
+class OnlyAdmin
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next)
     {
-        if (Auth::guard($guard)->check()) {
+    	if($request->user()->user_type !== 'Admin'){
 			return redirect(action('HomeController@index'));
 		}
-
         return $next($request);
     }
 }

@@ -38,14 +38,15 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_admin_joins_automatically(): void {
 		Event::fake();
 
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
-
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert', __('match/show.joined'));
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(302)
+			->assertSessionHas('alert', __('match/show.joined'));
 
 		$this->assertTrue($this->match->hasPlayer($this->manager));
 
@@ -56,35 +57,41 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_admin_cant_repeat_join(): void {
-		$this->match->addPlayer($this->manager);
 		Event::fake();
 
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
+		$this->match->addPlayer($this->manager);
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(403);
 
-		$response->assertStatus(403);
 		Event::assertNotDispatched(UserJoined::class);
 	}
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_admin_cant_join_full_match(): void {
+		Event::fake();
+
 		factory(User::class, $this->match->players)->create()->each(function ($player) {
 			$this->match->addPlayer($player);
 		});
 
-		Event::fake();
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(403);
 
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
-
-		$response->assertStatus(403);
 		Event::assertNotDispatched(UserJoined::class);
 	}
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_sends_email_to_admins_when_user_joins(): void {
 		Notification::fake();
@@ -97,15 +104,16 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_player_can_send_join_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
-			'message' => 'bla',
-		]);
 
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert', __('match/show.joinMatchSent'));
+		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
+		])->assertStatus(302)
+			->assertSessionHas('alert', __('match/show.joinMatchSent'));
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
@@ -116,55 +124,60 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_player_cant_repeat_send_join_request(): void {
-		$this->match->addJoinRequest($this->player);
 		Event::fake();
 
-		$response = $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
-			'message' => 'bla',
-		]);
+		$this->match->addJoinRequest($this->player);
 
-		$response->assertStatus(403);
+		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
+		])->assertStatus(403);
+
 		Event::assertNotDispatched(JoinRequestSent::class);
 	}
 
-
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_player_cant_send_join_request_to_full_match(): void {
+		Event::fake();
+
 		factory(User::class, $this->match->players)->create()->each(function ($player) {
 			$this->match->addPlayer($player);
 		});
 
-		Event::fake();
-
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), []);
-
-		$response->assertStatus(403);
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(403);
 		Event::assertNotDispatched(JoinRequestSent::class);
 	}
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
-	public function test_not_loged_in_cant_send_join_request(): void {
+	public function test_not_logged_in_cant_send_join_request(): void {
 		Event::fake();
-		$response = $this->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+		$this->post(action('Match\MatchUsersController@joinMatch', $this->match), [
 			'message' => 'bla',
-		]);
+		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 		$this->assertFalse($this->match->hasJoinRequest($this->player));
 
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-		Event::assertNotDispatched(JoinRequestSent::class);
 
+		Event::assertNotDispatched(JoinRequestSent::class);
 	}
+
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_sends_email_when_request_sent(): void {
 		Notification::fake();
@@ -175,19 +188,20 @@ class JoinTest extends TestCase {
 		Notification::assertSentTo($this->manager, JoinMatchRequest::class);
 	}
 
+
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_can_reject_user_request(): void {
-		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->match->addJoinRequest($this->player);
+		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
-
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
+		])->assertStatus(302)
+			->assertSessionHas('alert', __('match/requests.rejected'));
 
 		$this->assertFalse($this->match->hasJoinRequest($this->player));
 
@@ -199,16 +213,16 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_cant_reject_non_existent_user_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
-
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('request');
+		])->assertStatus(302)
+			->assertSessionHasErrors('request',__('match/requests.requestNotExistent'));
 
 		Event::assertNotDispatched(UserRejected::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
@@ -217,17 +231,18 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_cant_reject_when_not_logged_in(): void {
-		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->match->addJoinRequest($this->player);
+		$this->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
+		])->assertStatus(302)
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
 		Event::assertNotDispatched(UserRejected::class, function ($event) {
@@ -235,8 +250,12 @@ class JoinTest extends TestCase {
 		});
 	}
 
-
-	public function test_notfies_user_when_rejected() {
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_notfies_user_when_rejected(): void {
 		Notification::fake();
 
 		$listener = new SendJoinRequestRejectedNotification();
@@ -247,17 +266,17 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_can_accept_user_join_request(): void {
-		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->match->addJoinRequest($this->player);
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
-
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
+		])->assertStatus(302)
+			->assertSessionHas('alert',__('match/requests.accepted'));
 
 		$this->assertfalse($this->match->hasJoinRequest($this->player));
 		$this->assertTrue($this->match->hasPlayer($this->player));
@@ -271,16 +290,16 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_cant_accept_non_existent_request(): void {
 		Event::fake();
-		$response = $this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
-
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('request');
+		])->assertStatus(302)
+			->assertSessionHasErrors('request',__('match/requests.requestNotExistent'));
 
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
@@ -291,17 +310,16 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_cant_accept_when_not_logged_in(): void {
-		$this->match->addJoinRequest($this->player);
 		Event::fake();
-		$response = $this->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->match->addJoinRequest($this->player);
+		$this->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		]);
-
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
+		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
@@ -316,6 +334,8 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
+	 * @group joinMatch
 	 */
 	public function test_user_is_notified_when_request_is_accepted(): void {
 		Notification::fake();

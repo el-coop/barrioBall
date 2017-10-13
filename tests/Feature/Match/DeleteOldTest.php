@@ -21,12 +21,16 @@ class DeleteOldTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group deleteOld
+	 * @group match
 	 */
 	public function test_doesnt_delete_not_old_matches(): void {
+		Event::fake();
 		$this->createManagedMatch();
 		$this->artisan('match:deleteOld');
 
 		$this->assertEquals(1, Match::count());
+		Event::assertNotDispatched(DeletedOldMatch::class);
 	}
 
 	/**
@@ -42,6 +46,8 @@ class DeleteOldTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group deleteOld
+	 * @group match
 	 */
 	public function test_deletes_old_matches(): void {
 		Event::fake();
@@ -56,6 +62,8 @@ class DeleteOldTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group deleteOld
+	 * @group match
 	 */
 	public function test_sends_old_match_deleted_notification(): void {
 		Notification::fake();

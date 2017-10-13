@@ -3,6 +3,7 @@
 namespace Tests\Feature\User;
 
 use App\Models\Admin;
+use App\Models\Player;
 use App\Models\User;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,194 +12,239 @@ use Tests\TestCase;
 class ProfileTest extends TestCase {
 	use RefreshDatabase;
 
+	protected $user;
+
 	public function setUp() {
 		parent::setUp();
-		factory(Admin::class)->create()->each(function ($user) {
-			$user->user()->save(factory(User::class)->make([
-				'language' => 'en'
-			]));
-		});
-	}
-
-	public function test_doesnt_show_profile_page_unauthorized() {
-		$response = $this->get(action('UserController@show'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-
-	}
-
-	public function test_shows_profile_page() {
-		$response = $this->actingAs(User::first())->get(action('UserController@show'));
-		$response->assertStatus(200);
-		$response->assertSee("<title>Profile");
-	}
-
-	public function test_unlogged_cant_update_username() {
-		$response = $this->patch(action('UserController@updateUsername'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-
-	}
-
-
-	public function test_user_can_update_username() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateUsername', [
-			'username' => 'newUsername'
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
-		$this->assertDatabaseHas('users', [
-			'username' => 'newUsername'
+		$this->user = factory(User::class)->create([
+			'language' => 'en',
 		]);
 	}
 
-	public function test_user_cant_have_empty_username() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateUsername', [
-			'username' => ''
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('username');
-		$this->assertDatabaseMissing('users', [
-			'username' => ''
-		]);
-	}
-
-	public function test_unlogged_cant_update_password() {
-		$response = $this->patch(action('UserController@updatePassword'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_doesnt_show_profile_page_unauthorized(): void {
+		$this->get(action('UserController@show'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 	}
 
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_shows_profile_page(): void {
+		$this->actingAs($this->user)->get(action('UserController@show'))
+			->assertSee('<title>' . __('navbar.profileLink', [], $this->user->language));
+	}
 
-	public function test_user_can_update_password() {
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_unlogged_cant_update_username(): void {
+		$this->patch(action('UserController@updateUsername'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
+	}
 
-		$response = $this->actingAs(User::first())->patch(action('UserController@updatePassword', [
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_can_update_username(): void {
+
+		$this->actingAs($this->user)->patch(action('UserController@updateUsername', [
+			'username' => 'newUsername',
+		]))->assertSessionHas('alert',__('profile/page.updatedUsername'));
+		$this->assertEquals('newUsername', $this->user->username);
+	}
+
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_empty_username(): void {
+
+		$this->actingAs($this->user)->patch(action('UserController@updateUsername', [
+			'username' => '',
+		]))->assertSessionHasErrors('username');
+		$this->assertNotEquals('', $this->user->username);
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_unlogged_cant_update_password(): void {
+		$this->patch(action('UserController@updatePassword'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_can_update_password(): void {
+		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
 			'password' => '12345678',
-			'password_confirmation' => '12345678'
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
-		$this->assertTrue(Hash::check('12345678', User::first()->password));
+			'password_confirmation' => '12345678',
+		]))->assertSessionHas('alert',__('profile/page.updatedPassword'));
+		$this->assertTrue(Hash::check('12345678', $this->user->password));
 	}
 
-	public function test_user_cant_have_empty_password() {
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_empty_password(): void {
 
-		$response = $this->actingAs(User::first())->patch(action('UserController@updatePassword', [
+		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
 			'password' => '',
-			'password_confirm' => ''
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('password');
+			'password_confirm' => '',
+		]))->assertSessionHasErrors('password');
+		$this->assertFalse(Hash::check('', $this->user->password));
 	}
 
-	public function test_user_cant_have_unconfirmed_password() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updatePassword', [
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_unconfirmed_password(): void {
+		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
 			'password' => '1234567',
-			'password_confirm' => '123'
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('password');
+			'password_confirm' => '123',
+		]))->assertSessionHasErrors('password');
+		$this->assertFalse(Hash::check('1234567', $this->user->password));
 	}
 
-	public function test_unlogged_cant_update_email() {
-		$response = $this->patch(action('UserController@updateEmail'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_unlogged_cant_update_email(): void {
+		$this->patch(action('UserController@updateEmail'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
-	public function test_user_can_update_email() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateEmail', [
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_can_update_email(): void {
+		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
 			'email' => 'new@new.new',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
-		$this->assertDatabaseHas('users', [
-			'email' => 'new@new.new'
-		]);
+		]))->assertSessionHas('alert',__('profile/page.updatedEmail'));
+		$this->assertEquals('new@new.new', $this->user->email);
 	}
 
-	public function test_user_cant_have_empty_email() {
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_empty_email(): void {
 
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateEmail', [
+		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
 			'email' => '',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('email');
+		]))->assertSessionHasErrors('email');
+		$this->assertNotEquals('', $this->user->email);
 	}
 
-	public function test_user_cant_have_non_email() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateEmail', [
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_non_email(): void {
+		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
 			'email' => 'test',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('email');
-		$this->assertDatabaseMissing('users', [
-			'email' => 'test'
-		]);
+		]))->assertSessionHasErrors('email');
+		$this->assertNotEquals('test', $this->user->email);
 	}
 
-	public function test_unlogged_cant_update_language() {
-		$response = $this->patch(action('UserController@updateLanguage'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_unlogged_cant_update_language(): void {
+		$this->patch(action('UserController@updateLanguage'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
-	public function test_user_can_update_language() {
-
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateLanguage', [
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_can_update_language(): void {
+		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
 			'language' => 'es',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHas('alert');
-		$this->assertDatabaseHas('users', [
-			'language' => 'es'
-		]);
+		]))->assertSessionHas('alert',__('profile/page.updatedLanguage',[],$this->user->language));
+		$this->assertEquals('es', $this->user->language);
 	}
 
-	public function test_user_cant_have_empty_language() {
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_empty_language(): void {
 
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateLanguage', [
+		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
 			'language' => '',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('language');
+		]))->assertSessionHasErrors('language');
+		$this->assertNotEquals('', $this->user->language);
 	}
 
-	public function test_user_cant_have_non_language() {
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_cant_have_non_language(): void {
 
-		$response = $this->actingAs(User::first())->patch(action('UserController@updateLanguage', [
+		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
 			'language' => 'test',
-		]));
-		$response->assertStatus(302);
-		$response->assertSessionHasErrors('language');
-		$this->assertDatabaseMissing('users', [
-			'language' => 'test'
-		]);
+		]))->assertSessionHasErrors('language');
+		$this->assertNotEquals('test', $this->user->language);
 	}
 
-	public function test_unlogged_cant_delete_user() {
-		$response = $this->delete(action('UserController@deleteUser'));
-		$response->assertStatus(302);
-		$response->assertRedirect(action('Auth\LoginController@showLoginForm'));
-
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_unlogged_cant_delete_user(): void {
+		$this->delete(action('UserController@deleteUser'))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
+		$this->assertNotEquals(0,User::count());
+		$this->assertNotEquals(0,Player::count());
 	}
 
-	public function test_user_can_delete_himself() {
-
-		$username = User::first()->username;
-
-		$response = $this->actingAs(User::first())->delete(action('UserController@deleteUser'));
-		$response->assertStatus(302);
-		$this->assertDatabaseMissing('users', [
-			'username' => $username
-		]);
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function test_user_can_delete_himself(): void {
+		$this->actingAs($this->user)->delete(action('UserController@deleteUser'));
+		$this->assertEquals(0,User::count());
+		$this->assertEquals(0,Player::count());
 	}
 }
