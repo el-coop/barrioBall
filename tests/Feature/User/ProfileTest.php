@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\User;
 
-use App\Models\Admin;
 use App\Models\Player;
 use App\Models\User;
 use Hash;

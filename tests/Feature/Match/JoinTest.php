@@ -16,7 +16,7 @@ use App\Models\User;
 use App\Notifications\Match\JoinMatchRequest;
 use App\Notifications\Match\MatchJoined;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
+use Event;
 use Notification;
 use Tests\TestCase;
 

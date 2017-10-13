@@ -6,7 +6,6 @@ use App\Events\Match\PlayerRemoved;
 use App\Listeners\Match\SendPlayerRemovedNotification;
 use App\Models\Admin;
 use App\Models\Match;
-use App\Models\Player;
 use App\Models\User;
 use App\Notifications\Match\PlayerRemoved as PlayerRemovedNotification;
 use Event;

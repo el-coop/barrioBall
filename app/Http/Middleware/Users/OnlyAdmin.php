@@ -15,7 +15,7 @@ class OnlyAdmin
      */
     public function handle($request, Closure $next)
     {
-    	if(!$request->user() || $request->user()->user_type !== 'Admin'){
+    	if(!$request->user() || ! $request->user()->isAdmin()){
 			return redirect(action('HomeController@index'));
 		}
         return $next($request);

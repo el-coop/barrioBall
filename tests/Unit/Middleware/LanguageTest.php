@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Session\Middleware\StartSession;
-use Session;
 use Tests\TestCase;
 
 class LanguageTest extends TestCase {
@@ -33,7 +32,7 @@ class LanguageTest extends TestCase {
 	 * @group middleware
 	 * @group language
 	 */
-	public function test_it_sets_language_for_spanish_user() {
+	public function test_it_sets_language_for_spanish_user(): void {
 		$this->request->setUserResolver(function () {
 			return factory(User::class)->create([
 				'language' => 'es',
@@ -49,7 +48,7 @@ class LanguageTest extends TestCase {
 	 * @group middleware
 	 * @group language
 	 */
-	public function test_it_sets_language_for_english_user() {
+	public function test_it_sets_language_for_english_user(): void {
 		$this->request->setUserResolver(function () {
 			return factory(User::class)->create([
 				'language' => 'en',
@@ -65,7 +64,7 @@ class LanguageTest extends TestCase {
 	 * @group middleware
 	 * @group language
 	 */
-	public function test_it_sets_language_for_english_guest() {
+	public function test_it_sets_language_for_english_guest(): void {
 		$this->request->session()->put('appLocale','en');
 		$this->middleware->handle($this->request, function () {
 		});
@@ -77,7 +76,7 @@ class LanguageTest extends TestCase {
 	 * @group middleware
 	 * @group language
 	 */
-	public function test_it_sets_language_for_spanish_guest() {
+	public function test_it_sets_language_for_spanish_guest(): void {
 		$this->request->session()->put('appLocale','es');
 		$this->middleware->handle($this->request, function () {
 		});
@@ -90,7 +89,7 @@ class LanguageTest extends TestCase {
 	 * @group language
 	 */
 	public function test_it_defaults_to_english() {
-		$this->middleware->handle($this->request, function () {
+		$this->middleware->handle($this->request, function (): void {
 		});
 		$this->assertEquals('en', App::getLocale());
 	}

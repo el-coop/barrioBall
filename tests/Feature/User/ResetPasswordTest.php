@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\User;
 
-use App\Models\Admin;
 use App\Models\User;
 use App\Notifications\User\ResetPassword;
 use DB;

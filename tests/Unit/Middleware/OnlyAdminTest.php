@@ -7,7 +7,6 @@ use App\Models\Admin;
 use App\Models\User;
 use Request;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OnlyAdminTest extends TestCase {
 
@@ -39,7 +38,7 @@ class OnlyAdminTest extends TestCase {
 	 * @group middleware
 	 * @group auth
 	 */
-	public function test_it_doesnt_allow_nonAdmins_in() {
+	public function test_it_doesnt_allow_nonAdmins_in(): void {
 		$this->request->setUserResolver(function () {
 			return factory(User::class)->create();
 		});
@@ -54,7 +53,7 @@ class OnlyAdminTest extends TestCase {
 	 * @group middleware
 	 * @group auth
 	 */
-	public function test_it__allows_admins_in() {
+	public function test_it__allows_admins_in(): void {
 		$this->request->setUserResolver(function () {
 			return factory(User::class)->create([
 				'user_id' => function () {

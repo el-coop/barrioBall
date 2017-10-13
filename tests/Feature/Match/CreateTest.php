@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Match;
 
-use App\Models\Admin;
 use App\Models\Match;
-use App\Models\Player;
 use App\Models\User;
 use Carbon\Carbon;
 use Tests\TestCase;
