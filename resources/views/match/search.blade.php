@@ -19,9 +19,7 @@
                 </div>
             </flipper>
             <div class="search-toggle text-center">
-                <span class="btn-group d-md-none">
-                    <button class="btn btn-primary" @click="toggleMap">@{{mapBtn}}</button>
-                </span>
+                <button class="btn btn-primary d-md-none" @click="toggleMap">@{{mapBtn}}</button>
             </div>
         </div>
     </search-page>
