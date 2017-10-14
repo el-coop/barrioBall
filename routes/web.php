@@ -19,7 +19,7 @@ foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
 
 
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->middleware(['auth']);
 Route::get('/', 'HomeController@welcome');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 

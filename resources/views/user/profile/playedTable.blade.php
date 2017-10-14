@@ -1,6 +1,6 @@
 @component('partials.components.panel')
     @slot('title')
-        <h4>@lang('profile/page.playedMatches')</h4>
+        <h4 class="mb-0">@lang('profile/page.playedMatches')</h4>
     @endslot
     <datatable
             url="{{ action('UserController@getMatches')}}"
