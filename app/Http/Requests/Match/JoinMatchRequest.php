@@ -42,11 +42,11 @@ class JoinMatchRequest extends FormRequest {
 		if ($this->user()->isManager($this->match)) {
 			$this->match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(), $this->match));
+			event(new UserJoined($this->match, $this->user()));
 		} else {
 			$this->match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-			event(new JoinRequestSent($this->user(), $this->match, $this->input('message')));
+			event(new JoinRequestSent($this->match, $this->user(), $this->input('message')));
 		}
 
 		return $message;

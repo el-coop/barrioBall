@@ -25,8 +25,6 @@ class SendJoinRequestNotification implements ShouldQueue {
 	 * @return void
 	 */
 	public function handle(JoinRequestSent $event): void {
-		$event->match->managers->each(function ($manager) use ($event) {
-			$manager->notify(new JoinMatchRequest($event->user, $event->match, $event->message, $manager));
-		});
+		$event->match->managers->each->notify(new JoinMatchRequest($event->match, $event->user, $event->message));
 	}
 }

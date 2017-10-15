@@ -56,6 +56,6 @@ class AcceptJoinRequest extends FormRequest {
 	public function commit(): void {
 		$this->match->addPlayer($this->user);
 		$this->match->joinRequests()->detach($this->user);
-		event(new UserJoined($this->user, $this->match, $this->input('message')));
+		event(new UserJoined($this->match, $this->user, $this->input('message')));
 	}
 }

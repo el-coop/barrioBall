@@ -55,7 +55,7 @@ class DeleteTest extends TestCase {
 		Notification::fake();
 
 		$listener = new SendMatchDeletedNotification;
-		$listener->handle(new MatchDeleted($this->manager, $this->match));
+		$listener->handle(new MatchDeleted($this->match, $this->manager));
 
 		Notification::assertSentTo($this->manager, Deleted::class);
 		Notification::assertSentTo($this->player, Deleted::class);

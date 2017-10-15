@@ -24,6 +24,6 @@ class SendPlayerRemovedNotification {
 	 * @return void
 	 */
 	public function handle($event): void {
-		$event->user->notify(new PlayerRemoved($event->user, $event->match, $event->message));
+		$event->user->notify(new PlayerRemoved($event->match, $event->message));
 	}
 }

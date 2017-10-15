@@ -43,6 +43,6 @@ class RemovePlayerRequest extends FormRequest {
 		$user = User::find($this->input('user'));
 		$this->match->removePlayer($user);
 
-		event(new PlayerRemoved($user, $this->match, $this->input('message')));
+		event(new PlayerRemoved($this->match, $user, $this->input('message')));
 	}
 }

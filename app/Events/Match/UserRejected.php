@@ -25,7 +25,7 @@ class UserRejected {
 	 * @param Match $match
 	 * @param string $message
 	 */
-	public function __construct(User $user, Match $match, ?string $message = '') {
+	public function __construct(Match $match, User $user, ?string $message = '') {
 		//
 		$this->user = $user;
 		$this->match = $match;

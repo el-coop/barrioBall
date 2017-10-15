@@ -3,16 +3,13 @@
 namespace App\Notifications\Match;
 
 use App\Mail\MailMessage;
+use App\Models\Match;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class JoinRequestRejected extends Notification implements ShouldQueue {
 	use Queueable;
-	/**
-	 * @var
-	 */
-	protected $language;
 	/**
 	 * @var
 	 */
@@ -25,10 +22,10 @@ class JoinRequestRejected extends Notification implements ShouldQueue {
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
+	 * @param string $message
 	 */
-	public function __construct($user, $match, $message) {
-		$this->language = $user->language;
+	public function __construct(Match $match,string $message) {
 		$this->match = $match;
 		$this->message = $message;
 	}
@@ -55,16 +52,16 @@ class JoinRequestRejected extends Notification implements ShouldQueue {
 		return (new MailMessage)
 			->subject(__('mail/userRejected.subject', [
 				'name' => $this->match->name,
-			], $this->language))
-			->language($this->language)
-			->greeting(__('mail/global.hello', [], $this->language) . ',')
+			], $notifiable->language))
+			->language($notifiable->language)
+			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/userRejected.youWereRejected', [
 				'url' => action('Match\MatchController@showMatch', $this->match),
 				'name' => $this->match->name,
-			], $this->language))
-			->line(__('mail/global.adminSays', [], $this->language))
+			], $notifiable->language))
+			->line(__('mail/global.adminSays', [], $notifiable->language))
 			->quote($this->message)
-			->salutation(__('mail/global.dontReply', [], $this->language));
+			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}
 
 	/**

@@ -3,16 +3,15 @@
 namespace App\Notifications\Match;
 
 use App\Mail\MailMessage;
+use App\Models\Match;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class JoinRequestAccepted extends Notification implements ShouldQueue {
 	use Queueable;
-	/**
-	 * @var
-	 */
-	protected $user;
+
 	/**
 	 * @var
 	 */
@@ -25,19 +24,18 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 	 * @var
 	 */
 	protected $manager;
-	protected $language;
+
 
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
+	 * @param string $message
+	 * @param User $manager
 	 */
-	public function __construct($user, $match, $message, $manager) {
-		//
-		$this->user = $user;
+	public function __construct(Match $match, User $manager, string $message) {
 		$this->match = $match;
 		$this->message = $message;
-		$this->language = $this->user->language;
 		$this->manager = $manager;
 	}
 
@@ -62,17 +60,17 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 		return (new MailMessage)
 			->subject(__('mail/userAccepted.subject', [
 				'name' => $this->match->name,
-			], $this->language))
+			], $notifiable->language))
 			->replyTo($this->manager->email)
-			->language($this->language)
-			->greeting(__('mail/global.hello', [], $this->language) . ',')
+			->language($notifiable->language)
+			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/userAccepted.youWereAccepted', [
 				'url' => action('Match\MatchController@showMatch', $this->match),
 				'name' => $this->match->name,
-			], $this->language))
-			->line(__('mail/global.adminSays', [], $this->language))
+			], $notifiable->language))
+			->line(__('mail/global.adminSays', [], $notifiable->language))
 			->quote($this->message)
-			->salutation(__('mail/global.replyToThisEmail', [], $this->language));
+			->salutation(__('mail/global.replyToThisEmail', [], $notifiable->language));
 	}
 
 	/**

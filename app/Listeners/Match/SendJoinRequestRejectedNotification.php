@@ -25,6 +25,6 @@ class SendJoinRequestRejectedNotification {
 	 * @return void
 	 */
 	public function handle(UserRejected $event): void {
-		$event->user->notify(new JoinRequestRejected($event->user, $event->match, $event->message));
+		$event->user->notify(new JoinRequestRejected($event->match, $event->message));
 	}
 }
