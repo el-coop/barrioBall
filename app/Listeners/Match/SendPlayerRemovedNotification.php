@@ -2,7 +2,8 @@
 
 namespace App\Listeners\Match;
 
-use App\Notifications\Match\PlayerRemoved;
+use App\Events\Match\PlayerRemoved;
+use App\Notifications\Match\PlayerRemoved as Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -19,11 +20,11 @@ class SendPlayerRemovedNotification {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  object $event
+	 * @param PlayerRemoved $event
 	 *
 	 * @return void
 	 */
-	public function handle($event): void {
-		$event->user->notify(new PlayerRemoved($event->match, $event->message));
+	public function handle(PlayerRemoved $event): void {
+		$event->user->notify(new Notification($event->match, $event->message));
 	}
 }

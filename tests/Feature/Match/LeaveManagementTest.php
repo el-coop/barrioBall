@@ -3,9 +3,12 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\ManagerLeft;
+use App\Listeners\Match\SendManagerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
+use App\Notifications\Match\ManagerLeft as ManagerLeftNotification;
 use Event;
+use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -40,6 +43,21 @@ class LeaveManagementTest extends TestCase {
 			->assertSessionHas('alert', __('match/show.managementLeft'));
 		$this->assertFalse($this->player->isManager($this->match));
 		Event::assertDispatched(ManagerLeft::class);
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_manager_left_notification_sent(): void {
+		Notification::fake();
+
+		$listener = new SendManagerLeftNotification();
+		$listener->handle(new ManagerLeft($this->match, $this->player));
+
+		Notification::assertSentTo($this->manager, ManagerLeftNotification::class);
 	}
 
 	/**

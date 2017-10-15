@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\Match\DeletedOldMatch;
 use App\Events\Match\JoinRequestSent;
+use App\Events\Match\ManagerLeft;
 use App\Events\Match\MatchDeleted;
 use App\Events\Match\PlayerRemoved;
 use App\Events\Match\UserRejected;
@@ -11,6 +12,7 @@ use App\Events\Match\UserJoined;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
+use App\Listeners\Match\SendManagerLeftNotification;
 use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Listeners\Match\SendOldMatchDeletedMessage;
 use App\Listeners\Match\SendPlayerRemovedNotification;
@@ -42,6 +44,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		MatchDeleted::class => [
 			SendMatchDeletedNotification::class
+		],
+		ManagerLeft::class => [
+			SendManagerLeftNotification::class
 		]
 	];
 

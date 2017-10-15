@@ -46,12 +46,12 @@ class Deleted extends Notification implements ShouldQueue {
 	 */
 	public function toMail($notifiable) {
 		return (new MailMessage)
-			->subject(__('mail/MatchDeleted.subject', [
+			->subject(__('mail/matchDeleted.subject', [
 				'match' => $this->match->name,
 			], $notifiable->language))
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
-			->line(__('mail/MatchDeleted.body', [
+			->line(__('mail/matchDeleted.body', [
 				'match' => $this->match->name,
 				'name' => $this->deleter->username,
 			], $notifiable->language))
