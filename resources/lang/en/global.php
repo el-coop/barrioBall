@@ -15,5 +15,7 @@ return [
 
 
     'currentLanguage' => 'English',
+	'error' => 'Error',
+	'success' => 'Success'
 
 ];

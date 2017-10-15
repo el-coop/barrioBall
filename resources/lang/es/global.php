@@ -15,6 +15,7 @@ return [
 
 
     'currentLanguage' => 'Español',
-	'message' => 'Mensaje'
+	'error' => 'Error',
+	'success' => 'Éxito'
 
 ];
