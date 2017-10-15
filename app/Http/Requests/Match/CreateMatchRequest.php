@@ -13,7 +13,7 @@ class CreateMatchRequest extends FormRequest {
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		if ($this->user() && $this->user()->exists()) {
+		if ($this->user()) {
 			return true;
 		}
 

@@ -109,7 +109,7 @@ class Match extends Model {
 	 * @return bool
 	 */
 	public function hasJoinRequest(User $user): bool {
-		return $this->joinRequests()->exists($user);
+		return $this->joinRequests()->where('id',$user->id)->exists();
 	}
 
 	/**
@@ -126,7 +126,7 @@ class Match extends Model {
 	 * @return bool
 	 */
 	public function hasPlayer(User $user): bool {
-		return $this->registeredPlayers()->exists($user);
+		return $this->registeredPlayers()->where('id',$user->id)->exists();
 	}
 
 	/**

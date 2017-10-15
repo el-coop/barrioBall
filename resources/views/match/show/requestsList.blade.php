@@ -2,6 +2,7 @@
     <div class="list-group-item d-flex justify-content-between align-items-center">
         <a>{{$request->username}}</a>
         <div class="btn-group">
+            @if(! $match->isFull())
             <button class="btn btn-success"
                     @click="toggleModal({
                             url: '{{ action('Match\MatchUsersController@acceptJoin', $match) }}',
@@ -14,6 +15,7 @@
                         })">
                 <i class="fa fa-check"></i>
             </button>
+            @endif
             <button class="btn btn-danger"
                     @click="toggleModal({
                             url: '{{ action('Match\MatchUsersController@rejectJoin', $match) }}',

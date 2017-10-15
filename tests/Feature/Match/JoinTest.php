@@ -128,6 +128,30 @@ class JoinTest extends TestCase {
 	 * @group match
 	 * @group joinMatch
 	 */
+	public function test_user_can_send_request_to_full_match(): void {
+		Event::fake();
+
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+			'message' => 'bla',
+		])->assertStatus(302)
+			->assertSessionHas('alert', __('match/show.joinMatchSent'));
+
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
+
+		Event::assertDispatched(JoinRequestSent::class, function ($event) {
+			return $event->user->id === $this->player->id && $event->message = 'bla';
+		});
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
 	public function test_player_cant_repeat_send_join_request(): void {
 		Event::fake();
 
@@ -145,7 +169,7 @@ class JoinTest extends TestCase {
 	 * @group match
 	 * @group joinMatch
 	 */
-	public function test_player_cant_send_join_request_to_full_match(): void {
+	public function test_manager_cant_join_request_to_full_match(): void {
 		Event::fake();
 
 		factory(User::class, $this->match->players)->create()->each(function ($player) {
@@ -330,6 +354,31 @@ class JoinTest extends TestCase {
 		Event::assertNotDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_manager_cant_accept_join_request_to_full_match(): void {
+		Event::fake();
+
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
+			$this->match->addPlayer($player);
+		});
+
+		$this->match->addJoinRequest($this->player);
+
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
+		])->assertStatus(403);
+
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
+		$this->assertFalse($this->match->hasPlayer($this->player));
+
+		Event::assertNotDispatched(JoinRequestSent::class);
 	}
 
 
