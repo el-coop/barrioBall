@@ -33,8 +33,9 @@ class ErrorsTest extends DuskTestCase {
 	 * @group admin
 	 */
 	public function test_shows_php_errors(): void {
-		$this->browse(function (Browser $browser) {
-			$errors = factory(Error::class, 5)->create();
+		$errors = factory(Error::class, 5)->create();
+
+		$this->browse(function (Browser $browser) use ($errors) {
 
 			$browser->loginAs($this->admin)->visit(new ErrorsPage)
 				->waitFor('@tables-loaded')
@@ -48,13 +49,14 @@ class ErrorsTest extends DuskTestCase {
 	 * @group admin
 	 */
 	public function test_shows_js_errors(): void {
-		$this->browse(function (Browser $browser) {
-			$errors = factory(Error::class, 5)->create([
-				'errorable_id' => function () {
-					return factory(JsError::class);
-				},
-				'errorable_type' => 'JSError',
-			]);
+		$errors = factory(Error::class, 5)->create([
+			'errorable_id' => function () {
+				return factory(JsError::class);
+			},
+			'errorable_type' => 'JSError',
+		]);
+
+		$this->browse(function (Browser $browser) use ($errors) {
 
 			$browser->loginAs($this->admin)->visit(new ErrorsPage)
 				->waitFor('@tables-loaded')
@@ -68,17 +70,19 @@ class ErrorsTest extends DuskTestCase {
 	 * @group admin
 	 */
 	public function test_button_resolves_errors(): void {
-		$this->browse(function (Browser $browser) {
-			$error = factory(Error::class)->create();
-			$errorable = $error->errorable;
+
+		$error = factory(Error::class)->create();
+		$errorable = $error->errorable;
+
+		$this->browse(function (Browser $browser) use ($errorable, $error) {
 
 			$browser->loginAs($this->admin)->visit(new ErrorsPage)
 				->waitFor('@tables-loaded')
 				->click('@resolve-button')
 				->waitUntilMissing('@resolve-button');
-
-			$this->assertFalse($error->exists());
-			$this->assertFalse($errorable->exists());
 		});
+
+		$this->assertFalse($error->exists());
+		$this->assertFalse($errorable->exists());
 	}
 }

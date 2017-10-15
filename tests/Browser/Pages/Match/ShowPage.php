@@ -42,6 +42,11 @@ class ShowPage extends BasePage {
 		return [
 			'@player-remove' => '.list-group-item > .btn.btn-danger',
 			'@message-modal' => '#listsModal',
+			'@delete-button' => '.btn.btn-danger.col-12.col-md-6.col-lg-4',
+			'@join-button' => '.btn.btn-success.sm-btn-block',
+			'@leave-button' => '.btn.btn-warning.sm-btn-block',
+			'@accept-button' => '.list-group-item > .btn-group > .btn.btn-success',
+			'@reject-button' => '.list-group-item > .btn-group > .btn.btn-danger',
 		];
 	}
 
@@ -50,9 +55,9 @@ class ShowPage extends BasePage {
 	 * @param string $message
 	 */
 	public function fillModalMessage(Browser $browser, string $message): void {
-		$browser->whenAvailable('@message-modal', function ($modal) {
-			$modal->type('.form-control', 'I hate you')
-				->press('.btn.btn-danger.btn-block');
+		$browser->whenAvailable('@message-modal', function ($modal) use($message){
+			$modal->type('.form-control', $message)
+				->press('.btn.btn-block');
 		});
 	}
 }

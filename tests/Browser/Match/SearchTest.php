@@ -41,16 +41,15 @@ class SearchTest extends DuskTestCase {
 	 * @group match
 	 */
 	public function test_shows_search_results(): void {
-		$this->browse(function (Browser $browser) {
+		$faker = new Base(new Generator());
 
-			$faker = new Base(new Generator());
+		$matches = factory(Match::class, 5)->create([
+			'date' => (new Carbon())->addDay()->format('y/m/d'),
+			'lat' => $faker->randomFloat(15, 0, 5),
+			'lng' => $faker->randomFloat(15, 0, 5),
+		]);
 
-			$matches = factory(Match::class, 5)->create([
-				'date' => (new Carbon())->addDay()->format('y/m/d'),
-				'lat' => $faker->randomFloat(15, 0, 5),
-				'lng' => $faker->randomFloat(15, 0, 5),
-			]);
-
+		$this->browse(function (Browser $browser) use($matches) {
 			$browser->visit(new SearchPage)
 				->waitFor('@map')
 				->submitForm([
@@ -70,15 +69,15 @@ class SearchTest extends DuskTestCase {
 	 * @group match
 	 */
 	public function test_click_marker_highlights_result(): void {
-		$this->browse(function (Browser $browser) {
+		$faker = new Base(new Generator());
 
-			$faker = new Base(new Generator());
+		$matches = factory(Match::class, 5)->create([
+			'date' => (new Carbon())->addDay()->format('y/m/d'),
+			'lat' => $faker->randomFloat(15, 0, 5),
+			'lng' => $faker->randomFloat(15, 0, 5),
+		]);
 
-			$matches = factory(Match::class, 5)->create([
-				'date' => (new Carbon())->addDay()->format('y/m/d'),
-				'lat' => $faker->randomFloat(15, 0, 5),
-				'lng' => $faker->randomFloat(15, 0, 5),
-			]);
+		$this->browse(function (Browser $browser) use ($matches) {
 
 			$browser->visit(new SearchPage)
 				->waitFor('@map')
