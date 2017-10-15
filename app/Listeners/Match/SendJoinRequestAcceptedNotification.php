@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Match;
 
-use App\Events\Match\UserJoined;
+use App\Events\Match\PlayerJoined;
 use App\Notifications\Match\JoinRequestAccepted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,11 +20,11 @@ class SendJoinRequestAcceptedNotification implements ShouldQueue {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  UserJoined $event
+	 * @param  PlayerJoined $event
 	 *
 	 * @return void
 	 */
-	public function handle(UserJoined $event): void {
+	public function handle(PlayerJoined $event): void {
 		if ($event->user != $event->manager) {
 			$event->user->notify(new JoinRequestAccepted($event->match, $event->manager, $event->message));
 		}

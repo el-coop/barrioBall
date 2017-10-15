@@ -1,7 +1,7 @@
 <?php
 return [
 
-	'subject' => ':name dejó de administrar el juego :match',
-	'body' => ':name dejó de administrar el juego :match.',
+	'subject' => ':name dejó de administrar :match',
+	'body' => ':name dejó de administrar :match.',
 	'review' => 'Ver el partido'
 ];

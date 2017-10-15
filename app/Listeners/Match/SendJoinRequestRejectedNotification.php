@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Match;
 
-use App\Events\Match\UserRejected;
+use App\Events\Match\PlayerRejected;
 use App\Notifications\Match\JoinRequestRejected;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,11 +20,11 @@ class SendJoinRequestRejectedNotification {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  UserRejected $event
+	 * @param  PlayerRejected $event
 	 *
 	 * @return void
 	 */
-	public function handle(UserRejected $event): void {
+	public function handle(PlayerRejected $event): void {
 		$event->user->notify(new JoinRequestRejected($event->match, $event->message));
 	}
 }

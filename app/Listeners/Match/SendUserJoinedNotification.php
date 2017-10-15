@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Match;
 
-use App\Events\Match\UserJoined;
+use App\Events\Match\PlayerJoined;
 use App\Notifications\Match\MatchJoined;
 use Auth;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,11 +21,11 @@ class SendUserJoinedNotification implements ShouldQueue {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  UserJoined $event
+	 * @param  PlayerJoined $event
 	 *
 	 * @return void
 	 */
-	public function handle(UserJoined $event): void {
+	public function handle(PlayerJoined $event): void {
 
 		$event->match->managers->reject(function ($manager) use ($event) {
 			return $manager == $event->user;

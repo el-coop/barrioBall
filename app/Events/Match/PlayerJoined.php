@@ -13,7 +13,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserJoined {
+class PlayerJoined {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
 	public $user;

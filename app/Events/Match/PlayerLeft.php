@@ -12,32 +12,31 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserRejected {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+class PlayerLeft
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
 	public $user;
 	public $match;
-	public $message;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param User $user
 	 * @param Match $match
-	 * @param string $message
 	 */
-	public function __construct(Match $match, User $user, ?string $message = '') {
-		//
+	public function __construct(Match $match, User $user)
+	{
 		$this->user = $user;
 		$this->match = $match;
-		$this->message = $message;
 	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn() {
-		return new PrivateChannel('channel-name');
-	}
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return Channel|array
+     */
+    public function broadcastOn()
+    {
+        return new PrivateChannel('channel-name');
+    }
 }

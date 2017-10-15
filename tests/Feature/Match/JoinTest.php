@@ -3,8 +3,8 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\JoinRequestSent;
-use App\Events\Match\UserJoined;
-use App\Events\Match\UserRejected;
+use App\Events\Match\PlayerJoined;
+use App\Events\Match\PlayerRejected;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
@@ -51,7 +51,7 @@ class JoinTest extends TestCase {
 
 		$this->assertTrue($this->match->hasPlayer($this->manager));
 
-		Event::assertDispatched(UserJoined::class, function ($event) {
+		Event::assertDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->manager->id;
 		});
 	}
@@ -68,7 +68,7 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
 			->assertStatus(403);
 
-		Event::assertNotDispatched(UserJoined::class);
+		Event::assertNotDispatched(PlayerJoined::class);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
 			->assertStatus(403);
 
-		Event::assertNotDispatched(UserJoined::class);
+		Event::assertNotDispatched(PlayerJoined::class);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class JoinTest extends TestCase {
 		Notification::fake();
 
 		$listener = new SendUserJoinedNotification();
-		$listener->handle(new UserJoined($this->match, $this->player));
+		$listener->handle(new PlayerJoined($this->match, $this->player));
 
 		Notification::assertSentTo($this->manager, MatchJoined::class);
 	}
@@ -206,7 +206,7 @@ class JoinTest extends TestCase {
 
 		$this->assertFalse($this->match->hasJoinRequest($this->player));
 
-		Event::assertDispatched(UserRejected::class, function ($event) {
+		Event::assertDispatched(PlayerRejected::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
@@ -225,7 +225,7 @@ class JoinTest extends TestCase {
 		])->assertStatus(302)
 			->assertSessionHasErrors('request', __('match/requests.requestNotExistent'));
 
-		Event::assertNotDispatched(UserRejected::class, function ($event) {
+		Event::assertNotDispatched(PlayerRejected::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
@@ -246,7 +246,7 @@ class JoinTest extends TestCase {
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
-		Event::assertNotDispatched(UserRejected::class, function ($event) {
+		Event::assertNotDispatched(PlayerRejected::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
@@ -260,7 +260,7 @@ class JoinTest extends TestCase {
 		Notification::fake();
 
 		$listener = new SendJoinRequestRejectedNotification();
-		$listener->handle(new UserRejected($this->match, $this->player, 'Test Mail'));
+		$listener->handle(new PlayerRejected($this->match, $this->player, 'Test Mail'));
 
 		Notification::assertSentTo($this->player, JoinRequestRejected::class);
 	}
@@ -283,7 +283,7 @@ class JoinTest extends TestCase {
 		$this->assertTrue($this->match->hasPlayer($this->player));
 
 
-		Event::assertDispatched(UserJoined::class, function ($event) {
+		Event::assertDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 
@@ -304,7 +304,7 @@ class JoinTest extends TestCase {
 
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
-		Event::assertNotDispatched(UserJoined::class, function ($event) {
+		Event::assertNotDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
@@ -327,7 +327,7 @@ class JoinTest extends TestCase {
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
 
-		Event::assertNotDispatched(UserJoined::class, function ($event) {
+		Event::assertNotDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
 	}
@@ -342,7 +342,7 @@ class JoinTest extends TestCase {
 		Notification::fake();
 		Auth::login($this->manager);
 		$listener = new SendJoinRequestAcceptedNotification();
-		$listener->handle(new UserJoined($this->match, $this->player, 'Test'));
+		$listener->handle(new PlayerJoined($this->match, $this->player, 'Test'));
 
 		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
 	}
