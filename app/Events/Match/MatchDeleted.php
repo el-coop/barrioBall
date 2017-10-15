@@ -27,7 +27,6 @@ class MatchDeleted
 	 */
     public function __construct(User $user, Match $match)
     {
-
         $this->match = $match;
 		$this->user = $user;
 	}
