@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section ('title','Profile')
+@section ('title',__('navbar.profileLink'))
 
 
 @section('content')

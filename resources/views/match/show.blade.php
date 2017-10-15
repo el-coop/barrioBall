@@ -44,6 +44,9 @@
             <div class="row">
                 @include('match.show.map')
             </div>
+            @auth
+                @include('match.show.messageModal')
+            @endauth
         </div>
     </show-page>
 @endsection

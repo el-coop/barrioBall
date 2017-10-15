@@ -28,41 +28,60 @@ class LeaveManagementTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group showMatch
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
 	 */
 	public function test_leave_managment(): void {
 		Event::fake();
 		$this->match->addManager($this->player);
 		$this->actingAs($this->player)
-			->delete(action('Match\MatchUsersController@stopManaging', $this->match));
+			->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+			->assertSessionHas('alert', __('match/show.managementLeft'));
 		$this->assertFalse($this->player->isManager($this->match));
 		Event::assertDispatched(ManagerLeft::class);
 	}
 
-
 	/**
 	 * @test
-	 * @group showMatch
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
 	 */
 	public function test_last_manager_cant_leave_managment(): void {
 		Event::fake();
 
-		$response = $this->actingAs($this->manager)->delete(action('Match\MatchUsersController@stopManaging', $this->match));
-		$response->assertStatus(403);
+		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+			->assertStatus(403);
 
 		Event::assertNotDispatched(ManagerLeft::class);
 	}
 
 	/**
 	 * @test
-	 * @group showMatch
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
 	 */
 	public function test_non_manager_cant_leave_managment(): void {
 		Event::fake();
 
-		$response = $this->actingAs($this->player)->delete(action('Match\MatchUsersController@stopManaging', $this->match));
-		$response->assertStatus(403);
+		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+			->assertStatus(403);
 		Event::assertNotDispatched(ManagerLeft::class);
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_not_logged_in_cant_leave_managment(): void {
+		Event::fake();
+
+		$this->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
+		Event::assertNotDispatched(ManagerLeft::class);
+	}
 }

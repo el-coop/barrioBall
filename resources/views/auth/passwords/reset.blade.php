@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Reset Password')
+@section('title',__('auth.resetPassword'))
 
 @section('content')
     @parent

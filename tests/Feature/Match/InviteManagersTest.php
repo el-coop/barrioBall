@@ -26,6 +26,7 @@ class InviteManagersTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
 	 * @group inviteManagers
 	 */
 
@@ -38,6 +39,7 @@ class InviteManagersTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group match
 	 * @group inviteManagers
 	 */
 	public function test_non_manager_cant_invite_others(): void {

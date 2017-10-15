@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Welcome')
+@section('title',__('global/welcome.pageTitle'))
 
 @section('content')
     @parent

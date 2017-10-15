@@ -7,8 +7,8 @@
     @endslot
     @slot('navbarRight')
         <li class="nav-item">
-            <a class="nav-link {{ Request::is('login') ? 'active' : '' }}"
-               href="{{ action('Auth\LoginController@showLoginForm') }}">@lang('navbar.loginLink')</a>
+            <a class="nav-link {{ Request::is('login') ? 'active' : '' }}" href="{{ action('Auth\LoginController@showLoginForm') }}">
+                @lang('navbar.loginLink')</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ Request::is('register') ? 'active' : '' }}"

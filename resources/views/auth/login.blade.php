@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Login')
+@section('title',__('navbar.loginLink'))
 
 
 @section('content')

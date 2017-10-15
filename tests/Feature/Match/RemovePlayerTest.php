@@ -6,7 +6,6 @@ use App\Events\Match\PlayerRemoved;
 use App\Listeners\Match\SendPlayerRemovedNotification;
 use App\Models\Admin;
 use App\Models\Match;
-use App\Models\Player;
 use App\Models\User;
 use App\Notifications\Match\PlayerRemoved as PlayerRemovedNotification;
 use Event;
@@ -24,57 +23,30 @@ class RemovePlayerTest extends TestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->match = factory(Match::class)->create();
-		factory(Admin::class)->create();
 		$this->admin = factory(User::class)->create([
-			'user_id' => Admin::first()->id,
-			'user_type' => 'Admin'
+			'user_id' => function () {
+				return factory(Admin::class)->create()->id;
+			},
+			'user_type' => 'Admin',
 		]);
-		factory(Player::class)->create();
-		$this->player = factory(User::class)->create([
-			'user_id' => Player::first()->id,
-			'user_type' => 'Player'
-		]);
+		$this->player = factory(User::class)->create();
 		$this->match->addManager($this->admin);
 		$this->match->addPlayer($this->admin);
 		$this->match->addPlayer($this->player);
 	}
 
-	public function test_shows_remove_button_to_manager() {
-		$this->actingAs($this->admin)
-			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertSee("url: '" . action('Match\MatchUsersController@removePlayer', $this->match). "'")
-			->assertSee('<button class="btn btn-danger"');
-	}
-
-	public function test_doesnt_show_remove_button_to_player(){
-		$this->actingAs($this->player)
-			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertDontSee('ref="removeUser"')
-			->assertDontSee('<button class="btn btn-danger"');
-	}
-
-
-	public function test_doesnt_show_remove_button_to_guest(){
-		$this->actingAs($this->player)
-			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertDontSee('ref="removeUser"')
-			->assertDontSee('<button class="btn btn-danger"');
-	}
-
-	public function test_doesnt_show_remove_button_on_manager(){
-		$this->match->removePlayer($this->player);
-		$this->actingAs($this->admin)
-			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertDontSee('<button class="btn btn-danger"');
-	}
-
-	public function test_manager_can_kick_user_out(){
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_manager_can_kick_user_out() {
 		Event::fake();
 
-		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer',$this->match),[
+		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'I hate you'
-		]);
+			'message' => 'I hate you',
+		])->assertSessionHas('alert', __('match/removePlayer.removed'));
 
 		$this->assertFalse($this->player->inMatch($this->match));
 
@@ -83,13 +55,13 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_player_cant_kick_user_out(){
+	public function test_player_cant_kick_user_out() {
 		Event::fake();
 
-		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@removePlayer',$this->match),[
+		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'I hate you'
-		]);
+			'message' => 'I hate you',
+		])->assertStatus(403);
 
 		$this->assertTrue($this->player->inMatch($this->match));
 
@@ -98,13 +70,13 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_guest_cant_kick_user_out(){
+	public function test_guest_cant_kick_user_out() {
 		Event::fake();
 
-		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@removePlayer',$this->match),[
+		$this->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
 			'user' => $this->player->id,
-			'message' => 'I hate you'
-		]);
+			'message' => 'I hate you',
+		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 		$this->assertTrue($this->player->inMatch($this->match));
 
@@ -113,11 +85,11 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_sends_notification_on_user_removed_event(){
+	public function test_sends_notification_on_user_removed_event() {
 		Notification::fake();
 
 		$listener = new SendPlayerRemovedNotification();
-		$listener->handle(new PlayerRemoved($this->player, Match::first(),''));
+		$listener->handle(new PlayerRemoved($this->player, Match::first(), ''));
 
 		Notification::assertSentTo($this->player, PlayerRemovedNotification::class);
 

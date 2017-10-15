@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Errors Table')
+@section('title',__('navbar.errorsLink'))
 
 @section('content')
     @parent

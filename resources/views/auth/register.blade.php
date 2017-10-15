@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section ('title','Register')
+@section ('title',__('navbar.registerLink'))
 
 
 @section('content')

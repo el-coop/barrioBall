@@ -5,10 +5,12 @@
             <button class="btn btn-danger"
                     @click="toggleModal({
                             url: '{{ action('Match\MatchUsersController@removePlayer', $match) }}',
+                            title: '@lang('match/show.message')',
                             class: 'btn-danger',
                             delete: true,
                             user: {{ $player->id }},
-                            buttonText: '@lang('match/removePlayer.confirm',['user' => $player->username])'
+                            buttonText: '@lang('match/removePlayer.confirm',['user' => $player->username])',
+                            buttonIcon: 'fa-minus-circle'
                         })">
                 <i class="fa fa-times"></i>
             </button>
