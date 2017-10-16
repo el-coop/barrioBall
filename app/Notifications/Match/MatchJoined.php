@@ -3,6 +3,7 @@
 namespace App\Notifications\Match;
 
 use App\Mail\MailMessage;
+use App\Models\Match;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -13,17 +14,16 @@ class MatchJoined extends Notification implements ShouldQueue {
 
 	protected $user;
 	protected $match;
-	protected $language;
 
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
+	 * @param User $user
 	 */
-	public function __construct($user, $match, User $recipient) {
+	public function __construct(Match $match,User $user) {
 		$this->match = $match;
 		$this->user = $user;
-		$this->language = $recipient->language;
 	}
 
 	/**
@@ -49,15 +49,15 @@ class MatchJoined extends Notification implements ShouldQueue {
 		return (new MailMessage)
 			->subject(__('mail/matchJoined.subject', [
 				'match' => $this->match->name,
-			], $this->language))
-			->language($this->language)
-			->greeting(__('mail/global.hello', [], $this->language) . ',')
+			], $notifiable->language))
+			->language($notifiable->language)
+			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/matchJoined.hasBeenAuth', [
 				'name' => $this->user->username,
 				'url' => action('Match\MatchController@showMatch', $this->match),
 				'match' => $this->match->name,
-			], $this->language))
-			->salutation(__('mail/global.dontReply', [], $this->language));
+			], $notifiable->language))
+			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}
 
 	/**

@@ -15,22 +15,14 @@ class OldMatchDeleted extends Notification implements ShouldQueue {
 	 * @var Match
 	 */
 	public $match;
-	/**
-	 * @var User
-	 */
-	public $recipient;
-	public $language;
 
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
 	 */
-	public function __construct(Match $match, User $recipient) {
-		//
+	public function __construct(Match $match) {
 		$this->match = $match;
-		$this->recipient = $recipient;
-		$this->language = $recipient->language;
 	}
 
 	/**
@@ -55,13 +47,13 @@ class OldMatchDeleted extends Notification implements ShouldQueue {
 		return (new MailMessage)
 			->subject(__('mail/oldMatchDeleted.subject', [
 				'match' => $this->match->name,
-			], $this->language))
-			->language($this->language)
-			->greeting(__('mail/global.hello', [], $this->language) . ',')
+			], $notifiable->language))
+			->language($notifiable->language)
+			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/oldMatchDeleted.body', [
 				'match' => $this->match->name,
-			], $this->language))
-			->salutation(__('mail/global.dontReply', [], $this->language));
+			], $notifiable->language))
+			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}
 
 	/**

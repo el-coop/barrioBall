@@ -12,32 +12,30 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ManagerLeft
-{
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+class ManagerLeft {
+	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	protected $user;
-	protected $match;
+	public $manager;
+	public $match;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param User $user
 	 * @param Match $match
+	 * @param User $manager
+	 *
 	 */
-	public function __construct(User $user, Match $match)
-	{
-		$this->user = $user;
+	public function __construct(Match $match, User $manager) {
+		$this->manager = $manager;
 		$this->match = $match;
 	}
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return Channel|array
+	 */
+	public function broadcastOn() {
+		return new PrivateChannel('channel-name');
+	}
 }

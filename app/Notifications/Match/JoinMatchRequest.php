@@ -3,6 +3,7 @@
 namespace App\Notifications\Match;
 
 use App\Mail\MailMessage;
+use App\Models\Match;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -14,18 +15,18 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	protected $message;
 	protected $match;
 	protected $user;
-	protected $language;
 
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
+	 * @param User $user
+	 * @param string $message
 	 */
-	public function __construct($user, $match, $message, User $recipient) {
+	public function __construct(Match $match, User $user, string $message) {
 		$this->message = $message;
 		$this->match = $match;
 		$this->user = $user;
-		$this->language = $recipient->language;
 	}
 
 	/**
@@ -48,20 +49,20 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 */
 	public function toMail($notifiable) {
 		return (new MailMessage)
-			->replyTo($this->user->email,$this->user->name)
-			->language($this->language)
-			->subject(__('mail/joinMatchRequest.subject',[
-				'match' => $this->match->name
-			],$this->language))
-			->greeting(__('mail/global.hello', [], $this->language) . ',')
+			->replyTo($this->user->email, $this->user->name)
+			->language($notifiable->language)
+			->subject(__('mail/joinMatchRequest.subject', [
+				'match' => $this->match->name,
+			], $notifiable->language))
+			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/joinMatchRequest.sentJoin', [
-					'name' => $this->user->username,
-					'url' => action('Match\MatchController@showMatch', $this->match),
-					'match' => $this->match->name
-				], $this->language))
+				'name' => $this->user->username,
+				'url' => action('Match\MatchController@showMatch', $this->match),
+				'match' => $this->match->name,
+			], $notifiable->language))
 			->quote($this->message)
-			->action(__('mail/joinMatchRequest.review',[],$this->language), action('Match\MatchController@showMatch', $this->match))
-			->salutation(__('mail/global.replyToThisEmail', [], $this->language));
+			->action(__('mail/joinMatchRequest.review', [], $notifiable->language), action('Match\MatchController@showMatch', $this->match))
+			->salutation(__('mail/global.replyToThisEmail', [], $notifiable->language));
 	}
 
 	/**

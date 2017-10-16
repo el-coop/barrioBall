@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserLeft
+class PlayerLeft
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -25,7 +25,7 @@ class UserLeft
 	 * @param User $user
 	 * @param Match $match
 	 */
-	public function __construct(User $user, Match $match)
+	public function __construct(Match $match, User $user)
 	{
 		$this->user = $user;
 		$this->match = $match;

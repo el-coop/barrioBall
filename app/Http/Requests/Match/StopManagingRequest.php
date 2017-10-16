@@ -39,6 +39,6 @@ class StopManagingRequest extends FormRequest {
 	 */
 	public function commit(): void {
 		$this->match->removeManager($this->user());
-		event(new ManagerLeft($this->user(), $this->match));
+		event(new ManagerLeft($this->match, $this->user()));
 	}
 }

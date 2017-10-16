@@ -19,7 +19,9 @@ class CreateTest extends DuskTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->user = factory(User::class)->create();
+		$this->user = factory(User::class)->create([
+			'language' => 'en'
+		]);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\UserLeft;
+use App\Events\Match\PlayerLeft;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LeaveMatchRequest extends FormRequest {
@@ -38,6 +38,6 @@ class LeaveMatchRequest extends FormRequest {
 	 */
 	public function commit(): void {
 		$this->match->removePlayer($this->user());
-		event(new UserLeft($this->user(), $this->match));
+		event(new PlayerLeft($this->match, $this->user()));
 	}
 }

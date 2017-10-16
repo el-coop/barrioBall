@@ -9,34 +9,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class JoinRequestAccepted extends Notification implements ShouldQueue {
+class Deleted extends Notification implements ShouldQueue {
 	use Queueable;
 
-	/**
-	 * @var
-	 */
 	protected $match;
-	/**
-	 * @var
-	 */
-	protected $message;
-	/**
-	 * @var
-	 */
-	protected $manager;
-
+	protected $deleter;
 
 	/**
 	 * Create a new notification instance.
 	 *
 	 * @param Match $match
-	 * @param string $message
-	 * @param User $manager
+	 * @param User $user
 	 */
-	public function __construct(Match $match, User $manager, string $message) {
+	public function __construct(Match $match, User $deleter) {
 		$this->match = $match;
-		$this->message = $message;
-		$this->manager = $manager;
+		$this->deleter = $deleter;
 	}
 
 	/**
@@ -50,27 +37,25 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 		return ['mail'];
 	}
 
-
 	/**
-	 * @param $notifiable
+	 * Get the mail representation of the notification.
 	 *
-	 * @return MailMessage
+	 * @param  mixed $notifiable
+	 *
+	 * @return \Illuminate\Notifications\Messages\MailMessage
 	 */
 	public function toMail($notifiable) {
 		return (new MailMessage)
-			->subject(__('mail/userAccepted.subject', [
-				'name' => $this->match->name,
+			->subject(__('mail/matchDeleted.subject', [
+				'match' => $this->match->name,
 			], $notifiable->language))
-			->replyTo($this->manager->email)
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
-			->line(__('mail/userAccepted.youWereAccepted', [
-				'url' => action('Match\MatchController@showMatch', $this->match),
-				'name' => $this->match->name,
+			->line(__('mail/matchDeleted.body', [
+				'match' => $this->match->name,
+				'name' => $this->deleter->username,
 			], $notifiable->language))
-			->line(__('mail/global.adminSays', [], $notifiable->language))
-			->quote($this->message)
-			->salutation(__('mail/global.replyToThisEmail', [], $notifiable->language));
+			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}
 
 	/**

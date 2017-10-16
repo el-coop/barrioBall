@@ -25,9 +25,8 @@ class MatchDeleted
 	 * @param User $user
 	 * @param Match $match
 	 */
-    public function __construct(User $user, Match $match)
+    public function __construct(Match $match, User $user)
     {
-
         $this->match = $match;
 		$this->user = $user;
 	}

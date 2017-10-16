@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Match;
 
 use App\Events\Match\JoinRequestSent;
-use App\Events\Match\UserJoined;
+use App\Events\Match\PlayerJoined;
 use Illuminate\Foundation\Http\FormRequest;
 
 class JoinMatchRequest extends FormRequest {
@@ -42,11 +42,11 @@ class JoinMatchRequest extends FormRequest {
 		if ($this->user()->isManager($this->match)) {
 			$this->match->addPlayer($this->user());
 			$message = __('match/show.joined');
-			event(new UserJoined($this->user(), $this->match));
+			event(new PlayerJoined($this->match, $this->user()));
 		} else {
 			$this->match->joinRequests()->save($this->user());
 			$message = __('match/show.joinMatchSent');
-			event(new JoinRequestSent($this->user(), $this->match, $this->input('message')));
+			event(new JoinRequestSent($this->match, $this->user(), $this->input('message')));
 		}
 
 		return $message;

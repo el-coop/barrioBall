@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Match;
 
-use App\Events\Match\UserLeft;
+use App\Events\Match\PlayerLeft;
+use App\Listeners\Match\SendPlayerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
+use App\Notifications\Match\PlayerLeft as PlayerLeftNotification;
 use Event;
+use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,6 +23,7 @@ class LeaveTest extends TestCase {
 		parent::setUp();
 		$this->match = factory(Match::class)->create();
 		$this->manager = factory(User::class)->create();
+		$this->player = factory(User::class)->create();
 
 		$this->match->addManager($this->manager);
 	}
@@ -37,7 +41,7 @@ class LeaveTest extends TestCase {
 			->assertSessionHas('alert', __('match/show.left'));
 
 		$this->assertFalse($this->manager->inMatch($this->match));
-		Event::assertDispatched(UserLeft::class, function ($event) {
+		Event::assertDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
 
@@ -54,11 +58,26 @@ class LeaveTest extends TestCase {
 		$this->actingAs($this->manager)
 			->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
 			->assertStatus(403);
-		Event::assertNotDispatched(UserLeft::class, function ($event) {
+		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
 	}
 
+
+	/**
+	 * @test
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_manager_left_notification_sent(): void {
+		Notification::fake();
+
+		$listener = new SendPlayerLeftNotification;
+		$listener->handle(new PlayerLeft($this->match, $this->player));
+
+		Notification::assertSentTo($this->manager, PlayerLeftNotification::class);
+	}
 
 	/**
 	 * @test
@@ -70,7 +89,7 @@ class LeaveTest extends TestCase {
 		$this->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
-		Event::assertNotDispatched(UserLeft::class, function ($event) {
+		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
 	}

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\UserRejected;
+use App\Events\Match\PlayerRejected;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -48,6 +48,6 @@ class RejectJoinRequest extends FormRequest {
 
 	public function commit():void {
 		$this->match->joinRequests()->detach($this->user);
-		event(new UserRejected($this->user, $this->match, $this->input('message')));
+		event(new PlayerRejected($this->match, $this->user, $this->input('message')));
 	}
 }

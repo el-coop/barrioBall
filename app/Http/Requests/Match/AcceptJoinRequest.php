@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\UserJoined;
+use App\Events\Match\PlayerJoined;
 use App\Models\Match;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
@@ -56,6 +56,6 @@ class AcceptJoinRequest extends FormRequest {
 	public function commit(): void {
 		$this->match->addPlayer($this->user);
 		$this->match->joinRequests()->detach($this->user);
-		event(new UserJoined($this->user, $this->match, $this->input('message')));
+		event(new PlayerJoined($this->match, $this->user, $this->input('message')));
 	}
 }

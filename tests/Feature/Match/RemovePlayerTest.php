@@ -89,7 +89,7 @@ class RemovePlayerTest extends TestCase {
 		Notification::fake();
 
 		$listener = new SendPlayerRemovedNotification();
-		$listener->handle(new PlayerRemoved($this->player, Match::first(), ''));
+		$listener->handle(new PlayerRemoved($this->match, $this->player, ''));
 
 		Notification::assertSentTo($this->player, PlayerRemovedNotification::class);
 
