@@ -91,6 +91,25 @@ class JoinTest extends DuskTestCase
 	 * @group match
 	 * @group showMatch
 	 */
+	public function test_manager_cant_see_accept_join_request_full_match(): void {
+		factory(User::class,$this->match->players)->create()->each(function($player){
+			$this->match->addPlayer($player);
+		});
+		$this->match->addJoinRequest($this->player);
+
+		$this->browse(function (Browser $browser) {
+			$browser->loginAs($this->manager)
+				->visit(new ShowPage($this->match))
+				->assertMissing('@accept-button');
+		});
+	}
+
+	/**
+	 * @test
+	 * @group joinMatch
+	 * @group match
+	 * @group showMatch
+	 */
 	public function test_manager_can_reject_join_request(): void {
 		$this->match->addJoinRequest($this->player);
 

@@ -42,7 +42,7 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function isManager(Match $match): bool {
-		return $this->managedMatches()->exists($match);
+		return $this->managedMatches()->where('id',$match->id)->exists();
 	}
 
 	/**
@@ -79,7 +79,11 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function canJoin(Match $match): bool {
-		return !$this->inMatch($match) && !$this->sentRequest($match) && !$match->isFull();
+		if($this->isManager($match) && $match->isFull()){
+			return false;
+		}
+
+		return ! $this->inMatch($match) && !$this->sentRequest($match);
 	}
 
 	/**
@@ -88,14 +92,7 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function inMatch(Match $match): bool {
-		return $this->playedMatches()->exists($match);
-	}
-
-	/**
-	 * @return BelongsToMany
-	 */
-	public function playedMatches(): BelongsToMany {
-		return $this->matches()->wherePivot('role', 'player');
+		return $this->playedMatches()->where('id',$match->id)->exists();
 	}
 
 	/**
@@ -104,7 +101,14 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function sentRequest(Match $match): bool {
-		return $this->joinRequests()->exists($match);
+		return $this->joinRequests()->where('id',$match->id)->exists();
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function playedMatches(): BelongsToMany {
+		return $this->matches()->wherePivot('role', 'player');
 	}
 
 	/**

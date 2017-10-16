@@ -98,10 +98,22 @@ class UserTest extends TestCase {
 	 * @test
 	 * @group user
 	 */
-	public function test_canJoin_returns_false_when_match_is_full(): void {
+	public function test_canJoin_returns_true_when_match_is_full_for_regular_user(): void {
 		factory(User::class,$this->match->players)->create()->each(function($player){
 			$this->match->addPlayer($player);
 		});
+		$this->assertTrue($this->user->canJoin($this->match));
+	}
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_canJoin_returns_true_when_match_is_full_for_manager_user(): void {
+		factory(User::class,$this->match->players)->create()->each(function($player){
+			$this->match->addPlayer($player);
+		});
+		$this->match->addManager($this->user);
 		$this->assertFalse($this->user->canJoin($this->match));
 	}
 
