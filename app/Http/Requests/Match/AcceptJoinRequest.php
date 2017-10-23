@@ -19,7 +19,7 @@ class AcceptJoinRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match) && ! $this->match->isFull()) {
+		if ($this->user() && $this->user()->isManager($this->match) && ! $this->match->isFull() && ! $this->match->ended()) {
 			return true;
 		}
 

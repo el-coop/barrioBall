@@ -30,46 +30,46 @@ class MatchController extends Controller {
 		$match = $request->commit();
 
 		return redirect()->action('Match\MatchController@showMatch', $match);
-	}
+}
 
-	/**
-	 * @param Request $request
-	 * @param Match $match
-	 *
-	 * @return View
-	 */
-	public function showMatch(Request $request, Match $match): View {
+/**
+ * @param Request $request
+ * @param Match $match
+ *
+ * @return View
+ */
+public function showMatch(Request $request, Match $match): View {
 
-		return view('match.show', compact('match'));
-	}
+	return view('match.show', compact('match'));
+}
 
-	/**
-	 * @param DeleteMatchRequest $request
-	 * @param Match $match
-	 *
-	 * @return RedirectResponse
-	 */
-	public function delete(DeleteMatchRequest $request, Match $match): RedirectResponse {
-		$request->commit();
+/**
+ * @param DeleteMatchRequest $request
+ * @param Match $match
+ *
+ * @return RedirectResponse
+ */
+public function delete(DeleteMatchRequest $request, Match $match): RedirectResponse {
+	$request->commit();
 
-		return redirect('/');
-	}
+	return redirect('/');
+}
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return View
-	 */
-	public function showSearch(Request $request): View {
-		return view('match.search');
-	}
+/**
+ * @param Request $request
+ *
+ * @return View
+ */
+public function showSearch(Request $request): View {
+	return view('match.search');
+}
 
-	/**
-	 * @param SearchRequest $request
-	 *
-	 * @return LengthAwarePaginator
-	 */
-	public function search(SearchRequest $request): LengthAwarePaginator {
-		return $request->commit();
-	}
+/**
+ * @param SearchRequest $request
+ *
+ * @return LengthAwarePaginator
+ */
+public function search(SearchRequest $request): LengthAwarePaginator {
+	return $request->commit();
+}
 }

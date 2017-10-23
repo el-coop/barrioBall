@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\Match;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -250,5 +251,30 @@ class MatchTest extends TestCase {
 		$this->assertInstanceOf(Collection::class, $this->match->joinRequests);
 		$this->assertArraySubset($players->toArray(), $this->match->joinRequests->toArray());
 		$this->assertCount(2, $this->match->joinRequests);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_eneded_return_true_when_ended(): void {
+		$this->match->date_time = new Carbon('yesterday');
+		$this->match->save();
+		$match = Match::first();
+
+		$this->assertTrue($match->ended());
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_eneded_return_false_when_not_ended(): void {
+		$this->match->date_time = new Carbon('tomorrow');
+		$this->match->save();
+		$match = Match::first();
+
+		$this->assertFalse($match->ended());
 	}
 }

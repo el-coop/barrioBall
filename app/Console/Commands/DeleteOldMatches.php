@@ -38,7 +38,7 @@ class DeleteOldMatches extends Command {
 	 * @return mixed
 	 */
 	public function handle(): void {
-		$matches = Match::where('date', '<', new Carbon("7 days ago"))->get();
+		$matches = Match::where('date_time', '<', new Carbon("7 days ago"))->get();
 
 		foreach ($matches as $match) {
 			$match->delete();

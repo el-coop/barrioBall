@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Notifications\Match\JoinMatchRequest;
 use App\Notifications\Match\MatchJoined;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Event;
 use Notification;
@@ -54,6 +55,26 @@ class JoinTest extends TestCase {
 		Event::assertDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->manager->id;
 		});
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_admin_cant_join_finished_match(): void {
+		Event::fake();
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(403);
+
+		$this->assertFalse($this->match->hasPlayer($this->manager));
+
+		Event::assertNotDispatched(PlayerJoined::class);
+		$this->assertTrue(true);
 	}
 
 	/**
@@ -147,6 +168,26 @@ class JoinTest extends TestCase {
 		});
 	}
 
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_user_cant_join_request_finished_match(): void {
+		Event::fake();
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+
+		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+			->assertStatus(403);
+
+		$this->assertFalse($this->match->hasJoinRequest($this->manager));
+
+		Event::assertNotDispatched(JoinRequestSent::class);
+		$this->assertTrue(true);
+	}
+
 	/**
 	 * @test
 	 * @group match
@@ -161,23 +202,6 @@ class JoinTest extends TestCase {
 			'message' => 'bla',
 		])->assertStatus(403);
 
-		Event::assertNotDispatched(JoinRequestSent::class);
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group joinMatch
-	 */
-	public function test_manager_cant_join_request_to_full_match(): void {
-		Event::fake();
-
-		factory(User::class, $this->match->players)->create()->each(function ($player) {
-			$this->match->addPlayer($player);
-		});
-
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
-			->assertStatus(403);
 		Event::assertNotDispatched(JoinRequestSent::class);
 	}
 
@@ -235,6 +259,27 @@ class JoinTest extends TestCase {
 		});
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_manager_cant_reject_join_request_finished_match(): void {
+		Event::fake();
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+		$this->match->addJoinRequest($this->player);
+
+		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
+		])->assertStatus(403);
+
+		$this->assertTrue($this->match->hasJoinRequest($this->player));
+
+		Event::assertNotDispatched(PlayerRejected::class);
+		$this->assertTrue(true);
+	}
 
 	/**
 	 * @test
@@ -310,8 +355,30 @@ class JoinTest extends TestCase {
 		Event::assertDispatched(PlayerJoined::class, function ($event) {
 			return $event->user->id === $this->player->id && $event->message = 'bla';
 		});
-
 	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_manager_cant_accept_join_request_finished_match(): void {
+		Event::fake();
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+		$this->match->addJoinRequest($this->player);
+
+		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
+		])->assertStatus(403);
+
+		$this->assertFalse($this->match->hasPlayer($this->player));
+
+		Event::assertNotDispatched(PlayerJoined::class);
+		$this->assertTrue(true);
+	}
+
 
 	/**
 	 * @test
@@ -378,7 +445,7 @@ class JoinTest extends TestCase {
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
-		Event::assertNotDispatched(JoinRequestSent::class);
+		Event::assertNotDispatched(PlayerJoined::class);
 	}
 
 

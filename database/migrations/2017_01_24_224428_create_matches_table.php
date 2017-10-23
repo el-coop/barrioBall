@@ -22,8 +22,7 @@ class CreateMatchesTable extends Migration
             $table->boolean('public')->default(true);
             $table->integer('players');
             $table->text('description')->nullable();
-            $table->date('date');
-            $table->time('time');
+            $table->timestamp('date_time');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Match;
 
 use App\Models\Match;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -46,6 +47,24 @@ class ShowTest extends TestCase {
 	public function test_logged_sees_join_match_button(): void {
 		$this->actingAs($this->manager)->get($this->match->url)
 			->assertSeeText(__('match/show.joinRequest'))
+			->assertDontSeeText(__('match/show.login'))
+			->assertDontSeeText(__('match/show.matchFull'))
+			->assertDontSeeText(__('match/show.leaveMatch'))
+			->assertDontSeeText(__('match/show.waitingForResponse'));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group showMatch
+	 * @group joinMatch
+	 */
+	public function test_finished_match_dont_show_buttons(): void {
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+		$this->actingAs($this->manager)->get($this->match->url)
+			->assertSee(__('match/show.matchEnded'))
+			->assertDontSeeText(__('match/show.joinRequest'))
 			->assertDontSeeText(__('match/show.login'))
 			->assertDontSeeText(__('match/show.matchFull'))
 			->assertDontSeeText(__('match/show.leaveMatch'))

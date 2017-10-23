@@ -39,7 +39,7 @@ class DeleteOldTest extends TestCase {
 	protected function createManagedMatch(string $date = 'today'): void {
 		$this->user = factory(User::class)->create();
 		$this->match = factory(Match::class)->create([
-			'date' => (new Carbon($date))->format('y/m/d'),
+			'date_time' => new Carbon($date),
 		]);
 		$this->match->addManager($this->user);
 	}

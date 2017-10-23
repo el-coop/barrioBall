@@ -44,7 +44,7 @@ class SearchTest extends DuskTestCase {
 		$faker = new Base(new Generator());
 
 		$matches = factory(Match::class, 5)->create([
-			'date' => (new Carbon())->addDay()->format('y/m/d'),
+			'date_time' => Carbon::now()->addDay(),
 			'lat' => $faker->randomFloat(15, 0, 5),
 			'lng' => $faker->randomFloat(15, 0, 5),
 		]);
@@ -72,7 +72,7 @@ class SearchTest extends DuskTestCase {
 		$faker = new Base(new Generator());
 
 		$matches = factory(Match::class, 5)->create([
-			'date' => (new Carbon())->addDay()->format('y/m/d'),
+			'date_time' => Carbon::now()->addDay(),
 			'lat' => $faker->randomFloat(15, 0, 5),
 			'lng' => $faker->randomFloat(15, 0, 5),
 		]);
