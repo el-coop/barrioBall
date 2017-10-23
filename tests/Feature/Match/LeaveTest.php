@@ -7,6 +7,7 @@ use App\Listeners\Match\SendPlayerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\PlayerLeft as PlayerLeftNotification;
+use Carbon\Carbon;
 use Event;
 use Notification;
 use Tests\TestCase;
@@ -46,6 +47,26 @@ class LeaveTest extends TestCase {
 		});
 
 	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group leaveMatch
+	 */
+	public function test_cant_leave_ended_match(): void {
+		Event::fake();
+		$this->match->addPlayer($this->manager);
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+
+		$this->actingAs($this->manager)
+			->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
+			->assertStatus(403);
+		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
+			return $event->user->id == $this->manager->id;
+		});
+	}
+
 
 	/**
 	 * @test

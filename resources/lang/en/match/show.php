@@ -23,5 +23,6 @@ return [
 	'rejectRequest' => 'Reject request from :user',
 	'matchFull' => 'Match is full',
 	'charLimit' => '500 chars max',
-	'message' => 'Send message'
+	'message' => 'Send message',
+	'matchEnded' => 'Match ended, click here to go to search page'
 ];

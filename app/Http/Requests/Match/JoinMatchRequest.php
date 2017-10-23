@@ -17,7 +17,7 @@ class JoinMatchRequest extends FormRequest {
 	public function authorize(): bool {
 		$this->match = $this->route('match');
 
-		if ($this->user() && $this->user()->canJoin($this->match)) {
+		if ($this->user() && $this->user()->canJoin($this->match) && ! $this->match->ended()) {
 			return true;
 		}
 

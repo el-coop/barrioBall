@@ -13,6 +13,12 @@
             </button>
         </a>
     </div>
+@elseif($match->ended())
+    <div class="mt-1 bm-1">
+        <a href="{{ action('Match\MatchController@showSearch') }}"><button class="btn btn-info sm-btn-block"><i
+                    class="fa fa-search"></i> @lang('match/show.matchEnded')
+        </button></a>
+    </div>
 @elseif($user->inMatch($match))
     <form method="post" action="{{ action('Match\MatchUsersController@leaveMatch', $match) }}"
           class="mt-1 mb-1">

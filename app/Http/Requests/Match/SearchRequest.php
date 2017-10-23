@@ -35,14 +35,12 @@ class SearchRequest extends FormRequest {
 	}
 
 	public function commit(): LengthAwarePaginator {
-		$date = Carbon::createFromFormat('d/m/y', $this->input('date'))->format('Y-m-d');
-		$startTime = Carbon::createFromFormat('H:i', $this->input('from'))->subSecond()->format('H:i:s');
-		$endTime = Carbon::createFromFormat('H:i', $this->input('to'))->addSecond()->format('H:i:s');
+		$startTime = Carbon::createFromFormat('d/m/y H:i',$this->input('date') . ' ' . $this->input('from'));
+		$endTime = Carbon::createFromFormat('d/m/y H:i',$this->input('date') . ' ' . $this->input('to'));
 
 		$matches = Match::whereBetween('lng', [$this->input('west'), $this->input('east')])
 			->whereBetween('lat', [$this->input('south'), $this->input('north')])
-			->whereBetween('time', [$startTime, $endTime])
-			->where('date', $date)
+			->whereBetween('date_time', [$startTime, $endTime])
 			->paginate(20);
 
 		return $matches;

@@ -102,7 +102,7 @@ class CreateTest extends DuskTestCase {
 				->fillAddressModal('test')
 				->submitForm([
 					'name' => 'test',
-					'date' => Carbon::now()->addDay()->format('d/n/y'),
+					'date' => Carbon::now()->addDay()->format('d/m/y'),
 					'time' => '20:00',
 					'description' => 'test',
 				])

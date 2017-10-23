@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\PlayerRemoved as PlayerRemovedNotification;
+use Carbon\Carbon;
 use Event;
 use Notification;
 use Tests\TestCase;
@@ -54,6 +55,24 @@ class RemovePlayerTest extends TestCase {
 			return $event->user->id === $this->player->id;
 		});
 	}
+
+	public function test_cant_kick_user_out_finished_match() {
+		Event::fake();
+		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->save();
+
+		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'I hate you',
+		])->assertStatus(403);
+
+		$this->assertTrue($this->player->inMatch($this->match));
+
+		Event::assertNotDispatched(PlayerRemoved::class, function ($event) {
+			return $event->user->id === $this->player->id;
+		});
+	}
+
 
 	public function test_player_cant_kick_user_out() {
 		Event::fake();

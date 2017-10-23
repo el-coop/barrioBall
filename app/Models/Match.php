@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Match extends Model {
 
 	protected $appends = ['url'];
+	protected $dates = [
+		'created_at',
+		'updated_at',
+		'date_time'
+	];
 
 	/**
 	 *
@@ -16,10 +21,8 @@ class Match extends Model {
 	 *
 	 * @return string
 	 */
-	public function getDateAttribute(string $value): string {
-		$date = new Carbon($value);
-
-		return $date->format('d/m/y');
+	public function getDateAttribute(): string {
+		return $this->date_time->format('d/m/y');
 	}
 
 
@@ -28,10 +31,8 @@ class Match extends Model {
 	 *
 	 * @return string
 	 */
-	public function getTimeAttribute(string $value): string {
-		$date = new Carbon($value);
-
-		return $date->format('H:i');
+	public function getTimeAttribute(): string {
+		return $this->date_time->format('H:i');
 	}
 
 	/**
@@ -141,5 +142,13 @@ class Match extends Model {
 	 */
 	public function isFull(): bool {
 		return $this->registeredPlayers()->count() >= $this->players;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function ended(): bool {
+		return Carbon::now() > $this->date_time;
 	}
 }

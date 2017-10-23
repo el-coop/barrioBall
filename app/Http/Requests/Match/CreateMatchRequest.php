@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Match;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Match;
 
@@ -50,8 +51,8 @@ class CreateMatchRequest extends FormRequest {
 		$match->public = 1;
 		$match->players = $this->input('players');
 		$match->description = $this->input('description');
-		$match->date = $this->input('date');
-		$match->time = $this->input('time');
+
+		$match->date_time = Carbon::createFromFormat('d/m/y H:i',$this->input('date') . ' ' . $this->input('time'));
 		$match->save();
 		$match->addManager($this->user());
 

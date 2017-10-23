@@ -55,20 +55,22 @@ class CreateTest extends TestCase {
 	 * @group match
 	 */
 	public function test_can_create_match_and_is_set_as_manager(): void {
+		$time = Carbon::now();
 		$this->actingAs($this->user)->post(action('Match\MatchController@create'), [
 			'name' => 'Nurs Match',
 			'address' => 'Test Test',
 			'lat' => 0,
 			'lng' => 0,
 			'players' => 8,
-			'date' => Carbon::now()->addDays(1)->format('d/m/y'),
-			'time' => Carbon::now()->format('H:i'),
+			'date' =>$time->addDays(1)->format('d/m/y'),
+			'time' => $time->format('H:i'),
 			'description' => 'description',
 		])->assertRedirect(action('Match\MatchController@showMatch', Match::first()));
 		$this->assertArraySubset([
 			'name' => 'Nurs Match',
 			'address' => 'Test Test',
 		], Match::first()->toArray());
+		$this->assertEquals($time->format('d/m/y H:i'),Match::first()->date_time->format('d/m/y H:i'));
 	}
 
 	/**

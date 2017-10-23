@@ -3,6 +3,7 @@
 namespace Tests\Feature\Match;
 
 use App\Models\Match;
+use Carbon\Carbon;
 use Faker\Generator;
 use Faker\Provider\Base;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -98,7 +99,7 @@ class SearchTest extends TestCase {
 		$faker = new Base(new Generator());
 
 		$matches = factory(Match::class, 5)->create([
-			'date' => date('y/m/d'),
+			'date_time' => Carbon::now(),
 			'lat' => $faker->randomFloat(15, 0, 5),
 			'lng' => $faker->randomFloat(15, 0, 5),
 		]);

@@ -23,6 +23,6 @@ return [
 	'rejectRequest' => 'Rechaze la solicitud de :user',
 	'matchFull' => 'El partido está lleno',
 	'charLimit' => '500 caracteres max',
-	'message' => 'Envia mensaje'
-
+	'message' => 'Envia mensaje',
+	'matchEnded' => 'El partido terminó, haga clic aquí para ir a la página de búsqueda'
 ];
