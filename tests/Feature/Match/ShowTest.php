@@ -6,6 +6,7 @@ use App\Models\Match;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
 
 class ShowTest extends TestCase {
@@ -45,12 +46,21 @@ class ShowTest extends TestCase {
 	 * @group joinMatch
 	 */
 	public function test_logged_sees_join_match_button(): void {
-		$this->actingAs($this->manager)->get($this->match->url)
-			->assertSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.leaveMatch'))
-			->assertDontSeeText(__('match/show.waitingForResponse'));
+		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.joinRequest');
+	}
+
+	protected function assertButtons(TestResponse $response, string $see): void {
+		collect([
+			'match/show.matchEnded',
+			'match/show.joinRequest',
+			'match/show.login',
+			'match/show.matchFull',
+			'match/show.leaveMatch',
+			'match/show.waitingForResponse',
+		])->diff([$see])->each(function ($value, $index) use ($response) {
+			$response->assertDontSeeText(__($value));
+		});
+		$response->assertSeeText(__($see));
 	}
 
 	/**
@@ -62,13 +72,7 @@ class ShowTest extends TestCase {
 	public function test_finished_match_dont_show_buttons(): void {
 		$this->match->date_time = Carbon::now()->subDays(1);
 		$this->match->save();
-		$this->actingAs($this->manager)->get($this->match->url)
-			->assertSee(__('match/show.matchEnded'))
-			->assertDontSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.leaveMatch'))
-			->assertDontSeeText(__('match/show.waitingForResponse'));
+		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.matchEnded');
 	}
 
 	/**
@@ -79,12 +83,7 @@ class ShowTest extends TestCase {
 	 */
 	public function test_sent_request_sees_request_sent_button(): void {
 		$this->match->addJoinRequest($this->player);
-		$this->actingAs($this->player)->get($this->match->url)
-			->assertSeeText(__('match/show.waitingForResponse'))
-			->assertDontSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.leaveMatch'));
+		$this->assertButtons($this->actingAs($this->player)->get($this->match->url), 'match/show.waitingForResponse');
 	}
 
 
@@ -93,13 +92,7 @@ class ShowTest extends TestCase {
 	 * @group showMatch
 	 */
 	public function test_not_logged_sees_login_button(): void {
-		$this->get($this->match->url)
-			->assertSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.leaveMatch'))
-			->assertDontSeeText(__('match/show.waitingForResponse'));
-
+		$this->assertButtons($this->get($this->match->url), 'match/show.login');
 	}
 
 	/**
@@ -109,12 +102,7 @@ class ShowTest extends TestCase {
 	 */
 	public function test_joined_sees_leave_button(): void {
 		$this->match->addPlayer($this->manager);
-		$this->actingAs($this->manager)->get($this->match->url)
-			->assertSeeText(__('match/show.leaveMatch'))
-			->assertDontSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.waitingForResponse'));
+		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.leaveMatch');
 	}
 
 	/**
@@ -126,12 +114,7 @@ class ShowTest extends TestCase {
 		factory(User::class, $this->match->players)->create()->each(function ($player) {
 			$this->match->addPlayer($player);
 		});
-		$this->actingAs($this->manager)->get($this->match->url)
-			->assertSeeText(__('match/show.matchFull'))
-			->assertDontSeeText(__('match/show.joinRequest'))
-			->assertDontSeeText(__('match/show.leaveMatch'))
-			->assertDontSeeText(__('match/show.login'))
-			->assertDontSeeText(__('match/show.waitingForResponse'));
+		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.matchFull');
 	}
 
 

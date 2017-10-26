@@ -70,7 +70,7 @@ class LeaveManagementTest extends TestCase {
 		Event::fake();
 
 		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@stopManaging', $this->match))
-			->assertStatus(403);
+			->assertStatus(302)->assertSessionHasErrors('managers');
 
 		Event::assertNotDispatched(ManagerLeft::class);
 	}

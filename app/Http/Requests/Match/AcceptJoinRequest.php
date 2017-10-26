@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Match;
 
 use App\Events\Match\PlayerJoined;
-use App\Models\Match;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -19,7 +18,7 @@ class AcceptJoinRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match) && ! $this->match->isFull() && ! $this->match->ended()) {
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
 
@@ -46,6 +45,12 @@ class AcceptJoinRequest extends FormRequest {
 		$validator->after(function ($validator) {
 			if (!$this->match->hasJoinRequest($this->user)) {
 				$validator->errors()->add('request', __('match/requests.requestNotExistent'));
+			}
+			if ($this->match->isFull()) {
+				$validator->errors()->add('full', __('match/requests.isFull'));
+			}
+			if ($this->match->ended()) {
+				$validator->errors()->add('ended', __('match/requests.ended'));
 			}
 		});
 	}

@@ -7,5 +7,6 @@ return [
 	'user' => 'User',
 	'date' => 'Date and Time',
 	'resolve' => 'Resolve',
+	'authorizationError' => 'JS errors are logged automatically'
 
 ];
