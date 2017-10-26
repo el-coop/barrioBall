@@ -69,7 +69,8 @@ class JoinTest extends TestCase {
 		$this->match->save();
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
-			->assertStatus(403);
+			->assertStatus(302)
+		->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasPlayer($this->manager));
 
@@ -87,7 +88,8 @@ class JoinTest extends TestCase {
 
 		$this->match->addPlayer($this->manager);
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
-			->assertStatus(403);
+			->assertStatus(302)
+		->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(PlayerJoined::class);
 	}
@@ -105,7 +107,8 @@ class JoinTest extends TestCase {
 		});
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
-			->assertStatus(403);
+			->assertStatus(302)
+		->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(PlayerJoined::class);
 	}
@@ -180,7 +183,8 @@ class JoinTest extends TestCase {
 		$this->match->save();
 
 		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
-			->assertStatus(403);
+			->assertStatus(302)
+		->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasJoinRequest($this->manager));
 
@@ -200,7 +204,8 @@ class JoinTest extends TestCase {
 
 		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
 			'message' => 'bla',
-		])->assertStatus(403);
+		])->assertStatus(302)
+		->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(JoinRequestSent::class);
 	}
@@ -273,7 +278,7 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		])->assertStatus(403);
+		])->assertStatus(302)->assertSessionHasErrors('ended');
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 
@@ -371,7 +376,8 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		])->assertStatus(403);
+		])->assertStatus(302)
+		->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
@@ -440,7 +446,8 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
-		])->assertStatus(403);
+		])->assertStatus(302)
+		->assertSessionHasErrors('full');
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 		$this->assertFalse($this->match->hasPlayer($this->player));

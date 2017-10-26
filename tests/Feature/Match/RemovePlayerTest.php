@@ -64,7 +64,7 @@ class RemovePlayerTest extends TestCase {
 		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'I hate you',
-		])->assertStatus(403);
+		])->assertStatus(302)->assertSessionHasErrors('ended');
 
 		$this->assertTrue($this->player->inMatch($this->match));
 

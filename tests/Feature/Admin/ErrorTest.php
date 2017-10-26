@@ -96,7 +96,7 @@ class ErrorTest extends TestCase {
 	 * @group error
 	 */
 	public function test_cant_logs_js_errors_without_ajax(): void {
-		$this->post(action('ErrorController@store'), [
+		$response = $this->post(action('ErrorController@store'), [
 			'page' => "/",
 			'message' => "message",
 			'source' => "source",
@@ -104,7 +104,7 @@ class ErrorTest extends TestCase {
 			'trace' => "[]",
 			'userAgent' => 'firefox',
 			'vm' => 'vm',
-		]);
+		])->assertStatus(302)->assertSessionHasErrors('authorization');
 
 		$this->assertEquals(0, Error::count());
 		$this->assertEquals(0, JsError::count());

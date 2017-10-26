@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Match;
 
 use App\Events\Match\ManagerLeft;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StopManagingRequest extends FormRequest {
@@ -16,7 +17,7 @@ class StopManagingRequest extends FormRequest {
 	public function authorize(): bool {
 
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match) && $this->match->managers()->count() > 1) {
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
 
@@ -40,5 +41,18 @@ class StopManagingRequest extends FormRequest {
 	public function commit(): void {
 		$this->match->removeManager($this->user());
 		event(new ManagerLeft($this->match, $this->user()));
+	}
+
+
+	/**
+	 * @param Validator $validator
+	 */
+	public function withValidator(Validator $validator): void {
+
+		$validator->after(function ($validator) {
+			if ($this->match->managers()->count() < 2) {
+				$validator->errors()->add('managers', __('match/requests.notEnoughManagers'));
+			}
+		});
 	}
 }

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Match;
 
 use App\Events\Match\PlayerRemoved;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RemovePlayerRequest extends FormRequest {
@@ -17,7 +18,7 @@ class RemovePlayerRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match) && ! $this->match->ended()) {
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
 
@@ -44,5 +45,17 @@ class RemovePlayerRequest extends FormRequest {
 		$this->match->removePlayer($user);
 
 		event(new PlayerRemoved($this->match, $user, $this->input('message')));
+	}
+
+	/**
+	 * @param Validator $validator
+	 */
+	public function withValidator(Validator $validator): void {
+
+		$validator->after(function ($validator) {
+			if ($this->match->ended()) {
+				$validator->errors()->add('ended', __('match/requests.ended'));
+			}
+		});
 	}
 }

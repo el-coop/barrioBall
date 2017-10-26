@@ -61,7 +61,8 @@ class LeaveTest extends TestCase {
 
 		$this->actingAs($this->manager)
 			->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
-			->assertStatus(403);
+			->assertStatus(302)
+		->assertSessionHasErrors('ended');
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});

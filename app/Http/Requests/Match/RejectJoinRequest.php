@@ -17,7 +17,7 @@ class RejectJoinRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match) && ! $this->match->ended()) {
+		if ($this->user() && $this->user()->isManager($this->match)) {
 			return true;
 		}
 
@@ -42,6 +42,9 @@ class RejectJoinRequest extends FormRequest {
 		$validator->after(function ($validator) {
 			if (!$this->match->hasJoinRequest($this->user)) {
 				$validator->errors()->add('request', __('match/requests.requestNotExistent'));
+			}
+			if ($this->match->ended()) {
+				$validator->errors()->add('ended', __('match/requests.ended'));
 			}
 		});
 	}
