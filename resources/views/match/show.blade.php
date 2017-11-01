@@ -9,13 +9,14 @@
         <div class="container">
             <div class="row mt-2">
                 <div class="col-12 col-md-6">
-                    @include('match.show.nameAndJoin')
+                    @include('match.show.nameAndAdmins')
+                    @include('match.show.buttons')
                 </div>
                 <div class="col-12 col-md-6 text-md-right d-md-flex flex-column justify-content-center">
                     @manager($match)
-                    @include('match.show.inviteManagers')
-                    @include('match.show.stopManaging')
-                    @include('match.show.deleteMatch')
+                        @include('match.show.inviteManagers')
+                        @include('match.show.stopManaging')
+                        @include('match.show.deleteMatch')
                     @endmanager
                 </div>
             </div>

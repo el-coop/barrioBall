@@ -58,7 +58,7 @@ class RemovePlayerTest extends TestCase {
 
 	public function test_cant_kick_user_out_finished_match() {
 		Event::fake();
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
 		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [

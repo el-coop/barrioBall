@@ -56,7 +56,7 @@ class LeaveTest extends TestCase {
 	public function test_cant_leave_ended_match(): void {
 		Event::fake();
 		$this->match->addPlayer($this->manager);
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
 		$this->actingAs($this->manager)

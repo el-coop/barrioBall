@@ -1,4 +1,4 @@
-<div class="mt-1 mb-1">
+<div class="my-1">
     <button class="btn btn-success sm-btn-block" @click="toggleModal({
                             url: '{{ action('Match\MatchUsersController@joinMatch', $match) }}',
                             class: 'btn-success',

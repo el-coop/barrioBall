@@ -24,5 +24,6 @@ return [
 	'matchFull' => 'Match is full',
 	'charLimit' => '500 chars max',
 	'message' => 'Send message',
-	'matchEnded' => 'Match ended, click here to go to search page'
+	'matchEnded' => 'Match ended, click here to go to search page',
+	'repeatMatch' => 'Repeat match',
 ];
