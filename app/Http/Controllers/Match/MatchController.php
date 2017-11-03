@@ -81,6 +81,6 @@ class MatchController extends Controller {
 	 */
 	public function repeatMatch(RepeatMatchRequest $request, Match $match): RedirectResponse{
 		$request->commit();
-		return back()->with('alert', 'Match repeated');
+		return back()->with('alert', __('global.success'));
 	}
 }

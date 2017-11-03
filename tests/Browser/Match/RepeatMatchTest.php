@@ -33,11 +33,16 @@ class RepeatMatchTest extends DuskTestCase {
 	 * @group current
 	 */
 	public function test_repeat_match_works(): void {
-		$this->browse(function (Browser $browser) {
+		$date = Carbon::now()->addDay()->format('d/m/y');
+		$this->browse(function (Browser $browser) use($date){
 			$browser->loginAs($this->manager)->visit(new ShowPage($this->match))
 				->click('@repeat-button')
-				->type('date',  Carbon::now()->addDay()->format('d/m/y'))
-				->type('time',  '22:00');
+				->type('date',  $date)
+				->type('time',  '22:00')
+				->click('.modal-body .fa.fa-repeat')
+				->assertSee( __('global.success',[],$this->manager->language));
 		});
+
+		$this->assertEquals($date,Match::first()->date);
 	}
 }

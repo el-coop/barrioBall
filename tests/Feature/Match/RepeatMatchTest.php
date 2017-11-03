@@ -18,7 +18,7 @@ class RepeatMatchTest extends TestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->match = factory(Match::class)->create([
-			'date_time' => Carbon::now()->subDay()
+			'date_time' => Carbon::now()->subDay(),
 		]);
 		$this->manager = factory(User::class)->create();
 
@@ -32,12 +32,12 @@ class RepeatMatchTest extends TestCase {
 	 */
 	public function test_cant_repeat_match_as_guest(): void {
 
-		$this->patch(action('Match\MatchController@repeatMatch', $this->match),[
+		$this->patch(action('Match\MatchController@repeatMatch', $this->match), [
 			'date' => Carbon::now()->addDays(2),
-			'time' => '22:00'
+			'time' => '22:00',
 		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
-		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'),Match::first()->date);
+		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'), Match::first()->date);
 	}
 
 	/**
@@ -49,12 +49,12 @@ class RepeatMatchTest extends TestCase {
 
 		$user = factory(User::class)->create();
 
-		$this->actingAs($user)->patch(action('Match\MatchController@repeatMatch', $this->match),[
+		$this->actingAs($user)->patch(action('Match\MatchController@repeatMatch', $this->match), [
 			'date' => Carbon::now()->addDays(2),
-			'time' => '22:00'
+			'time' => '22:00',
 		])->assertStatus(403);
 
-		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'),Match::first()->date);
+		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'), Match::first()->date);
 	}
 
 
@@ -67,12 +67,55 @@ class RepeatMatchTest extends TestCase {
 		$this->match->date_time = Carbon::now()->addDays(1);
 		$this->match->save();
 
-		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match),[
-			'date' => Carbon::now()->addDays(2),
-			'time' => '22:00'
+		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match), [
+			'date' => Carbon::now()->addDays(2)->format('d/m/y'),
+			'time' => '22:00',
 		])->assertStatus(302)
 			->assertSessionHasErrors('match');
 
-		$this->assertEquals(Carbon::now()->addDay()->format('d/m/y'),Match::first()->date);
+		$this->assertEquals(Carbon::now()->addDay()->format('d/m/y'), Match::first()->date);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group repeatMatch
+	 */
+	public function test_match_has_to_be_in_future(): void {
+		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match), [
+			'date' => Carbon::now()->subDay()->format('d/m/y'),
+			'time' => '22:00',
+		])->assertStatus(302)
+			->assertSessionHasErrors('date');
+
+		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'), Match::first()->date);
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group repeatMatch
+	 */
+	public function test_validates_input(): void {
+		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match))->assertStatus(302)
+			->assertSessionHasErrors(['date', 'time']);
+
+		$this->assertEquals(Carbon::now()->subDay()->format('d/m/y'), Match::first()->date);
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group repeatMatch
+	 */
+	public function test_can_repeat_match(): void {
+		$date = Carbon::now()->addDay();
+		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match), [
+			'date' => $date->format('d/m/y'),
+			'time' => '22:00',
+		])->assertStatus(302)->assertSessionHas('alert');
+
+		$this->assertEquals($date->format('d/m/y'), Match::first()->date);
 	}
 }
