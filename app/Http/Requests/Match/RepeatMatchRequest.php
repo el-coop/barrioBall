@@ -6,16 +6,19 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Match;
 
-class CreateMatchRequest extends FormRequest {
+class RepeatMatchRequest extends FormRequest {
+	protected $match;
+	protected $dateTime;
+
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
 	 * @return bool
 	 */
-	public function authorize(): bool {
-		if ($this->user()) {
+	public function authorize() {
+		$this->match = $this->route('match');
+		if ($this->user()->isManager($this->match)) {
 			return true;
 		}
 
@@ -27,37 +30,11 @@ class CreateMatchRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules(): array {
+	public function rules() {
 		return [
-			'name' => 'required|min:3',
-			'address' => 'required|min:3',
-			'description' => 'required|min:3',
-			'lat' => 'required|numeric',
-			'lng' => 'required|numeric',
-			'players' => 'required|int|min:8|max:22',
 			'date' => 'required|date_format:d/m/y',
 			'time' => 'required|date_format:H:i',
 		];
-	}
-
-	/**
-	 * @return Match
-	 */
-	public function commit(): Match {
-		$match = new Match();
-		$match->name = $this->input('name');
-		$match->address = $this->input('address');
-		$match->lat = $this->input('lat');
-		$match->lng = $this->input('lng');
-		$match->public = 1;
-		$match->players = $this->input('players');
-		$match->description = $this->input('description');
-
-		$match->date_time = Carbon::createFromFormat('d/m/y H:i', $this->input('date') . ' ' . $this->input('time'));
-		$match->save();
-		$match->addManager($this->user());
-
-		return $match;
 	}
 
 	/**
@@ -70,9 +47,17 @@ class CreateMatchRequest extends FormRequest {
 				if ($this->dateTime < Carbon::now()) {
 					$validator->errors()->add('date', __('match/create.tooEarly'));
 				}
+				if (!$this->match->ended()) {
+					$validator->errors()->add('match', __('match/requests.ended'));
+				}
 			});
 		} catch (Exception $exception) {
 			$validator->errors()->add('date', __('match/create.timeError'));
 		}
+	}
+
+	public function commit() {
+		$this->match->date_time = $this->dateTime;
+		$this->match->save();
 	}
 }

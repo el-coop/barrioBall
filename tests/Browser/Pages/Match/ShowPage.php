@@ -43,10 +43,11 @@ class ShowPage extends BasePage {
 			'@player-remove' => '.list-group-item > .btn.btn-danger',
 			'@message-modal' => '#listsModal',
 			'@delete-button' => '.btn.btn-danger.col-12.col-md-6.col-lg-4',
-			'@join-button' => '.btn.btn-success.sm-btn-block',
+			'@join-button' => '.btn.btn-success.sm-btn-block > .fa-plus-circle',
 			'@leave-button' => '.btn.btn-warning.sm-btn-block',
 			'@accept-button' => '.list-group-item > .btn-group > .btn.btn-success',
 			'@reject-button' => '.list-group-item > .btn-group > .btn.btn-danger',
+			'@repeat-button' => '.btn.btn-success.sm-btn-block > .fa-repeat',
 		];
 	}
 

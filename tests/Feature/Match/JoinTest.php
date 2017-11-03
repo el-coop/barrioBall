@@ -65,7 +65,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_admin_cant_join_finished_match(): void {
 		Event::fake();
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
@@ -179,7 +179,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_user_cant_join_request_finished_match(): void {
 		Event::fake();
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
 		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
@@ -271,7 +271,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_manager_cant_reject_join_request_finished_match(): void {
 		Event::fake();
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 		$this->match->addJoinRequest($this->player);
 
@@ -369,7 +369,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_manager_cant_accept_join_request_finished_match(): void {
 		Event::fake();
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 		$this->match->addJoinRequest($this->player);
 

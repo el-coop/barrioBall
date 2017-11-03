@@ -62,7 +62,7 @@ class CreateTest extends TestCase {
 			'lat' => 0,
 			'lng' => 0,
 			'players' => 8,
-			'date' =>$time->addDays(1)->format('d/m/y'),
+			'date' => $time->addDays(1)->format('d/m/y'),
 			'time' => $time->format('H:i'),
 			'description' => 'description',
 		])->assertRedirect(action('Match\MatchController@showMatch', Match::first()));
@@ -70,7 +70,7 @@ class CreateTest extends TestCase {
 			'name' => 'Nurs Match',
 			'address' => 'Test Test',
 		], Match::first()->toArray());
-		$this->assertEquals($time->format('d/m/y H:i'),Match::first()->date_time->format('d/m/y H:i'));
+		$this->assertEquals($time->format('d/m/y H:i'), Match::first()->date_time->format('d/m/y H:i'));
 	}
 
 	/**
@@ -83,9 +83,33 @@ class CreateTest extends TestCase {
 			'name' => 'N',
 			'address' => 'T',
 			'description' => 'd',
-		])->assertSessionHasErrors([
+		])->assertStatus(302)->assertSessionHasErrors([
 			'name', 'address', 'lat', 'lng', 'players', 'date', 'time', 'description',
 		]);
+		$this->assertEquals(0, Match::count());
 
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group create
+	 */
+	public function test_match_has_to_be_in_future(): void {
+		$this->actingAs($this->user)->post(action('Match\MatchController@create'), [
+			'name' => 'Nurs Match',
+			'address' => 'Test Test',
+			'lat' => 0,
+			'lng' => 0,
+			'players' => 8,
+			'date' => Carbon::now()->subDay()->format('d/m/y'),
+			'time' => '22:00',
+			'description' => 'description',
+
+		])->assertStatus(302)
+			->assertSessionHasErrors('date');
+
+		$this->assertEquals(0, Match::count());
 	}
 }

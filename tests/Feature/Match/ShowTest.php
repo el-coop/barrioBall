@@ -57,6 +57,7 @@ class ShowTest extends TestCase {
 			'match/show.matchFull',
 			'match/show.leaveMatch',
 			'match/show.waitingForResponse',
+			'match/show.repeatMatch',
 		])->diff([$see])->each(function ($value, $index) use ($response) {
 			$response->assertDontSeeText(__($value));
 		});
@@ -70,9 +71,9 @@ class ShowTest extends TestCase {
 	 * @group joinMatch
 	 */
 	public function test_finished_match_dont_show_buttons(): void {
-		$this->match->date_time = Carbon::now()->subDays(1);
+		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
-		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.matchEnded');
+		$this->assertButtons($this->actingAs($this->player)->get($this->match->url), 'match/show.matchEnded');
 	}
 
 	/**
@@ -84,6 +85,19 @@ class ShowTest extends TestCase {
 	public function test_sent_request_sees_request_sent_button(): void {
 		$this->match->addJoinRequest($this->player);
 		$this->assertButtons($this->actingAs($this->player)->get($this->match->url), 'match/show.waitingForResponse');
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group showMatch
+	 * @group repeatMatch
+	 */
+	public function test_manager_sees_repeat_match_on_finished_match(): void {
+		$this->match->date_time = Carbon::now()->subDay();
+		$this->match->save();
+		$this->assertButtons($this->actingAs($this->manager)->get($this->match->url), 'match/show.repeatMatch');
 	}
 
 

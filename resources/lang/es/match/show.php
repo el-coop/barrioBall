@@ -24,5 +24,6 @@ return [
 	'matchFull' => 'El partido está lleno',
 	'charLimit' => '500 caracteres max',
 	'message' => 'Envia mensaje',
-	'matchEnded' => 'El partido terminó, haga clic aquí para ir a la página de búsqueda'
+	'matchEnded' => 'El partido terminó, haga clic aquí para ir a la página de búsqueda',
+	'repeatMatch' => 'Repetir el partido',
 ];
