@@ -19,6 +19,7 @@ return [
 	'waitingForResponse' => 'Waiting for response',
 	'introduceYourself' => 'Introduce yourself to the managers',
 	'joinRequests' => 'Join Requests',
+    'cancelJoinRequest' => 'Cancel Join Request',
 	'add' => 'Add :user to match',
 	'rejectRequest' => 'Reject request from :user',
 	'matchFull' => 'Match is full',

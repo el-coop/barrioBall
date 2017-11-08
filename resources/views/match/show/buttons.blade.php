@@ -34,6 +34,13 @@
                     class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
         </button>
     </div>
+    <form method="post" action="{{ action('Match\MatchUsersController@cancelJoin', $match) }}"
+          class="my-1">
+        {{ csrf_field() }}
+        <button class="btn btn-danger sm-btn-block"><i
+                    class="fa fa-minus-circle"></i> @lang('match/show.cancelJoinRequest')
+        </button>
+    </form>
 @elseif($match->isFull())
     <div class="my-1">
         <button class="btn btn-info sm-btn-block" disabled><i

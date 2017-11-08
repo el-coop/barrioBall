@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Match;
 
 use App\Http\Requests\Match\AcceptJoinRequest;
+use App\Http\Requests\Match\CancelJoinRequest;
 use App\Http\Requests\Match\InviteMangersRequest;
 use App\Http\Requests\Match\JoinMatchRequest;
 use App\Http\Requests\Match\LeaveMatchRequest;
@@ -28,6 +29,18 @@ class MatchUsersController extends Controller {
 
 		return back()->with('alert', $message);
 	}
+
+    /**
+     * @param CancelJoinRequest $request
+     * @param Match $match
+     * @return RedirectResponse
+     */
+    public function cancelJoin(CancelJoinRequest $request, Match $match): RedirectResponse {
+
+	    $message = $request->commit();
+
+        return back()->with('alert', $message);
+    }
 
 	/**
 	 * @param LeaveMatchRequest $request
