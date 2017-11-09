@@ -28,7 +28,9 @@ class CancelJoinRequestTest extends TestCase
     }
 
     /**
-     *
+     * @test
+     * @group cancelJoin
+     * @group match
      */
     public function test_cant_CancelJoinRequest_if_not_joind(): void
     {
@@ -37,7 +39,9 @@ class CancelJoinRequestTest extends TestCase
     }
 
     /**
-     *
+     * @test
+     * @group cancelJoin
+     * @group match
      */
     public function test_can_cancel_after_joining(): void
     {
@@ -52,7 +56,9 @@ class CancelJoinRequestTest extends TestCase
     }
 
     /**
-     *
+     * @test
+     * @group cancelJoin
+     * @group match
      */
     public function test_can_rejoin_after_canceling(): void
     {
