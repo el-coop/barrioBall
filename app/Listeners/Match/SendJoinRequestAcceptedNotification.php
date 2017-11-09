@@ -26,7 +26,7 @@ class SendJoinRequestAcceptedNotification implements ShouldQueue {
 	 */
 	public function handle(PlayerJoined $event): void {
 		if ($event->user != $event->manager) {
-			$event->user->notify(new JoinRequestAccepted($event->match, $event->manager, $event->message));
+			$event->user->notify(new JoinRequestAccepted($event->match, $event->manager, $event->message ?? ''));
 		}
 	}
 }

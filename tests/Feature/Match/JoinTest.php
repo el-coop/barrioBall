@@ -248,6 +248,21 @@ class JoinTest extends TestCase {
 	 * @group match
 	 * @group joinMatch
 	 */
+	public function test_sends_email_when_request_sent_empty_message(): void {
+		Notification::fake();
+
+		$listener = new SendJoinRequestNotification();
+		$listener->handle(new JoinRequestSent($this->match, $this->manager));
+
+		Notification::assertSentTo($this->manager, JoinMatchRequest::class);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
 	public function test_can_reject_user_request(): void {
 		Event::fake();
 		$this->match->addJoinRequest($this->player);
@@ -335,6 +350,20 @@ class JoinTest extends TestCase {
 
 		$listener = new SendJoinRequestRejectedNotification();
 		$listener->handle(new PlayerRejected($this->match, $this->player, 'Test Mail'));
+
+		Notification::assertSentTo($this->player, JoinRequestRejected::class);
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_notfies_user_when_rejected_empty_message(): void {
+		Notification::fake();
+
+		$listener = new SendJoinRequestRejectedNotification();
+		$listener->handle(new PlayerRejected($this->match, $this->player));
 
 		Notification::assertSentTo($this->player, JoinRequestRejected::class);
 	}
@@ -466,6 +495,21 @@ class JoinTest extends TestCase {
 		Auth::login($this->manager);
 		$listener = new SendJoinRequestAcceptedNotification();
 		$listener->handle(new PlayerJoined($this->match, $this->player, 'Test'));
+
+		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_user_is_notified_when_request_is_accepted_empty_message(): void {
+		Notification::fake();
+		Auth::login($this->manager);
+		$listener = new SendJoinRequestAcceptedNotification();
+		$listener->handle(new PlayerJoined($this->match, $this->player));
 
 		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
 	}

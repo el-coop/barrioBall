@@ -41,7 +41,7 @@ class RemovePlayerTest extends TestCase {
 	 * @group Match
 	 * @group removePlayer
 	 */
-	public function test_manager_can_kick_user_out() {
+	public function test_manager_can_kick_user_out(): void {
 		Event::fake();
 
 		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
@@ -56,7 +56,12 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_cant_kick_user_out_finished_match() {
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_cant_kick_user_out_finished_match(): void {
 		Event::fake();
 		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
@@ -73,8 +78,12 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-
-	public function test_player_cant_kick_user_out() {
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_player_cant_kick_user_out(): void {
 		Event::fake();
 
 		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
@@ -89,7 +98,12 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_guest_cant_kick_user_out() {
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_guest_cant_kick_user_out(): void {
 		Event::fake();
 
 		$this->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
@@ -104,11 +118,31 @@ class RemovePlayerTest extends TestCase {
 		});
 	}
 
-	public function test_sends_notification_on_user_removed_event() {
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_sends_notification_on_user_removed_event(): void {
 		Notification::fake();
 
 		$listener = new SendPlayerRemovedNotification();
 		$listener->handle(new PlayerRemoved($this->match, $this->player, ''));
+
+		Notification::assertSentTo($this->player, PlayerRemovedNotification::class);
+
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_sends_notification_on_user_removed_event_empty_message(): void {
+		Notification::fake();
+
+		$listener = new SendPlayerRemovedNotification();
+		$listener->handle(new PlayerRemoved($this->match, $this->player));
 
 		Notification::assertSentTo($this->player, PlayerRemovedNotification::class);
 
