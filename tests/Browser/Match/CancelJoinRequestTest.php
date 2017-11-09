@@ -52,6 +52,7 @@ class CancelJoinRequestTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs($this->player)
                 ->visit(new ShowPage($this->match))
+                ->click('@dropdown-button')
                 ->assertSee(__('match/show.cancelJoinRequest', [], $this->player->language))
                 ->click('@cancel-join-button')
                 ->assertSee(__('match/show.cancelMessage', [], $this->player->language))
