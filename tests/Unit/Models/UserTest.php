@@ -228,5 +228,20 @@ class UserTest extends TestCase {
 		]);
 	}
 
+    /**
+     * @test
+     * @group user
+     */
+    public function test_cancelJoinRequest_delete_relationship(): void{
+        $this->match->addJoinRequest($this->user);
+        $this->assertDatabaseHas('join_match_requests', [
+            'user_id' => $this->user->id,
+            'match_id' => $this->match->id
+        ]);
+        $this->match->cancelJoinRequest($this->user);
+        $this->assertDatabaseMissing('join_match_requests', [
+            'user_id' => $this->user->id,
+            'match_id' => $this->match->id]);
 
+    }
 }

@@ -20,6 +20,7 @@ return [
 	'introduceYourself' => 'Introduce yourself to the managers',
 	'joinRequests' => 'Join Requests',
     'cancelJoinRequest' => 'Cancel Join Request',
+    'cancelMessage' => 'Request canceled',
 	'add' => 'Add :user to match',
 	'rejectRequest' => 'Reject request from :user',
 	'matchFull' => 'Match is full',

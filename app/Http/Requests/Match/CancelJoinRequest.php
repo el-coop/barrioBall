@@ -17,10 +17,7 @@ class CancelJoinRequest extends FormRequest
     {
         $this->match = $this->route('match');
 
-        if ($this->user()) {
-            return true;
-        }
-        return false;
+        return $this->user()->sentRequest($this->match);
     }
 
     /**
@@ -40,7 +37,7 @@ class CancelJoinRequest extends FormRequest
      */
     public function commit(): string {
         $this->match->cancelJoinRequest($this->user());
-        $message = "Join Request Canceld";
+        $message = __('match/show.cancelMessage');
         return $message;
     }
 }
