@@ -34,7 +34,7 @@
                     class="fa fa-minus-circle"></i> @lang('match/show.waitingForResponse')
         </button>
     </div>
-    <form method="post" action="{{ action('Match\MatchUsersController@cancelJoin', $match) }}"
+    <form method="post" action="{{ action('Match\MatchUsersController@cancelJoinRequest', $match) }}"
           class="my-1">
         {{ csrf_field() }}
         <button class="btn btn-danger sm-btn-block" dusk="cancel-join-button"><i

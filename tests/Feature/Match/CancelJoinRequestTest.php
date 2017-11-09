@@ -29,24 +29,24 @@ class CancelJoinRequestTest extends TestCase
 
     /**
      * @test
-     * @group cancelJoin
+     * @group cancelJoinRequest
      * @group match
      */
-    public function test_cant_CancelJoinRequest_if_not_joind(): void
+    public function test_cant_cancelJ_join_request_if_not_joind(): void
     {
-        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoin', $this->match), [])
+        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoinRequest', $this->match), [])
             ->assertStatus(403);
     }
 
     /**
      * @test
-     * @group cancelJoin
+     * @group cancelJoinRequest
      * @group match
      */
     public function test_can_cancel_after_joining(): void
     {
         $this->match->addJoinRequest($this->player);
-        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoin', $this->match), [])
+        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoinRequest', $this->match), [])
             ->assertStatus(302)
             ->assertSessionHas('alert', __('match/show.cancelMessage'));
 
@@ -57,7 +57,7 @@ class CancelJoinRequestTest extends TestCase
 
     /**
      * @test
-     * @group cancelJoin
+     * @group cancelJoinRequest
      * @group match
      */
     public function test_can_rejoin_after_canceling(): void

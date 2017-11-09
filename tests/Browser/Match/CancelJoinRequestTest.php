@@ -29,7 +29,7 @@ class CancelJoinRequestTest extends DuskTestCase
 
     /**
      * @test
-     * @group cancelJoin
+     * @group cancelJoinRequest
      * @group match
      */
     public function test_cant_see_cancel_button_before_sending_request()
@@ -43,7 +43,7 @@ class CancelJoinRequestTest extends DuskTestCase
 
     /**
      * @test
-     * @group cancelJoin
+     * @group cancelJoinRequest
      * @group match
      */
     public function test_cancel_join_request()

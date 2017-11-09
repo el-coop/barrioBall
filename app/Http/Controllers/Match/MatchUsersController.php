@@ -35,7 +35,7 @@ class MatchUsersController extends Controller {
      * @param Match $match
      * @return RedirectResponse
      */
-    public function cancelJoin(CancelJoinRequest $request, Match $match): RedirectResponse {
+    public function cancelJoinRequest(CancelJoinRequest $request, Match $match): RedirectResponse {
 
 	    $message = $request->commit();
 

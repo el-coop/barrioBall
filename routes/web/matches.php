@@ -10,7 +10,7 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 		Route::delete('/{match}', 'MatchController@delete');
 		Route::get('/{match}/users','MatchUsersController@searchUsers');
 		Route::post('/{match}/players', 'MatchUsersController@joinMatch');
-        Route::post('/{match}/cancel', 'MatchUsersController@cancelJoin');
+        Route::post('/{match}/cancel', 'MatchUsersController@cancelJoinRequest');
 		Route::patch('/{match}', 'MatchController@repeatMatch');
 
 		Route::delete('/{match}/players', 'MatchUsersController@leaveMatch');
