@@ -19,6 +19,8 @@ return [
 	'waitingForResponse' => 'Esperando respuesta',
 	'introduceYourself' => 'Presentese a los gerentes',
 	'joinRequests' => 'Solicitudes de afiliación',
+    'cancelJoinRequest' => 'Cancelar solicitudes de afiliación',
+    'cancelMessage' => 'Solicitud cancelada',
 	'add' => 'Agrege :user al partido',
 	'rejectRequest' => 'Rechaze la solicitud de :user',
 	'matchFull' => 'El partido está lleno',
