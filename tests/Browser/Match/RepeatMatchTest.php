@@ -30,7 +30,6 @@ class RepeatMatchTest extends DuskTestCase {
 	 * @test
 	 * @group match
 	 * @group showMatch
-	 * @group current
 	 */
 	public function test_repeat_match_works(): void {
 		$date = Carbon::now()->addDay()->format('d/m/y');

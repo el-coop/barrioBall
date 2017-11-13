@@ -48,6 +48,8 @@ class ShowPage extends BasePage {
 			'@accept-button' => '.list-group-item > .btn-group > .btn.btn-success',
 			'@reject-button' => '.list-group-item > .btn-group > .btn.btn-danger',
 			'@repeat-button' => '.btn.btn-success.sm-btn-block > .fa-repeat',
+			'@dropdown-button' => '.dropdown-toggle.btn',
+			'@cancel-join-button' => '.dropdown-toggle.btn + .dropdown-menu  .dropdown-item'
 		];
 	}
 
