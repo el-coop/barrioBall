@@ -11,11 +11,8 @@ class DeleteUserRequest extends FormRequest {
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		if ($this->user() && $this->user()->exists()) {
-			return true;
-		}
+		return !! $this->user();
 
-		return false;
 	}
 
 	/**

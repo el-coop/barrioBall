@@ -15,11 +15,9 @@ class DeleteMatchRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->isManager($this->match)) {
-			return true;
-		}
 
-		return false;
+		return $this->user()->can('delete',$this->match);
+
 	}
 
 	/**

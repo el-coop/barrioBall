@@ -15,11 +15,7 @@ class CreateMatchRequest extends FormRequest {
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		if ($this->user()) {
-			return true;
-		}
-
-		return false;
+		return $this->user()->can('create',Match::class);
 	}
 
 	/**

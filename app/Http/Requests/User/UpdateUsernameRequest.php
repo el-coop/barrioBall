@@ -13,11 +13,7 @@ class UpdateUsernameRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 
-		if ($this->user()->exists()) {
-			return true;
-		}
-
-		return false;
+		return !! $this->user();
 	}
 
 	/**

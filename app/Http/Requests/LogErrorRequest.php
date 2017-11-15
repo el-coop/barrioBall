@@ -16,11 +16,7 @@ class LogErrorRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 
-		if ($this->ajax()) {
-			return true;
-		}
-
-		return false;
+		return $this->ajax();
 	}
 
 	/**

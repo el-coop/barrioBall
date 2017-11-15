@@ -18,11 +18,8 @@ class RepeatMatchRequest extends FormRequest {
 	 */
 	public function authorize() {
 		$this->match = $this->route('match');
-		if ($this->user()->isManager($this->match)) {
-			return true;
-		}
 
-		return false;
+		return $this->user()->can('manage', $this->match);
 	}
 
 	/**
