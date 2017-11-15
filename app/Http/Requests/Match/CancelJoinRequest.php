@@ -17,7 +17,7 @@ class CancelJoinRequest extends FormRequest
     {
         $this->match = $this->route('match');
 
-        return $this->user()->sentRequest($this->match);
+        return $this->user()->can('cancelRequest',$this->match);
     }
 
     /**

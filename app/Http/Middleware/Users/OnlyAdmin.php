@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware\Users;
 
+use App\Models\Admin;
 use Closure;
 
 class OnlyAdmin
@@ -15,7 +16,7 @@ class OnlyAdmin
      */
     public function handle($request, Closure $next)
     {
-    	if(!$request->user() || ! $request->user()->isAdmin()){
+    	if(! $request->user() || ! $request->user()->can('admin', Admin::class)){
 			return redirect(action('HomeController@index'));
 		}
         return $next($request);

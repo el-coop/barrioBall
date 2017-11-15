@@ -12,11 +12,7 @@ class UpdateEmailRequest extends FormRequest {
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		if ($this->user() && $this->user()->exists()) {
-			return true;
-		}
-
-		return false;
+		return !! $this->user();
 	}
 
 	/**

@@ -16,11 +16,9 @@ class LeaveMatchRequest extends FormRequest {
 	 */
 	public function authorize(): bool {
 		$this->match = $this->route('match');
-		if ($this->user() && $this->user()->inMatch($this->match)) {
-			return true;
-		}
 
-		return false;
+		return $this->user()->can('leave', $this->match);
+
 	}
 
 	/**

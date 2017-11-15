@@ -6,17 +6,17 @@ use App\Models\Errors\Error;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteErrorRequest extends FormRequest {
+	protected $error;
+
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		if ($this->user() && $this->user()->isAdmin()) {
-			return true;
-		}
+		$this->error = $this->route('error');
 
-		return false;
+		return $this->user()->can('delete', $this->error);
 	}
 
 	/**
@@ -31,7 +31,6 @@ class DeleteErrorRequest extends FormRequest {
 	}
 
 	public function commit(): void {
-		$error = $this->route('error');
-		$error->errorable->delete();
+		$this->error->errorable->delete();
 	}
 }

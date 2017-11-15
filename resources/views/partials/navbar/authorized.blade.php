@@ -8,7 +8,7 @@
             <a class="nav-link {{ Request::is('search') ? 'active' : '' }}"
                href="{{ action('Match\MatchController@showSearch') }}">@lang('navbar.searchLink')</a>
         </li>
-        @if($user->isAdmin())
+        @can('admin', \App\Models\Admin::class)
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {{ Request::is('admin/*') ? 'active' : '' }}"
                    data-toggle="dropdown">@lang('navbar.adminTitle')</a>

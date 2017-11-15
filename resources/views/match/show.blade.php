@@ -13,11 +13,11 @@
                     @include('match.show.buttons')
                 </div>
                 <div class="col-12 col-md-6 text-md-right d-md-flex flex-column justify-content-center">
-                    @manager($match)
+                    @can('manage',$match)
                         @include('match.show.inviteManagers')
                         @include('match.show.stopManaging')
                         @include('match.show.deleteMatch')
-                    @endmanager
+                    @endcan
                 </div>
             </div>
             <div class="row">
