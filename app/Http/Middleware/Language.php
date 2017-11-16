@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App;
+use Carbon\Carbon;
 use Closure;
 
 class Language {
@@ -21,6 +22,8 @@ class Language {
 		} else { // This is optional as Laravel will automatically set the fallback language if there is none specified
 			App::setLocale(config('app.fallback_locale'));
 		}
+
+		Carbon::setLocale(App::getLocale());
 
 		return $next($request);
 	}

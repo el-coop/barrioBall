@@ -9,7 +9,8 @@
                   :titles="{
                     name: '@lang('match/create.name')',
                     view: '@lang('profile/page.view')',
-                    requests: '@lang('profile/page.requests')'
+                    requests: '@lang('profile/page.requests')',
+                    date: '@lang('match/search.date')',
                   }">
         <div class="container mb-5 mt-5">
             <div class="row">

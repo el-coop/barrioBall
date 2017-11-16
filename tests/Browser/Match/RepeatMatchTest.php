@@ -35,7 +35,7 @@ class RepeatMatchTest extends DuskTestCase {
 		$date = Carbon::now()->addDay()->format('d/m/y');
 		$this->browse(function (Browser $browser) use($date){
 			$browser->loginAs($this->manager)->visit(new ShowPage($this->match))
-				->click('@repeat-button')
+				->pressAndWaitFor('@repeat-button')
 				->type('date',  $date)
 				->type('time',  '22:00')
 				->click('.modal-body .fa.fa-repeat')

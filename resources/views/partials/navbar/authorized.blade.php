@@ -1,6 +1,10 @@
 @component('partials.navbar.components.navbar')
     @slot('navbarCenter')
         <li class="nav-item">
+            <a class="nav-link {{ Request::is('home') ? 'active' : '' }}"
+               href="{{ action('HomeController@index') }}">@lang('global/dashboard.pageTitle')</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ Request::is('matches') ? 'active' : '' }}"
                href="{{ action('Match\MatchController@showCreate') }}">@lang('navbar.createLink')</a>
         </li>

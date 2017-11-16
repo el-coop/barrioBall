@@ -35,10 +35,11 @@
                               :css="css"
                               :per-page="perPage"
                               :append-params="params"
+                              :sort-order="sortOrder"
                               @vuetable:pagination-data="paginationData"
                               @vuetable:loading='tableLoading'
                               @vuetable:loaded='tableLoaded'>
-                        <template slot="actions" scope="props">
+                        <template slot="actions" slot-scope="props">
                             <div class="custom-actions">
                                 <button class="btn" :class="deleteClass"
                                         @click="onAction('delete', props.rowData, props.rowIndex)">
@@ -102,6 +103,12 @@
 				type: Object,
                 default(){
 					return {};
+                }
+            },
+            sortOrder: {
+				type: Array,
+                default(){
+					return []
                 }
             }
 		},
