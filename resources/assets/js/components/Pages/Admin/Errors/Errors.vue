@@ -24,7 +24,7 @@
 						title: 'URL',
 					},
 					{
-						name: 'error.user',
+						name: 'error.user.username',
 						title: this.translate.user
 					},
 					{
@@ -51,7 +51,7 @@
 						title: 'URL'
 					},
 					{
-						name: 'error.user',
+						name: 'error.user.username',
 						title: this.translate.user
 					},
 					{

@@ -7,6 +7,7 @@
             :fields="managedMatchesFields"
             :inline-forms="false"
             :per-page-options="[5,10]"
+            :sort-order="managedSortOrder"
             :extra-params="{
                 managed: true
             }"

@@ -6,6 +6,7 @@
             url="{{ action('UserController@getMatches')}}"
             :fields="playedMatchesFields"
             :inline-forms="false"
+            :sort-order="playedSortOrder"
             :per-page-options="[5,10]"
             class="mt-3">
     </datatable>

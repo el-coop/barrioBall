@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -10,9 +11,11 @@ class HomeController extends Controller
 	/**
 	 * @return View
 	 */
-	public function index(): View
+	public function index(Request $request): View
 	{
-		return view('home');
+		$nextMatch = $request->user()->playedMatches()->orderBy('date_time')->first();
+		$requestsCount = $request->user()->managedMatches()->withCount('joinRequests')->get()->sum->join_requests_count;
+		return view('dashboard.dashboard',compact('nextMatch','requestsCount'));
 	}
 
 	/**

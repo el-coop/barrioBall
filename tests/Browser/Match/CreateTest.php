@@ -20,29 +20,8 @@ class CreateTest extends DuskTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->user = factory(User::class)->create([
-			'language' => 'en'
+			'language' => 'en',
 		]);
-	}
-
-	/**
-	 * @test
-	 * @group createMatch
-	 * @group match
-	 */
-	public function test_switches_between_map_and_form_on_small_screen(): void {
-		$this->browse(function (Browser $browser) {
-
-			$browser->resize(320, 640)
-				->loginAs($this->user)
-				->visit(new CreatePage)
-				->assertVisible('@front-shown')
-				->click('@flip-button')
-				->assertVisible('@back-shown')
-				->click('@flip-button')
-				->assertVisible('@front-shown');
-
-			$browser->maximize();
-		});
 	}
 
 	/**
@@ -106,7 +85,7 @@ class CreateTest extends DuskTestCase {
 					'time' => '20:00',
 					'description' => 'test',
 				])
-				->assertPathIs(action('Match\MatchController@showMatch', Match::first(),false));
+				->assertPathIs(action('Match\MatchController@showMatch', Match::first(), false));
 		});
 
 		$this->assertDatabaseHas('matches', [
@@ -114,4 +93,26 @@ class CreateTest extends DuskTestCase {
 			'address' => 'test',
 		]);
 	}
+
+	/**
+	 * @test
+	 * @group createMatch
+	 * @group match
+	 */
+	public function test_switches_between_map_and_form_on_small_screen(): void {
+		$this->browse(function (Browser $browser) {
+
+			$browser->resize(320, 640)
+				->loginAs($this->user)
+				->visit(new CreatePage)
+				->assertVisible('@front-shown')
+				->click('@flip-button')
+				->assertVisible('@back-shown')
+				->click('@flip-button')
+				->assertVisible('@front-shown');
+
+			$browser->maximize();
+		});
+	}
+
 }
