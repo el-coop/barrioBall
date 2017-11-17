@@ -18,7 +18,7 @@ class RejectJoinRequest extends FormRequest {
 	public function authorize(): bool {
 		$this->match = $this->route('match');
 
-		return $this->user()->can('manage', $this->match);
+		return $this->user()->can('update', $this->match);
 	}
 
 	/**

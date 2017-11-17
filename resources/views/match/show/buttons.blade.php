@@ -18,7 +18,7 @@
                 </a>
             </div>
         @endcan
-    @elseif($user->inMatch($match))
+    @elseif($match->hasPlayer($user))
         <form method="post" action="{{ action('Match\MatchUsersController@leaveMatch', $match) }}"
               class="my-1">
             {{ csrf_field() }}
@@ -27,7 +27,7 @@
                         class="fa fa-minus-circle"></i> @lang('match/show.leaveMatch')
             </button>
         </form>
-    @elseif($user->sentRequest($match))
+    @elseif($match->hasJoinRequest($user))
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                 @lang('match/show.waitingForResponse')
@@ -47,7 +47,7 @@
                         class="fa fa-info-circle"></i> @lang('match/show.matchFull')
             </button>
         </div>
-    @elseif($user->isManager($match))
+    @elseif($user->can('manage',$match))
         <form method="post" action="{{ action('Match\MatchUsersController@joinMatch', $match) }}"
               class="my-1">
             {{ csrf_field() }}

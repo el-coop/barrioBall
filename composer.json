@@ -11,8 +11,9 @@
         "fideloper/proxy": "~3.3"
     },
     "require-dev": {
-        "filp/whoops": "~2.0",
+        "barryvdh/laravel-debugbar": "^3.1",
         "barryvdh/laravel-ide-helper": "^2.4",
+        "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "laravel/dusk": "^2.0",
         "mockery/mockery": "0.9.*",
@@ -35,6 +36,9 @@
     "extra": {
         "laravel": {
             "dont-discover": [
+                "barryvdh/laravel-debugbar",
+                "barryvdh/laravel-ide-helper",
+                "laravel/dusk"
             ]
         }
     },
