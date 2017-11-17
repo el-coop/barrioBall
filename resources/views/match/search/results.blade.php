@@ -8,7 +8,7 @@
          :ref="'result' + index" @mouseenter="resultHover(index)"
          @mouseleave="stopHover(index)">
         <div class="card-header bg-white">
-            <a :href="'matches/' + match.id">@{{ match.name  }}</a>
+            <a :href="match.url">@{{ match.name  }}</a>
             <span class="pull-right">@{{ match.date }} @{{ match.time }}</span>
         </div>
         <div class="card-block search-result-map-wrapper">

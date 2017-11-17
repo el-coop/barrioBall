@@ -38,7 +38,7 @@ class LeaveTest extends TestCase {
 		Event::fake();
 		$this->match->addPlayer($this->manager);
 
-		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertSessionHas('alert', __('match/show.left'));
 
 		$this->assertFalse($this->manager->inMatch($this->match));
@@ -60,7 +60,7 @@ class LeaveTest extends TestCase {
 		$this->match->save();
 
 		$this->actingAs($this->manager)
-			->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
+			->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertStatus(302)
 		->assertSessionHasErrors('ended');
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
@@ -78,7 +78,7 @@ class LeaveTest extends TestCase {
 		Event::fake();
 
 		$this->actingAs($this->manager)
-			->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
+			->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertStatus(403);
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
@@ -108,7 +108,7 @@ class LeaveTest extends TestCase {
 	 */
 	public function test_not_logged_cant_leave_match(): void {
 		Event::fake();
-		$this->delete(action('Match\MatchUsersController@leaveMatch', $this->match))
+		$this->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {

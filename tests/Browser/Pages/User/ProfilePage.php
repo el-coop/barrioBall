@@ -16,7 +16,7 @@ class ProfilePage extends BasePage
      */
     public function url()
     {
-        return action('UserController@show', [], false);
+        return action('User\UserController@show', [], false);
     }
 
     /**

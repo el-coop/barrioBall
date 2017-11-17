@@ -34,7 +34,7 @@ class CancelJoinRequestTest extends TestCase
      */
     public function test_cant_cancelJ_join_request_if_not_joind(): void
     {
-        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoinRequest', $this->match), [])
+        $this->actingAs($this->player)->post(action('Match\MatchUserController@cancelJoinRequest', $this->match), [])
             ->assertStatus(403);
     }
 
@@ -46,7 +46,7 @@ class CancelJoinRequestTest extends TestCase
     public function test_can_cancel_after_joining(): void
     {
         $this->match->addJoinRequest($this->player);
-        $this->actingAs($this->player)->post(action('Match\MatchUsersController@cancelJoinRequest', $this->match), [])
+        $this->actingAs($this->player)->post(action('Match\MatchUserController@cancelJoinRequest', $this->match), [])
             ->assertStatus(302)
             ->assertSessionHas('alert', __('match/show.cancelMessage'));
 
@@ -65,7 +65,7 @@ class CancelJoinRequestTest extends TestCase
         $this->test_can_cancel_after_joining();
         Event::fake();
 
-        $this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+        $this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
             'message' => 'bla',
         ])->assertStatus(302)
             ->assertSessionHas('alert', __('match/show.joinMatchSent'));

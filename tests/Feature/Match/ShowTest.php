@@ -216,7 +216,7 @@ class ShowTest extends TestCase {
 		$this->match->addPlayer($this->player);
 		$this->actingAs($this->manager)
 			->get(action('Match\MatchController@showMatch', $this->match))
-			->assertSee("url: '" . action('Match\MatchUsersController@removePlayer', $this->match) . "'")
+			->assertSee("url: '" . action('Match\MatchUserController@removePlayer', $this->match) . "'")
 			->assertSee('<button class="btn btn-danger"');
 	}
 

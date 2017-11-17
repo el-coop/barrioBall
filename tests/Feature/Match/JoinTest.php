@@ -46,7 +46,7 @@ class JoinTest extends TestCase {
 	public function test_admin_joins_automatically(): void {
 		Event::fake();
 
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
 			->assertSessionHas('alert', __('match/show.joined'));
 
@@ -68,7 +68,7 @@ class JoinTest extends TestCase {
 		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
 		->assertSessionHasErrors('ended');
 
@@ -87,7 +87,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 
 		$this->match->addPlayer($this->manager);
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
 		->assertSessionHasErrors('request');
 
@@ -106,7 +106,7 @@ class JoinTest extends TestCase {
 			$this->match->addPlayer($player);
 		});
 
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
 		->assertSessionHasErrors('request');
 
@@ -135,7 +135,7 @@ class JoinTest extends TestCase {
 	public function test_player_can_send_join_request(): void {
 		Event::fake();
 
-		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		])->assertStatus(302)
 			->assertSessionHas('alert', __('match/show.joinMatchSent'));
@@ -159,7 +159,7 @@ class JoinTest extends TestCase {
 			$this->match->addPlayer($player);
 		});
 
-		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		])->assertStatus(302)
 			->assertSessionHas('alert', __('match/show.joinMatchSent'));
@@ -182,7 +182,7 @@ class JoinTest extends TestCase {
 		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
-		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [])
+		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
 		->assertSessionHasErrors('ended');
 
@@ -202,7 +202,7 @@ class JoinTest extends TestCase {
 
 		$this->match->addJoinRequest($this->player);
 
-		$this->actingAs($this->player)->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		])->assertStatus(302)
 		->assertSessionHasErrors('request');
@@ -217,7 +217,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_not_logged_in_cant_send_join_request(): void {
 		Event::fake();
-		$this->post(action('Match\MatchUsersController@joinMatch', $this->match), [
+		$this->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
@@ -266,7 +266,7 @@ class JoinTest extends TestCase {
 	public function test_can_reject_user_request(): void {
 		Event::fake();
 		$this->match->addJoinRequest($this->player);
-		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -290,7 +290,7 @@ class JoinTest extends TestCase {
 		$this->match->save();
 		$this->match->addJoinRequest($this->player);
 
-		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)->assertSessionHasErrors('ended');
@@ -308,7 +308,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_cant_reject_non_existent_user_request(): void {
 		Event::fake();
-		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -327,7 +327,7 @@ class JoinTest extends TestCase {
 	public function test_cant_reject_when_not_logged_in(): void {
 		Event::fake();
 		$this->match->addJoinRequest($this->player);
-		$this->delete(action('Match\MatchUsersController@rejectJoin', $this->match), [
+		$this->delete(action('Match\MatchUserController@rejectJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -376,7 +376,7 @@ class JoinTest extends TestCase {
 	public function test_can_accept_user_join_request(): void {
 		Event::fake();
 		$this->match->addJoinRequest($this->player);
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -402,7 +402,7 @@ class JoinTest extends TestCase {
 		$this->match->save();
 		$this->match->addJoinRequest($this->player);
 
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -422,7 +422,7 @@ class JoinTest extends TestCase {
 	 */
 	public function test_cant_accept_non_existent_request(): void {
 		Event::fake();
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
@@ -443,7 +443,7 @@ class JoinTest extends TestCase {
 	public function test_cant_accept_when_not_logged_in(): void {
 		Event::fake();
 		$this->match->addJoinRequest($this->player);
-		$this->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->post(action('Match\MatchUserController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertRedirect(action('Auth\LoginController@showLoginForm'));
@@ -472,7 +472,7 @@ class JoinTest extends TestCase {
 
 		$this->match->addJoinRequest($this->player);
 
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@acceptJoin', $this->match), [
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)

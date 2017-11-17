@@ -51,7 +51,7 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/playerRemoved.youWereRemoved', [
-				'url' => action('Match\MatchController@showMatch', $this->match),
+				'url' => $this->match->url,
 				'match' => $this->match->name,
 			], $notifiable->language))
 			->line(__('mail/global.adminSays', [], $notifiable->language))

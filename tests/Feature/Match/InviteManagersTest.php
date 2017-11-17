@@ -31,7 +31,7 @@ class InviteManagersTest extends TestCase {
 	 */
 
 	public function test_manager_can_invite_managers(): void {
-		$this->actingAs($this->manager)->post(action('Match\MatchUsersController@inviteManagers', $this->match));
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@inviteManagers', $this->match));
 		//Todo - add testing when working on feature
 		$this->assertTrue(true);
 	}
@@ -44,7 +44,7 @@ class InviteManagersTest extends TestCase {
 	 */
 	public function test_non_manager_cant_invite_others(): void {
 		$this->actingAs($this->player)
-			->post(action('Match\MatchUsersController@inviteManagers', $this->match))
+			->post(action('Match\MatchUserController@inviteManagers', $this->match))
 			->assertStatus(403);
 	}
 }

@@ -3,7 +3,7 @@
         <h4 class="mb-0">@lang('profile/page.playedMatches')</h4>
     @endslot
     <datatable
-            url="{{ action('UserController@getMatches')}}"
+            url="{{ action('User\UserController@getMatches')}}"
             :fields="playedMatchesFields"
             :inline-forms="false"
             :sort-order="playedSortOrder"

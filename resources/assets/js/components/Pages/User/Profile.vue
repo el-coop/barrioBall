@@ -25,7 +25,7 @@
 						sortField: 'date_time'
 					},
 					{
-						name: 'id',
+						name: 'url',
 						title: this.titles.view,
 						dataClass: 'text-center',
 						callback: this.link,
@@ -44,7 +44,7 @@
 						dataClass: 'text-center align-middle'
 					},
 					{
-						name: 'id',
+						name: 'url',
 						title: this.titles.view,
 						dataClass: 'text-center',
 						callback: this.link,
@@ -67,7 +67,7 @@
 
 		methods: {
 			link(value) {
-				return "<a href='/matches/" + value + "'><button class='btn btn-dark'><i class='fa fa-search' ></button></i></a>";
+				return "<a href='" + value + "'><button class='btn btn-dark'><i class='fa fa-search' ></button></i></a>";
 			}
 		}
 

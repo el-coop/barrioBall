@@ -11,7 +11,7 @@
             'class' => 'btn-primary',
         ],
         [
-            'url' => action('UserController@show'),
+            'url' => action('User\UserController@show'),
             'text' => __('navbar.profileLink'),
             'class' => 'btn-outline-dark',
         ],

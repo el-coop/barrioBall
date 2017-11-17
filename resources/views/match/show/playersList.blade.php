@@ -4,7 +4,7 @@
         @if($user && $user->can('manage',$match) && ! $player->can('manage',$match))
             <button class="btn btn-danger"
                     @click="toggleModal({
-                            url: '{{ action('Match\MatchUsersController@removePlayer', $match) }}',
+                            url: '{{ action('Match\MatchUserController@removePlayer', $match) }}',
                             title: '@lang('match/show.message')',
                             class: 'btn-danger',
                             delete: true,

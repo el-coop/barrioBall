@@ -1,5 +1,5 @@
 @if($match->managers->count() > 1)
-    <form method="post" action="{{ action('Match\MatchUsersController@stopManaging', $match) }}"
+    <form method="post" action="{{ action('Match\MatchUserController@stopManaging', $match) }}"
           class="mb-1">
         {{ csrf_field() }}
         {{ method_field('delete') }}

@@ -1,5 +1,5 @@
 @component('user.profile.component.form',[
-    'url' => action('UserController@updatePassword'),
+    'url' => action('User\UserController@updatePassword'),
     'title' => __('profile/page.changePassword'),
     'fields' => [[
         'label' => __('profile/page.password'),

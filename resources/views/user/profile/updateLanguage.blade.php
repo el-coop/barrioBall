@@ -1,5 +1,5 @@
 @component('user.profile.component.form',[
-    'url' => action('UserController@updateLanguage'),
+    'url' => action('User\UserController@updateLanguage'),
     'title' => __('profile/page.changeLanguage'),
     'fields' => [[
         'type' => 'languages'

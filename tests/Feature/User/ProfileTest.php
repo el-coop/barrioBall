@@ -26,7 +26,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_doesnt_show_profile_page_unauthorized(): void {
-		$this->get(action('UserController@show'))
+		$this->get(action('User\UserController@show'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 	}
@@ -37,7 +37,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_shows_profile_page(): void {
-		$this->actingAs($this->user)->get(action('UserController@show'))
+		$this->actingAs($this->user)->get(action('User\UserController@show'))
 			->assertSee('<title>' . __('navbar.profileLink', [], $this->user->language));
 	}
 
@@ -47,7 +47,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_unlogged_cant_update_username(): void {
-		$this->patch(action('UserController@updateUsername'))
+		$this->patch(action('User\UserController@updateUsername'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
@@ -58,7 +58,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_can_update_username(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updateUsername', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateUsername', [
 			'username' => 'newUsername',
 		]))->assertSessionHas('alert',__('profile/page.updatedUsername'));
 		$this->assertEquals('newUsername', $this->user->username);
@@ -71,7 +71,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_cant_have_empty_username(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updateUsername', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateUsername', [
 			'username' => '',
 		]))->assertSessionHasErrors('username');
 		$this->assertNotEquals('', $this->user->username);
@@ -84,7 +84,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_unlogged_cant_update_password(): void {
-		$this->patch(action('UserController@updatePassword'))
+		$this->patch(action('User\UserController@updatePassword'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
@@ -95,7 +95,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_can_update_password(): void {
-		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updatePassword', [
 			'password' => '12345678',
 			'password_confirmation' => '12345678',
 		]))->assertSessionHas('alert',__('profile/page.updatedPassword'));
@@ -109,7 +109,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_cant_have_empty_password(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updatePassword', [
 			'password' => '',
 			'password_confirm' => '',
 		]))->assertSessionHasErrors('password');
@@ -122,7 +122,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_cant_have_unconfirmed_password(): void {
-		$this->actingAs($this->user)->patch(action('UserController@updatePassword', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updatePassword', [
 			'password' => '1234567',
 			'password_confirm' => '123',
 		]))->assertSessionHasErrors('password');
@@ -135,7 +135,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_unlogged_cant_update_email(): void {
-		$this->patch(action('UserController@updateEmail'))
+		$this->patch(action('User\UserController@updateEmail'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
@@ -145,7 +145,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_can_update_email(): void {
-		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateEmail', [
 			'email' => 'new@new.new',
 		]))->assertSessionHas('alert',__('profile/page.updatedEmail'));
 		$this->assertEquals('new@new.new', $this->user->email);
@@ -158,7 +158,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_cant_have_empty_email(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateEmail', [
 			'email' => '',
 		]))->assertSessionHasErrors('email');
 		$this->assertNotEquals('', $this->user->email);
@@ -170,7 +170,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_cant_have_non_email(): void {
-		$this->actingAs($this->user)->patch(action('UserController@updateEmail', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateEmail', [
 			'email' => 'test',
 		]))->assertSessionHasErrors('email');
 		$this->assertNotEquals('test', $this->user->email);
@@ -182,7 +182,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_unlogged_cant_update_language(): void {
-		$this->patch(action('UserController@updateLanguage'))
+		$this->patch(action('User\UserController@updateLanguage'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 	}
 
@@ -192,7 +192,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_can_update_language(): void {
-		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateLanguage', [
 			'language' => 'es',
 		]))->assertSessionHas('alert',__('profile/page.updatedLanguage',[],$this->user->language));
 		$this->assertEquals('es', $this->user->language);
@@ -205,7 +205,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_cant_have_empty_language(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateLanguage', [
 			'language' => '',
 		]))->assertSessionHasErrors('language');
 		$this->assertNotEquals('', $this->user->language);
@@ -218,7 +218,7 @@ class ProfileTest extends TestCase {
 	 */
 	public function test_user_cant_have_non_language(): void {
 
-		$this->actingAs($this->user)->patch(action('UserController@updateLanguage', [
+		$this->actingAs($this->user)->patch(action('User\UserController@updateLanguage', [
 			'language' => 'test',
 		]))->assertSessionHasErrors('language');
 		$this->assertNotEquals('test', $this->user->language);
@@ -230,7 +230,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_unlogged_cant_delete_user(): void {
-		$this->delete(action('UserController@deleteUser'))
+		$this->delete(action('User\UserController@delete'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 		$this->assertNotEquals(0,User::count());
 		$this->assertNotEquals(0,Player::count());
@@ -242,7 +242,7 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_can_delete_himself(): void {
-		$this->actingAs($this->user)->delete(action('UserController@deleteUser'));
+		$this->actingAs($this->user)->delete(action('User\UserController@delete'));
 		$this->assertEquals(0,User::count());
 		$this->assertEquals(0,Player::count());
 	}

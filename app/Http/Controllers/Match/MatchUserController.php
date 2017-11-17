@@ -16,7 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class MatchUsersController extends Controller {
+class MatchUserController extends Controller {
 
 	/**
 	 * @param JoinMatchRequest $request
