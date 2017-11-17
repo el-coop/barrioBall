@@ -123,7 +123,7 @@ class Match extends Model
      */
     public function hasJoinRequest(User $user): bool
     {
-        return $this->joinRequests()->where('id', $user->id)->exists();
+        return !! $this->joinRequests->where('id', $user->id)->count();
     }
 
     /**
@@ -135,8 +135,6 @@ class Match extends Model
             ->withTimestamps();
     }
 
-
-
     /**
      * @param User $user
      *
@@ -144,8 +142,18 @@ class Match extends Model
      */
     public function hasPlayer(User $user): bool
     {
-        return $this->registeredPlayers()->where('id', $user->id)->exists();
+        return !! $this->registeredPlayers->where('id', $user->id)->count();
     }
+
+	/**
+	 * @param User $user
+	 *
+	 * @return bool
+	 */
+	public function hasManager(User $user): bool
+	{
+		return !! $this->managers->where('id', $user->id)->count();
+	}
 
     /**
      * @param User $user
@@ -168,7 +176,7 @@ class Match extends Model
      */
     public function isFull(): bool
     {
-        return $this->registeredPlayers()->count() >= $this->players;
+        return $this->registeredPlayers->count() >= $this->players;
     }
 
 

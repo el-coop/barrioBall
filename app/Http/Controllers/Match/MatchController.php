@@ -41,6 +41,7 @@ class MatchController extends Controller {
 	 */
 	public function showMatch(Request $request, Match $match): View {
 
+		$match->load('managers','joinRequests','registeredPlayers');
 		return view('match.show', compact('match'));
 	}
 

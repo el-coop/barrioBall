@@ -52,7 +52,7 @@ class MatchPolicy {
 	 * @return bool
 	 */
 	public function manage(User $user, Match $match): bool {
-		return $user->isManager($match);
+		return $match->hasManager($user);
 	}
 
 

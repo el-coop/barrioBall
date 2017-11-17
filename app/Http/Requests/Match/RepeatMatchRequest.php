@@ -19,7 +19,7 @@ class RepeatMatchRequest extends FormRequest {
 	public function authorize() {
 		$this->match = $this->route('match');
 
-		return $this->user()->can('manage', $this->match);
+		return $this->user()->can('update', $this->match);
 	}
 
 	/**

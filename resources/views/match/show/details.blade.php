@@ -21,6 +21,6 @@
         <i class="fa fa-users fa-3x"></i>
     </p>
     <strong>
-        {{$match->registeredPlayers()->count()}}/{{$match->players}}
+        {{$match->registeredPlayers->count()}}/{{$match->players}}
     </strong>
 </div>

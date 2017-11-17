@@ -44,7 +44,7 @@ class NotifyBeforeMatch extends Command
         foreach ($matches as $match){
             $users = $match->registeredPlayers;
             foreach ($users as $user){
-                $user->notify(new Notification($match,$user));
+                $user->notify(new Notification($match));
             }
         }
     }

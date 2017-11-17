@@ -195,6 +195,26 @@ class MatchTest extends TestCase {
 		$this->assertFalse($this->match->hasPlayer($this->player));
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_hasManager_returns_true_when_it_has_manager(): void {
+
+		$this->match->addManager($this->player);
+		$this->assertTrue($this->match->hasMAnager($this->player));
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_hasManager_returns_false_when_it_doesnt_have_manager(): void {
+
+		$this->assertFalse($this->match->hasManager($this->player));
+	}
+
 
 	/**
 	 * @test

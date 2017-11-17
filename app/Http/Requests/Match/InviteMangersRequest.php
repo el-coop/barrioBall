@@ -17,7 +17,7 @@ class InviteMangersRequest extends FormRequest {
 
 		$this->match = $this->route('match');
 		
-		return $this->user()->can('manage', $this->match);
+		return $this->user()->can('update', $this->match);
 	}
 
 	/**

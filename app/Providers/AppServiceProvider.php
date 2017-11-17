@@ -31,8 +31,13 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register() {
-		if ($this->app->environment('local', 'testing')) {
+		if ($this->app->environment('local')) {
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+			$this->app->register(DuskServiceProvider::class);
+			$this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+		}
+
+		if($this->app->environment('testing')){
 			$this->app->register(DuskServiceProvider::class);
 		}
 	}
