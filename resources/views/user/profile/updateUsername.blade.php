@@ -1,6 +1,6 @@
 
 @component('user.profile.component.form',[
-    'url' => action('UserController@updateUsername'),
+    'url' => action('User\UserController@updateUsername'),
     'title' => __('profile/page.changeUsername'),
     'fields' => [[
         'label' => __('profile/page.newUsername'),

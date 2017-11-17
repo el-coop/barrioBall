@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Http\Requests\User\DeleteUserRequest;
 use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdateLanguageRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUsernameRequest;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 
@@ -80,7 +82,7 @@ class UserController extends Controller {
 	 *
 	 * @return RedirectResponse
 	 */
-	public function deleteUser(DeleteUserRequest $request): RedirectResponse {
+	public function delete(DeleteUserRequest $request): RedirectResponse {
 		$request->commit();
 
 		return redirect('/home');
@@ -95,7 +97,7 @@ class UserController extends Controller {
 		if($request->has('managed')){
 			$matches = $request->user()->managedMatches()->withCount('joinRequests');
 		} else {
-			$matches = $request->user()->playedMatches();
+			$matches = $request->user()->playedMatches()->where('date_time', '>', Carbon::today('Pacific/Pago_Pago'));
 		}
 
 		if ($request->filled('sort')) {

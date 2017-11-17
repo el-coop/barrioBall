@@ -1,6 +1,6 @@
 <div class="my-1">
     <button class="btn btn-success sm-btn-block" @click="toggleModal({
-                            url: '{{ action('Match\MatchUsersController@joinMatch', $match) }}',
+                            url: '{{ action('Match\MatchUserController@joinMatch', $match) }}',
                             class: 'btn-success',
                             delete: false,
                             title: '@lang('match/show.introduceYourself')',

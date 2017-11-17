@@ -46,7 +46,7 @@ class NotifyBeforeMatch extends Notification  implements ShouldQueue {
             ->subject(__('mail/notifyBeforeMatch.subject', [], $notifiable->language))
             ->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
             ->line(__('mail/notifyBeforeMatch.body', [
-                'url' => action('Match\MatchController@showMatch', $this->match),
+                'url' => $this->match->url,
                 'match' => $this->match->name,
             ], $notifiable->language))
             ->salutation(__('mail/global.dontReply', [], $notifiable->language));

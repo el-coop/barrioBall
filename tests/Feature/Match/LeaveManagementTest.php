@@ -39,7 +39,7 @@ class LeaveManagementTest extends TestCase {
 		Event::fake();
 		$this->match->addManager($this->player);
 		$this->actingAs($this->player)
-			->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+			->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertSessionHas('alert', __('match/show.managementLeft'));
 		$this->assertFalse($this->player->isManager($this->match));
 		Event::assertDispatched(ManagerLeft::class);
@@ -69,7 +69,7 @@ class LeaveManagementTest extends TestCase {
 	public function test_last_manager_cant_leave_managment(): void {
 		Event::fake();
 
-		$this->actingAs($this->manager)->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertStatus(302)->assertSessionHasErrors('managers');
 
 		Event::assertNotDispatched(ManagerLeft::class);
@@ -84,7 +84,7 @@ class LeaveManagementTest extends TestCase {
 	public function test_non_manager_cant_leave_managment(): void {
 		Event::fake();
 
-		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+		$this->actingAs($this->player)->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertStatus(403);
 		Event::assertNotDispatched(ManagerLeft::class);
 	}
@@ -98,7 +98,7 @@ class LeaveManagementTest extends TestCase {
 	public function test_not_logged_in_cant_leave_managment(): void {
 		Event::fake();
 
-		$this->delete(action('Match\MatchUsersController@stopManaging', $this->match))
+		$this->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 		Event::assertNotDispatched(ManagerLeft::class);
 	}

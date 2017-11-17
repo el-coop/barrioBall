@@ -1,4 +1,4 @@
-<form method="post" action="{{ action('UserController@deleteUser') }}">
+<form method="post" action="{{ action('User\UserController@delete') }}">
     {{ csrf_field() }}
     {{ method_field('delete') }}
     <h4>

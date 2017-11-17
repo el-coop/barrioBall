@@ -56,7 +56,7 @@ class JoinRequestRejected extends Notification implements ShouldQueue {
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/userRejected.youWereRejected', [
-				'url' => action('Match\MatchController@showMatch', $this->match),
+				'url' => $this->match->url,
 				'name' => $this->match->name,
 			], $notifiable->language))
 			->line(__('mail/global.adminSays', [], $notifiable->language))

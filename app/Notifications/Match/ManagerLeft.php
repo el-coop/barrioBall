@@ -64,7 +64,7 @@ class ManagerLeft extends Notification implements ShouldQueue
 				'match' => $this->match->name,
 				'name' => $this->manager->username,
 			], $notifiable->language))
-			->action(__('mail/managerLeft.review', [], $notifiable->language), action('Match\MatchController@showMatch', $this->match))
+			->action(__('mail/managerLeft.review', [], $notifiable->language), $this->match->url)
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));
     }
 

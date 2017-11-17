@@ -3,13 +3,13 @@
                 class="fa fa-plus-circle"></i> @lang('match/show.inviteManagers')</button>
     <modal v-cloak ref="inviteManagers">
         <form method="post"
-              action="{{ action('Match\MatchUsersController@inviteManagers', $match) }}"
+              action="{{ action('Match\MatchUserController@inviteManagers', $match) }}"
               slot="body">
             {{ csrf_field() }}
             <div class="form-group">
                 <multi-select name="invite_managers"
                               label="name"
-                              action="{{ action('Match\MatchUsersController@searchUsers', $match) }}"
+                              action="{{ action('Match\MatchUserController@searchUsers', $match) }}"
                               placeholder="@lang('match/show.invitePlaceholder')"
                 ></multi-select>
             </div>

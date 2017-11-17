@@ -54,7 +54,7 @@ class MatchJoined extends Notification implements ShouldQueue {
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/matchJoined.hasBeenAuth', [
 				'name' => $this->user->username,
-				'url' => action('Match\MatchController@showMatch', $this->match),
+				'url' => $this->match->url,
 				'match' => $this->match->name,
 			], $notifiable->language))
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));

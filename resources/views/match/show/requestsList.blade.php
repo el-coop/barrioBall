@@ -5,7 +5,7 @@
             @if(! $match->isFull())
             <button class="btn btn-success"
                     @click="toggleModal({
-                            url: '{{ action('Match\MatchUsersController@acceptJoin', $match) }}',
+                            url: '{{ action('Match\MatchUserController@acceptJoin', $match) }}',
                             title: '@lang('match/show.message')',
                             class: 'btn-success',
                             delete: false,
@@ -18,7 +18,7 @@
             @endif
             <button class="btn btn-danger"
                     @click="toggleModal({
-                            url: '{{ action('Match\MatchUsersController@rejectJoin', $match) }}',
+                            url: '{{ action('Match\MatchUserController@rejectJoin', $match) }}',
                             title: '@lang('match/show.message')',
                             class: 'btn-danger',
                             delete: true,

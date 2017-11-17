@@ -8,18 +8,18 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 		Route::get('/', 'MatchController@showCreate');
 		Route::post('/', 'MatchController@create');
 		Route::delete('/{match}', 'MatchController@delete');
-		Route::get('/{match}/users','MatchUsersController@searchUsers');
-		Route::post('/{match}/players', 'MatchUsersController@joinMatch');
-        Route::post('/{match}/cancel', 'MatchUsersController@cancelJoinRequest');
+		Route::get('/{match}/users','MatchUserController@searchUsers');
+		Route::post('/{match}/players', 'MatchUserController@joinMatch');
+        Route::post('/{match}/cancel', 'MatchUserController@cancelJoinRequest');
 		Route::patch('/{match}', 'MatchController@repeatMatch');
 
-		Route::delete('/{match}/players', 'MatchUsersController@leaveMatch');
-		Route::delete('/{match}/player','MatchUsersController@removePlayer');
+		Route::delete('/{match}/players', 'MatchUserController@leaveMatch');
+		Route::delete('/{match}/player','MatchUserController@removePlayer');
 
-		Route::post('/{match}/joinRequests','MatchUsersController@acceptJoin');
-		Route::delete('/{match}/joinRequests','MatchUsersController@rejectJoin');
+		Route::post('/{match}/joinRequests','MatchUserController@acceptJoin');
+		Route::delete('/{match}/joinRequests','MatchUserController@rejectJoin');
 
-		Route::post('/{match}/admins/invite', 'MatchUsersController@inviteManagers');
-		Route::delete('/{match}/admins', 'MatchUsersController@stopManaging');
+		Route::post('/{match}/admins/invite', 'MatchUserController@inviteManagers');
+		Route::delete('/{match}/admins', 'MatchUserController@stopManaging');
 	});
 });

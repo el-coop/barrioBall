@@ -32,7 +32,7 @@ class WelcomePageTest extends TestCase {
 			->get(action('HomeController@welcome'))
 			->assertStatus(200)
 			->assertSee('<a href="' . action('Match\MatchController@showCreate') . '" class="btn btn-block btn-info btn-lg">')
-			->assertSee('<a href="' . action('UserController@show') . '" class="btn btn-block btn-outline-dark btn-lg">')
+			->assertSee('<a href="' . action('User\UserController@show') . '" class="btn btn-block btn-outline-dark btn-lg">')
 			->assertSee('<a href="' . action('Match\MatchController@showSearch') . '" class="btn btn-block btn-primary btn-lg">');
 	}
 }

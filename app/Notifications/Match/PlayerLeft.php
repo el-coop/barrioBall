@@ -64,7 +64,7 @@ class PlayerLeft extends Notification implements ShouldQueue
 				'match' => $this->match->name,
 				'name' => $this->user->username,
 			], $notifiable->language))
-			->action(__('mail/playerLeft.review', [], $notifiable->language), action('Match\MatchController@showMatch', $this->match))
+			->action(__('mail/playerLeft.review', [], $notifiable->language), $this->match->url)
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));
     }
 

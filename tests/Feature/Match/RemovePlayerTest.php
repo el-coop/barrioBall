@@ -44,7 +44,7 @@ class RemovePlayerTest extends TestCase {
 	public function test_manager_can_kick_user_out(): void {
 		Event::fake();
 
-		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
+		$this->actingAs($this->admin)->delete(action('Match\MatchUserController@removePlayer', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'I hate you',
 		])->assertSessionHas('alert', __('match/removePlayer.removed'));
@@ -66,7 +66,7 @@ class RemovePlayerTest extends TestCase {
 		$this->match->date_time = Carbon::now()->subDay();
 		$this->match->save();
 
-		$this->actingAs($this->admin)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
+		$this->actingAs($this->admin)->delete(action('Match\MatchUserController@removePlayer', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'I hate you',
 		])->assertStatus(302)->assertSessionHasErrors('ended');
@@ -86,7 +86,7 @@ class RemovePlayerTest extends TestCase {
 	public function test_player_cant_kick_user_out(): void {
 		Event::fake();
 
-		$this->actingAs($this->player)->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
+		$this->actingAs($this->player)->delete(action('Match\MatchUserController@removePlayer', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'I hate you',
 		])->assertStatus(403);
@@ -106,7 +106,7 @@ class RemovePlayerTest extends TestCase {
 	public function test_guest_cant_kick_user_out(): void {
 		Event::fake();
 
-		$this->delete(action('Match\MatchUsersController@removePlayer', $this->match), [
+		$this->delete(action('Match\MatchUserController@removePlayer', $this->match), [
 			'user' => $this->player->id,
 			'message' => 'I hate you',
 		])->assertRedirect(action('Auth\LoginController@showLoginForm'));

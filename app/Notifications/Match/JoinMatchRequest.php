@@ -57,11 +57,11 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/joinMatchRequest.sentJoin', [
 				'name' => $this->user->username,
-				'url' => action('Match\MatchController@showMatch', $this->match),
+				'url' => $this->match->url,
 				'match' => $this->match->name,
 			], $notifiable->language))
 			->quote($this->message)
-			->action(__('mail/joinMatchRequest.review', [], $notifiable->language), action('Match\MatchController@showMatch', $this->match))
+			->action(__('mail/joinMatchRequest.review', [], $notifiable->language), $this->match->url)
 			->salutation(__('mail/global.replyToThisEmail', [], $notifiable->language));
 	}
 

@@ -19,7 +19,7 @@
             </div>
         @endcan
     @elseif($match->hasPlayer($user))
-        <form method="post" action="{{ action('Match\MatchUsersController@leaveMatch', $match) }}"
+        <form method="post" action="{{ action('Match\MatchUserController@leaveMatch', $match) }}"
               class="my-1">
             {{ csrf_field() }}
             {{ method_field('delete') }}
@@ -33,7 +33,7 @@
                 @lang('match/show.waitingForResponse')
             </button>
             <div class="dropdown-menu">
-                <form method="post" action="{{ action('Match\MatchUsersController@cancelJoinRequest', $match) }}">
+                <form method="post" action="{{ action('Match\MatchUserController@cancelJoinRequest', $match) }}">
                     {{ csrf_field() }}
                     <button class="dropdown-item">
                         @lang('match/show.cancelJoinRequest')
@@ -48,7 +48,7 @@
             </button>
         </div>
     @elseif($user->can('manage',$match))
-        <form method="post" action="{{ action('Match\MatchUsersController@joinMatch', $match) }}"
+        <form method="post" action="{{ action('Match\MatchUserController@joinMatch', $match) }}"
               class="my-1">
             {{ csrf_field() }}
             <button class="btn btn-success sm-btn-block"><i
