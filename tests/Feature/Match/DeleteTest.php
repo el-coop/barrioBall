@@ -90,7 +90,6 @@ class DeleteTest extends TestCase {
 	 */
 	public function test_non_manager_cant_delete_match(): void {
 		Event::fake();
-		dump($this->player->isManager($this->match));
 		$this->actingAs($this->player)->delete(action('Match\MatchController@delete', $this->match))
 			->assertStatus(403);
 
