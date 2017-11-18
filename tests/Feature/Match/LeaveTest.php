@@ -3,10 +3,13 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\PlayerLeft;
+use App\Listeners\Match\Cache\ClearPlayersCache;
+use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendPlayerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\PlayerLeft as PlayerLeftNotification;
+use Cache;
 use Carbon\Carbon;
 use Event;
 use Notification;
@@ -40,7 +43,7 @@ class LeaveTest extends TestCase {
 
 		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertSessionHas('alert', __('match/show.left'));
-
+		Cache::flush();
 		$this->assertFalse($this->manager->inMatch($this->match));
 		Event::assertDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
@@ -117,4 +120,32 @@ class LeaveTest extends TestCase {
 	}
 
 
+	/**
+	 * @test
+	 * @group Match
+	 * @group leaveMatch
+	 */
+	public function test_clears_users_match_cache_when_user_leaves(): void {
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_player"));
+
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearUserPlayedMatches();
+		$listener->handle(new PlayerLeft($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group leaveMatch
+	 */
+	public function test_clears_match_players_cache_when_user_leaves(): void {
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+
+		$listener = new ClearPlayersCache();
+		$listener->handle(new PlayerLeft($this->match, $this->player));
+	}
 }

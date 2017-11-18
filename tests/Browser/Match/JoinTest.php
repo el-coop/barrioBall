@@ -19,6 +19,7 @@ class JoinTest extends DuskTestCase
 
 	public function setUp() {
 		parent::setUp();
+
 		$this->match = factory(Match::class)->create();
 		$this->player = factory(User::class)->create();
 		$this->manager = factory(User::class)->create();

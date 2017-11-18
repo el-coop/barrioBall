@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\User\ResetPassword;
+use Cache;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
@@ -37,29 +38,6 @@ class User extends Authenticatable {
 	}
 
 	/**
-	 * @param Match $match
-	 *
-	 * @return bool
-	 */
-	public function isManager(Match $match): bool {
-		return $this->managedMatches()->where('id',$match->id)->exists();
-	}
-
-	/**
-	 * @return BelongsToMany
-	 */
-	public function managedMatches(): BelongsToMany {
-		return $this->matches()->wherePivot('role', 'manager');
-	}
-
-	/**
-	 * @return BelongsToMany
-	 */
-	public function matches(): BelongsToMany {
-		return $this->belongsToMany(Match::class);
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isAdmin(): bool {
@@ -79,11 +57,36 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function canJoin(Match $match): bool {
-		if($this->isManager($match) && $match->isFull()){
+		if ($this->isManager($match) && $match->isFull()) {
 			return false;
 		}
 
-		return ! $this->inMatch($match) && !$this->sentRequest($match);
+		return !$this->inMatch($match) && !$this->sentRequest($match);
+	}
+
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function isManager(Match $match): bool {
+		return Cache::rememberForever(sha1("{$this->id}_{$match->id}_manager"), function () use ($match) {
+			return $this->managedMatches()->where('id', $match->id)->exists();
+		});
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function managedMatches(): BelongsToMany {
+		return $this->matches()->wherePivot('role', 'manager');
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function matches(): BelongsToMany {
+		return $this->belongsToMany(Match::class);
 	}
 
 	/**
@@ -92,7 +95,17 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function inMatch(Match $match): bool {
-		return $this->playedMatches()->where('id',$match->id)->exists();
+
+		return Cache::rememberForever(sha1("{$this->id}_{$match->id}_player"), function () use ($match) {
+			return $this->playedMatches()->where('id', $match->id)->exists();
+		});
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function playedMatches(): BelongsToMany {
+		return $this->matches()->wherePivot('role', 'player');
 	}
 
 	/**
@@ -101,14 +114,9 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function sentRequest(Match $match): bool {
-		return $this->joinRequests()->where('id',$match->id)->exists();
-	}
-
-	/**
-	 * @return BelongsToMany
-	 */
-	public function playedMatches(): BelongsToMany {
-		return $this->matches()->wherePivot('role', 'player');
+		return Cache::rememberForever(sha1("{$this->id}_{$match->id}_joinRequest"), function () use ($match) {
+			return $this->joinRequests()->where('id', $match->id)->exists();
+		});
 	}
 
 	/**

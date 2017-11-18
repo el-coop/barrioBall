@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Events\User\Deleted;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteUserRequest extends FormRequest {
@@ -30,7 +31,9 @@ class DeleteUserRequest extends FormRequest {
 	 *
 	 */
 	public function commit(): void {
-		$this->user()->delete();
+		$user = $this->user()->load('joinRequests','playedMatches','managedMatches');
+		$user->delete();
+		event(new Deleted($user));
 	}
 
 }

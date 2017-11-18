@@ -2,7 +2,6 @@
 
 namespace Tests\Browser\User;
 
-use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
 use Hash;
@@ -33,7 +32,7 @@ class ProfileTest extends DuskTestCase {
 			$match->addPlayer($this->user);
 		});
 
-		$this->browse(function (Browser $browser) use($matches){
+		$this->browse(function (Browser $browser) use ($matches) {
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
@@ -95,13 +94,13 @@ class ProfileTest extends DuskTestCase {
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
-				->assertSee(__('profile/page.changeLanguage',[],'es'))
-				->select('language','en')
+				->assertSee(__('profile/page.changeLanguage', [], 'es'))
+				->select('language', 'en')
 				->press('Actualizar idioma')
-				->assertSee(__('profile/page.updatedLanguage',[],'en'));
+				->assertSee(__('profile/page.updatedLanguage', [], 'en'));
 		});
 
-		$this->assertEquals('en',User::first()->language);
+		$this->assertEquals('en', User::first()->language);
 	}
 
 	/**
@@ -115,13 +114,13 @@ class ProfileTest extends DuskTestCase {
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
-				->assertSee(__('profile/page.changeLanguage',[],$this->user->language))
-				->type('email','test@best.com')
-				->press(__('profile/page.updateEmail',[],$this->user->language))
-				->assertSee(__('profile/page.updatedEmail',[],$this->user->language));
+				->assertSee(__('profile/page.changeLanguage', [], $this->user->language))
+				->type('email', 'test@best.com')
+				->press(__('profile/page.updateEmail', [], $this->user->language))
+				->assertSee(__('profile/page.updatedEmail', [], $this->user->language));
 		});
 
-		$this->assertEquals('test@best.com',User::first()->email);
+		$this->assertEquals('test@best.com', User::first()->email);
 	}
 
 	/**
@@ -135,12 +134,12 @@ class ProfileTest extends DuskTestCase {
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
-				->type('username','newName')
-				->press(__('profile/page.updateUsername',[],$this->user->language))
-				->assertSee(__('profile/page.updatedUsername',[],$this->user->language));
+				->type('username', 'newName')
+				->press(__('profile/page.updateUsername', [], $this->user->language))
+				->assertSee(__('profile/page.updatedUsername', [], $this->user->language));
 		});
 
-		$this->assertEquals('newName',User::first()->username);
+		$this->assertEquals('newName', User::first()->username);
 	}
 
 	/**
@@ -154,12 +153,12 @@ class ProfileTest extends DuskTestCase {
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
-				->type('password','newPass')
-				->type('password_confirmation','newPass')
-				->press(__('profile/page.updatePassword',[],$this->user->language))
-				->assertSee(__('profile/page.updatedPassword',[],$this->user->language));
+				->type('password', 'newPass')
+				->type('password_confirmation', 'newPass')
+				->press(__('profile/page.updatePassword', [], $this->user->language))
+				->assertSee(__('profile/page.updatedPassword', [], $this->user->language));
 		});
 
-		$this->assertTrue(Hash::check('newPass',User::first()->password));
+		$this->assertTrue(Hash::check('newPass', User::first()->password));
 	}
 }

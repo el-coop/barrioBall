@@ -5,6 +5,10 @@ namespace Tests\Feature\Match;
 use App\Events\Match\JoinRequestSent;
 use App\Events\Match\PlayerJoined;
 use App\Events\Match\PlayerRejected;
+use App\Listeners\Match\Cache\ClearJoinRequestsCache;
+use App\Listeners\Match\Cache\ClearPlayersCache;
+use App\Listeners\Match\Cache\ClearUserJoinRequests;
+use App\Listeners\MAtch\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
@@ -16,6 +20,7 @@ use App\Models\User;
 use App\Notifications\Match\JoinMatchRequest;
 use App\Notifications\Match\MatchJoined;
 use Auth;
+use Cache;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Event;
@@ -513,4 +518,110 @@ class JoinTest extends TestCase {
 
 		Notification::assertSentTo($this->player, JoinRequestAccepted::class);
 	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_users_requests_cache_when_user_sends_join_request(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
+
+		$listener = new ClearUserJoinRequests();
+		$listener->handle(new JoinRequestSent($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_match_requests_cache_when_user_sends_join_request(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_joinRequests"));
+
+		$listener = new ClearJoinRequestsCache;
+		$listener->handle(new JoinRequestSent($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_users_match_cache_when_user_joins(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_player"));
+
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearUserPlayedMatches();
+		$listener->handle(new PlayerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_users_requests_cache_when_user_joins(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
+
+		$listener = new ClearUserJoinRequests();
+		$listener->handle(new playerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_match_requests_cache_when_user_joins(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_joinRequests"));
+
+		$listener = new ClearJoinRequestsCache;
+		$listener->handle(new playerJoined($this->match, $this->player));
+	}
+
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_match_players_cache_when_user_joins(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+
+		$listener = new ClearPlayersCache;
+		$listener->handle(new playerJoined($this->match, $this->player));
+	}
+
+	public function test_clears_users_requests_cache_when_user_is_rejected(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
+
+		$listener = new ClearUserJoinRequests();
+		$listener->handle(new PlayerRejected($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group joinMatch
+	 */
+	public function test_clears_match_requests_cache_when_user_is_rejected(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_joinRequests"));
+
+		$listener = new ClearJoinRequestsCache;
+		$listener->handle(new PlayerRejected($this->match, $this->player));
+	}
+
 }

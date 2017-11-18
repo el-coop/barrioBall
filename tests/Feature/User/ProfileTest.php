@@ -2,8 +2,13 @@
 
 namespace Tests\Feature\User;
 
+use App\Events\User\Deleted;
+use App\Listeners\User\ClearDeletedUserCache;
+use App\Models\Match;
 use App\Models\Player;
 use App\Models\User;
+use Cache;
+use Event;
 use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -242,8 +247,33 @@ class ProfileTest extends TestCase {
 	 * @group profile
 	 */
 	public function test_user_can_delete_himself(): void {
+		Event::fake();
 		$this->actingAs($this->user)->delete(action('User\UserController@delete'));
 		$this->assertEquals(0,User::count());
 		$this->assertEquals(0,Player::count());
+		Event::assertDispatched(Deleted::class,function($event){
+			return $this->user->id == $event->user->id;
+		});
+	}
+
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 */
+	public function refreshes_user_matches_caches_on_delete(): void {
+		$match = factory(Match::class)->create();
+		$matchWithRequest = factory(Match::class)->create();
+		$match->addPlayer($this->user);
+		$match->addManager($this->user);
+		$matchWithRequest->addJoinRequest($this->user);
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$matchWithRequest->id}_joinRequests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$match->id}_managers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$match->id}_registeredPlayers"));
+
+		$listener = new ClearDeletedUserCache;
+		$listener->handle(new Deleted($this->user));
+
 	}
 }

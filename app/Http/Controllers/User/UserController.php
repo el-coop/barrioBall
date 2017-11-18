@@ -7,6 +7,7 @@ use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdateLanguageRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUsernameRequest;
+use Cache;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
@@ -23,7 +24,12 @@ class UserController extends Controller {
 	 * @return View
 	 */
 	public function show(Request $request): View {
-		return view('user.profile');
+
+		$hasManagedMatches = Cache::rememberForever(sha1("{$request->user()->username}_hasManagedMatches"), function () use ($request) {
+			return !! $request->user()->managedMatches()->count();
+		});
+
+		return view('user.profile',compact('hasManagedMatches'));
 	}
 
 	/**
@@ -72,7 +78,7 @@ class UserController extends Controller {
 	public function updateLanguage(UpdateLanguageRequest $request): RedirectResponse {
 
 		$request->commit();
-		$message = __('profile/page.updatedLanguage',[], $request->get('language'));
+		$message = __('profile/page.updatedLanguage', [], $request->get('language'));
 
 		return back()->with('alert', $message);
 	}
@@ -93,27 +99,31 @@ class UserController extends Controller {
 	 *
 	 * @return LengthAwarePaginator
 	 */
-	public function getMatches(Request $request): LengthAwarePaginator{
-		if($request->has('managed')){
-			$matches = $request->user()->managedMatches()->withCount('joinRequests');
-		} else {
-			$matches = $request->user()->playedMatches()->where('date_time', '>', Carbon::today('Pacific/Pago_Pago'));
-		}
+	public function getMatches(Request $request): LengthAwarePaginator {
+		$tagType = $request->has('managed') ? 'managed' : 'played';
 
-		if ($request->filled('sort')) {
-			$sort = explode('|', $request->input('sort'));
-			$matches = $matches->orderBy($sort[0], $sort[1]);
+		return Cache::tags("{$request->user()->username}_{$tagType}")
+			->rememberForever(sha1($request->fullUrl()), function () use ($request) {
+				if ($request->has('managed')) {
+					$matches = $request->user()->managedMatches()->withCount('joinRequests');
+				} else {
+					$matches = $request->user()->playedMatches()->where('date_time', '>', Carbon::today('Pacific/Pago_Pago'));
+				}
 
-		} else {
-			$matches = $matches->latest();
-		}
+				if ($request->filled('sort')) {
+					$sort = explode('|', $request->input('sort'));
+					$matches = $matches->orderBy($sort[0], $sort[1]);
 
-		if ($request->filled('filter')) {
-			$filterVal = "%{$request->input('filter')}%";
-			$matches->where('name','like',$filterVal);
-		}
+				} else {
+					$matches = $matches->latest();
+				}
 
-		return $matches->paginate($request->input('per_page'));
+				if ($request->filled('filter')) {
+					$filterVal = "%{$request->input('filter')}%";
+					$matches->where('name', 'like', $filterVal);
+				}
 
+				return $matches->paginate($request->input('per_page'));
+			});
 	}
 }

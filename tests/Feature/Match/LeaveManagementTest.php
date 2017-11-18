@@ -2,11 +2,15 @@
 
 namespace Tests\Feature\Match;
 
+use App\Events\Match\Created;
 use App\Events\Match\ManagerLeft;
+use App\Listeners\Match\Cache\ClearManagersCache;
+use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Listeners\Match\SendManagerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\ManagerLeft as ManagerLeftNotification;
+use Cache;
 use Event;
 use Notification;
 use Tests\TestCase;
@@ -41,6 +45,7 @@ class LeaveManagementTest extends TestCase {
 		$this->actingAs($this->player)
 			->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertSessionHas('alert', __('match/show.managementLeft'));
+		Cache::flush();
 		$this->assertFalse($this->player->isManager($this->match));
 		Event::assertDispatched(ManagerLeft::class);
 	}
@@ -101,5 +106,36 @@ class LeaveManagementTest extends TestCase {
 		$this->delete(action('Match\MatchUserController@stopManaging', $this->match))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 		Event::assertNotDispatched(ManagerLeft::class);
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_clears_users_managed_match_cache_when_leaves_management(): void {
+
+		Cache::shouldReceive('tags')->once()->with("{$this->manager->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_hasManagedMatches"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"));
+
+		$listener = new ClearUserManagedMatches();
+		$listener->handle(new ManagerLeft($this->match,$this->manager));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_clears_match_managers_cache_when_leaves_management(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
+
+		$listener = new ClearManagersCache();
+		$listener->handle(new ManagerLeft($this->match,$this->manager));
 	}
 }
