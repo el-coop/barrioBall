@@ -7,6 +7,7 @@ use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
 use App\Models\User;
+use Cache;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -117,6 +118,7 @@ class ErrorTest extends TestCase {
 	 * @group error
 	 */
 	public function test_resolves_error(): void {
+		Cache::shouldReceive('tags')->once()->with('PHPError')->andReturn(\Mockery::self())->getMock()->shouldReceive('flush')->once();
 		$error = factory(Error::class)->create([
 			'errorable_id' => function () {
 				return factory(PhpError::class)->create()->id;

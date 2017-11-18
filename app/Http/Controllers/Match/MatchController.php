@@ -41,8 +41,16 @@ class MatchController extends Controller {
 	 */
 	public function showMatch(Request $request, Match $match): View {
 
-		$match->load('managers','joinRequests','registeredPlayers');
-		return view('match.show', compact('match'));
+		$joinRequests = \Cache::rememberForever(sha1("{$match->id}_joinRequests"),function() use($match){
+			return $match->joinRequests;
+		});
+		$managers = \Cache::rememberForever(sha1("{$match->id}_managers"),function() use($match){
+			return $match->managers;
+		});
+		$registeredPlayers = \Cache::rememberForever(sha1("{$match->id}_registeredPlayers"),function() use($match){
+			return $match->registeredPlayers;
+		});
+		return view('match.show', compact('match','managers','joinRequests','registeredPlayers'));
 	}
 
 	/**
@@ -54,7 +62,7 @@ class MatchController extends Controller {
 	public function delete(DeleteMatchRequest $request, Match $match): RedirectResponse {
 		$request->commit();
 
-		return redirect('/');
+		return redirect()->action('HomeController@index');
 	}
 
 	/**

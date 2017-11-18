@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\DeleteErrorRequest;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
+use Cache;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -27,29 +28,33 @@ class ErrorController extends Controller {
 	 * @return LengthAwarePaginator
 	 */
 	public function getPhpErrors(Request $request): LengthAwarePaginator {
-		$errors = PhpError::with('error.user');
 
-		if ($request->filled('sort')) {
-			$sort = explode('|', $request->input('sort'));
-			$errors = $errors->orderBy($sort[0], $sort[1]);
+		return Cache::tags('PHPError')->rememberForever(sha1($request->fullUrl()), function () use ($request) {
+			$errors = PhpError::with('error.user');
 
-		} else {
-			$errors = $errors->latest();
-		}
+			if ($request->filled('sort')) {
+				$sort = explode('|', $request->input('sort'));
+				$errors = $errors->orderBy($sort[0], $sort[1]);
 
-		if ($request->filled('filter')) {
-			$filterVal = "%{$request->input('filter')}%";
-			$errors->where(function ($query) use ($filterVal) {
-				$query->where('message', 'like', $filterVal)
-					->orWhere('created_at', 'like', $filterVal);
-			})->orWhereHas('error', function ($query) use ($filterVal) {
-				$query->where('page', 'like', $filterVal);
-			})->orWhereHas('error.user', function ($query) use ($filterVal) {
-				$query->where('email', 'like', $filterVal);
-			});
-		}
+			} else {
+				$errors = $errors->latest();
+			}
 
-		return $errors->paginate($request->input('per_page'));
+			if ($request->filled('filter')) {
+				$filterVal = "%{$request->input('filter')}%";
+				$errors->where(function ($query) use ($filterVal) {
+					$query->where('message', 'like', $filterVal)
+						->orWhere('created_at', 'like', $filterVal);
+				})->orWhereHas('error', function ($query) use ($filterVal) {
+					$query->where('page', 'like', $filterVal);
+				})->orWhereHas('error.user', function ($query) use ($filterVal) {
+					$query->where('email', 'like', $filterVal);
+				});
+			}
+
+			return $errors->paginate($request->input('per_page'));
+
+		});
 	}
 
 	/**
@@ -58,27 +63,30 @@ class ErrorController extends Controller {
 	 * @return LengthAwarePaginator
 	 */
 	public function getJsErrors(Request $request): LengthAwarePaginator {
-		$errors = JsError::with('error.user');
 
-		if ($request->filled('sort')) {
-			$errors = $errors->orderBy($request->input('sort'));
-		} else {
-			$errors = $errors->latest();
-		}
+		return Cache::tags('JSError')->rememberForever(sha1($request->fullUrl()), function () use ($request) {
+			$errors = JsError::with('error.user');
 
-		if ($request->filled('filter')) {
-			$filterVal = "%{$request->input('filter')}%";
-			$errors->where(function ($query) use ($filterVal) {
-				$query->where('class', 'like', $filterVal)
-					->orWhere('created_at', 'like', $filterVal);
-			})->orWhereHas('error', function ($query) use ($filterVal) {
-				$query->where('page', 'like', $filterVal);
-			})->orWhereHas('error.user', function ($query) use ($filterVal) {
-				$query->where('email', 'like', $filterVal);
-			});
-		}
+			if ($request->filled('sort')) {
+				$errors = $errors->orderBy($request->input('sort'));
+			} else {
+				$errors = $errors->latest();
+			}
 
-		return $errors->paginate($request->input('per_page'));
+			if ($request->filled('filter')) {
+				$filterVal = "%{$request->input('filter')}%";
+				$errors->where(function ($query) use ($filterVal) {
+					$query->where('class', 'like', $filterVal)
+						->orWhere('created_at', 'like', $filterVal);
+				})->orWhereHas('error', function ($query) use ($filterVal) {
+					$query->where('page', 'like', $filterVal);
+				})->orWhereHas('error.user', function ($query) use ($filterVal) {
+					$query->where('email', 'like', $filterVal);
+				});
+			}
+
+			return $errors->paginate($request->input('per_page'));
+		});
 	}
 
 	/**
@@ -87,10 +95,13 @@ class ErrorController extends Controller {
 	 *
 	 * @return JsonResponse
 	 */
-	public function delete(DeleteErrorRequest $deleteErrorRequest, Error $error): JsonResponse{
+	public function delete(DeleteErrorRequest $deleteErrorRequest, Error $error): JsonResponse {
 		$deleteErrorRequest->commit();
+
+		Cache::tags($error->errorable_type)->flush();
+
 		return response()->json([
-			'status' => 'Success'
+			'status' => 'Success',
 		]);
 	}
 }

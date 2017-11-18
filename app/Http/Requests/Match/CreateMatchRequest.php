@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
+use App\Events\Match\Created;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -53,6 +54,7 @@ class CreateMatchRequest extends FormRequest {
 		$match->save();
 		$match->addManager($this->user());
 
+		event(new Created($match));
 		return $match;
 	}
 

@@ -3,10 +3,12 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\DeletedOldMatch;
+use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\SendOldMatchDeletedMessage;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\OldMatchDeleted;
+use Cache;
 use Carbon\Carbon;
 use Event;
 use Notification;
@@ -74,4 +76,27 @@ class DeleteOldTest extends TestCase {
 
 		Notification::assertSentTo($this->user, OldMatchDeleted::class);
 	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteOld
+	 */
+	public function test_cache_cleared_when_matchDeleted_dispatched(): void {
+
+		$this->createManagedMatch('8 days ago');
+		$this->match->addPlayer($player = factory(User::class)->create());
+
+		Cache::shouldReceive('tags')->once()->with("{$this->user->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->username}_hasManagedMatches"));
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$player->username}_nextMatch"));
+		Cache::shouldReceive('tags')->once()->with("{$player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearDeletedMatchUsersCaches;
+		$listener->handle(new DeletedOldMatch($this->match));
+	}
+
 }

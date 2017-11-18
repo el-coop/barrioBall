@@ -4,6 +4,7 @@ namespace Tests\Browser\User;
 
 use App\Models\Match;
 use App\Models\User;
+use Cache;
 use Tests\Browser\Pages\User\DashboardPage;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -31,6 +32,9 @@ class DashboardTest extends DuskTestCase
 		$matches = factory(Match::class, 5)->create()->each(function ($match) {
 			$match->addPlayer($this->user);
 		});
+
+		/*Cache::shouldReceive('tags')->once()->with("{$this->user->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('rememberForever');*/
 
 		$this->browse(function (Browser $browser) use($matches){
 

@@ -3,10 +3,12 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\MatchDeleted;
+use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\Deleted;
+use Cache;
 use Event;
 use Notification;
 use Tests\TestCase;
@@ -59,6 +61,26 @@ class DeleteTest extends TestCase {
 
 		Notification::assertSentTo($this->manager, Deleted::class);
 		Notification::assertSentTo($this->player, Deleted::class);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteMatch
+	 */
+	public function test_cache_cleared_when_matchDeleted_dispatched(): void {
+
+		Cache::shouldReceive('tags')->once()->with("{$this->manager->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_hasManagedMatches"));
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearDeletedMatchUsersCaches;
+		$listener->handle(new MatchDeleted($this->match, $this->manager));
 	}
 
 	/**

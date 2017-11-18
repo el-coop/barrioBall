@@ -25,6 +25,6 @@ class SendManagerLeftNotification {
 	 * @return void
 	 */
 	public function handle(ManagerLeft $event): void {
-		$event->match->managers->each->notify(new Notification($event->match, $event->manager));
+		$event->match->managers->each->notify(new Notification($event->match, $event->user));
 	}
 }

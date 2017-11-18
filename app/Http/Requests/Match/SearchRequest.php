@@ -35,14 +35,16 @@ class SearchRequest extends FormRequest {
 	}
 
 	public function commit(): LengthAwarePaginator {
-		$startTime = Carbon::createFromFormat('d/m/y H:i',$this->input('date') . ' ' . $this->input('from'));
-		$endTime = Carbon::createFromFormat('d/m/y H:i',$this->input('date') . ' ' . $this->input('to'));
+		$startTime = Carbon::createFromFormat('d/m/y H:i', $this->input('date') . ' ' . $this->input('from'));
+		$endTime = Carbon::createFromFormat('d/m/y H:i', $this->input('date') . ' ' . $this->input('to'));
 
-		$matches = Match::whereBetween('lng', [$this->input('west'), $this->input('east')])
-			->whereBetween('lat', [$this->input('south'), $this->input('north')])
-			->whereBetween('date_time', [$startTime, $endTime])
-			->paginate(20);
+		$paramsString = "{$startTime}_{$endTime}_{$this->input('west')}_{$this->input('east')}_{$this->input('south')}_{$this->input('north')}";
 
-		return $matches;
+		return \Cache::remember(sha1("{$this->fullUrl()}_$paramsString"), 1, function () use ($startTime,$endTime) {
+			return $matches = Match::whereBetween('lng', [$this->input('west'), $this->input('east')])
+				->whereBetween('lat', [$this->input('south'), $this->input('north')])
+				->whereBetween('date_time', [$startTime, $endTime])
+				->paginate(20);
+		});
 	}
 }

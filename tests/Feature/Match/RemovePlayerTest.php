@@ -3,13 +3,17 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\PlayerRemoved;
+use App\Listeners\Match\Cache\ClearPlayersCache;
+use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendPlayerRemovedNotification;
 use App\Models\Admin;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\PlayerRemoved as PlayerRemovedNotification;
+use Cache;
 use Carbon\Carbon;
 use Event;
+use Mockery\Mock;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -146,5 +150,34 @@ class RemovePlayerTest extends TestCase {
 
 		Notification::assertSentTo($this->player, PlayerRemovedNotification::class);
 
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_clears_users_match_cache_when_user_is_removed(): void {
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_player"));
+
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearUserPlayedMatches();
+		$listener->handle(new PlayerRemoved($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group Match
+	 * @group removePlayer
+	 */
+	public function test_clears_match_users_cache_when_user_is_removed(): void {
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+
+		$listener = new ClearPlayersCache();
+		$listener->handle(new PlayerRemoved($this->match, $this->player));
 	}
 }

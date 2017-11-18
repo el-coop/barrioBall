@@ -19,7 +19,7 @@
                         @include('user.profile.playedTable')
                     </div>
 
-                    @if($user->managedMatches()->count())
+                    @if($hasManagedMatches)
                         <div class="card">
                             @include('user.profile.managedTable')
                         </div>

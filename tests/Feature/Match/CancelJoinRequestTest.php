@@ -2,9 +2,13 @@
 
 namespace Tests\Feature\Match;
 
+use App\Events\Match\JoinRequestCenceled;
 use App\Events\Match\JoinRequestSent;
+use App\Listeners\Match\Cache\ClearJoinRequestsCache;
+use App\Listeners\Match\Cache\ClearUserJoinRequests;
 use App\Models\Match;
 use App\Models\User;
+use Cache;
 use Event;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,28 +36,59 @@ class CancelJoinRequestTest extends TestCase
      * @group cancelJoinRequest
      * @group match
      */
-    public function test_cant_cancelJ_join_request_if_not_joind(): void
+    public function test_cant_cancel_join_request_if_not_joind(): void
     {
         $this->actingAs($this->player)->post(action('Match\MatchUserController@cancelJoinRequest', $this->match), [])
             ->assertStatus(403);
     }
 
-    /**
-     * @test
-     * @group cancelJoinRequest
-     * @group match
-     */
-    public function test_can_cancel_after_joining(): void
-    {
-        $this->match->addJoinRequest($this->player);
-        $this->actingAs($this->player)->post(action('Match\MatchUserController@cancelJoinRequest', $this->match), [])
-            ->assertStatus(302)
-            ->assertSessionHas('alert', __('match/show.cancelMessage'));
+	/**
+	 * @test
+	 * @group cancelJoinRequest
+	 * @group match
+	 */
+	public function test_can_cancel_after_joining(): void
+	{
+		Event::fake();
+		$this->match->addJoinRequest($this->player);
+		$this->actingAs($this->player)->post(action('Match\MatchUserController@cancelJoinRequest', $this->match), [])
+			->assertStatus(302)
+			->assertSessionHas('alert', __('match/show.cancelMessage'));
 
-        $this->assertDatabaseMissing('join_match_requests', [
-            'user_id' => $this->player->id,
-            'match_id' => $this->match->id]);
-    }
+		$this->assertDatabaseMissing('join_match_requests', [
+			'user_id' => $this->player->id,
+			'match_id' => $this->match->id]);
+
+		Event::assertDispatched(JoinRequestCenceled::class, function ($event) {
+			return $event->user->id === $this->player->id && $event->match->id = $this->match->id;
+		});
+	}
+
+	/**
+	 * @test
+	 * @group cancelJoinRequest
+	 * @group match
+	 */
+	public function test_clears_user_join_request_cache(): void
+	{
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
+
+		$listener = new ClearUserJoinRequests;
+		$listener->handle(new JoinRequestCenceled($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group cancelJoinRequest
+	 * @group match
+	 */
+	public function test_clears_match_join_request_cache(): void
+	{
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_joinRequests"));
+
+		$listener = new ClearJoinRequestsCache;
+		$listener->handle(new JoinRequestCenceled($this->match, $this->player));
+	}
 
     /**
      * @test
@@ -62,7 +97,6 @@ class CancelJoinRequestTest extends TestCase
      */
     public function test_can_rejoin_after_canceling(): void
     {
-        $this->test_can_cancel_after_joining();
         Event::fake();
 
         $this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [

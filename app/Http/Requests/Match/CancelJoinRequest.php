@@ -2,42 +2,42 @@
 
 namespace App\Http\Requests\Match;
 
+use App\Events\Match\JoinRequestCenceled;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CancelJoinRequest extends FormRequest
-{
-    protected $match;
+class CancelJoinRequest extends FormRequest {
+	protected $match;
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        $this->match = $this->route('match');
+	/**
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize() {
+		$this->match = $this->route('match');
 
-        return $this->user()->can('cancelRequest',$this->match);
-    }
+		return $this->user()->can('cancelRequest', $this->match);
+	}
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
-    }
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules() {
+		return [
+			//
+		];
+	}
 
-    /**
-     *
-     */
-    public function commit(): string {
-        $this->match->cancelJoinRequest($this->user());
-        $message = __('match/show.cancelMessage');
-        return $message;
-    }
+	/**
+	 *
+	 */
+	public function commit(): string {
+		$this->match->cancelJoinRequest($this->user());
+		$message = __('match/show.cancelMessage');
+		event(new JoinRequestCenceled($this->match, $this->user()));
+
+		return $message;
+	}
 }
