@@ -208,7 +208,7 @@ class ShowTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 * @group showMatch
 	 */
@@ -222,7 +222,7 @@ class ShowTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 * @group showMatch
 	 */
@@ -235,7 +235,7 @@ class ShowTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 * @group showMatch
 	 */
@@ -248,7 +248,7 @@ class ShowTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 * @group showMatch
 	 */

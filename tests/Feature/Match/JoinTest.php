@@ -521,7 +521,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_users_requests_cache_when_user_sends_join_request(): void {
@@ -534,7 +534,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_match_requests_cache_when_user_sends_join_request(): void {
@@ -547,7 +547,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_users_match_cache_when_user_joins(): void {
@@ -564,7 +564,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_users_requests_cache_when_user_joins(): void {
@@ -577,7 +577,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_match_requests_cache_when_user_joins(): void {
@@ -591,7 +591,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_match_players_cache_when_user_joins(): void {
@@ -613,7 +613,7 @@ class JoinTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group joinMatch
 	 */
 	public function test_clears_match_requests_cache_when_user_is_rejected(): void {

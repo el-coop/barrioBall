@@ -89,7 +89,7 @@ class UserTest extends TestCase {
 			'user_id' => function () {
 				return factory(Admin::class)->create()->id;
 			},
-			'user_type' => 'Admin'
+			'user_type' => 'Admin',
 		]);
 		$this->assertTrue($user->isAdmin());
 	}
@@ -99,7 +99,7 @@ class UserTest extends TestCase {
 	 * @group user
 	 */
 	public function test_canJoin_returns_true_when_match_is_full_for_regular_user(): void {
-		factory(User::class,$this->match->players)->create()->each(function($player){
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
 			$this->match->addPlayer($player);
 		});
 		$this->assertTrue($this->user->canJoin($this->match));
@@ -110,7 +110,7 @@ class UserTest extends TestCase {
 	 * @group user
 	 */
 	public function test_canJoin_returns_true_when_match_is_full_for_manager_user(): void {
-		factory(User::class,$this->match->players)->create()->each(function($player){
+		factory(User::class, $this->match->players)->create()->each(function ($player) {
 			$this->match->addPlayer($player);
 		});
 		$this->match->addManager($this->user);
@@ -220,24 +220,71 @@ class UserTest extends TestCase {
 	 */
 	public function test_delete_deletes_morphed(): void {
 		$this->user->delete();
-		$this->assertDatabaseMissing('users',[
-			'id' => $this->user->id
+		$this->assertDatabaseMissing('users', [
+			'id' => $this->user->id,
 		]);
-		$this->assertDatabaseMissing('players',[
-			'id' => $this->user->user->id
+		$this->assertDatabaseMissing('players', [
+			'id' => $this->user->user->id,
 		]);
 	}
 
-    /**
-     * @test
-     * @group user
-     */
-    public function test_cancelJoinRequest_delete_relationship(): void{
-        $this->match->addJoinRequest($this->user);
-        $this->match->cancelJoinRequest($this->user);
-        $this->assertDatabaseMissing('join_match_requests', [
-            'user_id' => $this->user->id,
-            'match_id' => $this->match->id]);
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_cancelJoinRequest_delete_relationship(): void {
+		$this->match->addJoinRequest($this->user);
+		$this->match->cancelJoinRequest($this->user);
+		$this->assertDatabaseMissing('join_match_requests', [
+			'user_id' => $this->user->id,
+			'match_id' => $this->match->id]);
 
-    }
+	}
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_manageInvite_adds_invitation(): void {
+		$this->user->manageInvite($this->match);
+		$this->assertDatabaseHas('manager_invites', [
+			'user_id' => $this->user->id,
+			'match_id' => $this->match->id]);
+	}
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_manageInvites_relationship(): void {
+		factory(Match::class, 3)->create()->each(function ($match) {
+			$match->inviteManager($this->user);
+		});
+
+		$this->assertInstanceOf(BelongsToMany::class, $this->user->manageInvites());
+		$this->assertInstanceOf(Collection::class, $this->user->manageInvites);
+		$this->assertArraySubset(Match::whereHas('managerInvites', function ($query) {
+			return $query->id = $this->user->id;
+		})->get()->toArray(), $this->user->manageInvites->toArray());
+		$this->assertCount(3, $this->user->manageInvites);
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_hasManageInvite_returns_true_when_has_invite(): void {
+		$this->match->inviteManager($this->user);
+		$this->assertTrue($this->user->hasManageInvite($this->match));
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_hasManageInvite_returns_false_when_doesnt_has_invite(): void {
+		$this->assertFalse($this->user->hasManageInvite($this->match));
+	}
 }

@@ -34,7 +34,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_player_can_leave_match(): void {
@@ -53,7 +53,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_cant_leave_ended_match(): void {
@@ -74,7 +74,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_unjoined_cant_leave_match(): void {
@@ -92,10 +92,10 @@ class LeaveTest extends TestCase {
 	/**
 	 * @test
 	 * @group match
-	 * @group leaveManagement
+	 * @group leaveMatch
 	 * @group management
 	 */
-	public function test_manager_left_notification_sent(): void {
+	public function test_player_left_notification_sent(): void {
 		Notification::fake();
 
 		$listener = new SendPlayerLeftNotification;
@@ -106,7 +106,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_not_logged_cant_leave_match(): void {
@@ -122,7 +122,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_clears_users_match_cache_when_user_leaves(): void {
@@ -138,7 +138,7 @@ class LeaveTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveMatch
 	 */
 	public function test_clears_match_players_cache_when_user_leaves(): void {

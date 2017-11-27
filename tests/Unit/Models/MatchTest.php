@@ -278,7 +278,7 @@ class MatchTest extends TestCase {
 	 * @test
 	 * @group match
 	 */
-	public function test_eneded_return_true_when_ended(): void {
+	public function test_ended_return_true_when_ended(): void {
 		$this->match->date_time = new Carbon('yesterday');
 		$this->match->save();
 		$match = Match::first();
@@ -290,11 +290,55 @@ class MatchTest extends TestCase {
 	 * @test
 	 * @group match
 	 */
-	public function test_eneded_return_false_when_not_ended(): void {
+	public function test_ended_return_false_when_not_ended(): void {
 		$this->match->date_time = new Carbon('tomorrow');
 		$this->match->save();
 		$match = Match::first();
 
 		$this->assertFalse($match->ended());
 	}
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_managerInvites_relationship(): void {
+		$players = factory(User::class, 2)->create()->each(function ($user) {
+			$this->match->inviteManager($user);
+		});
+
+		$this->assertInstanceOf(BelongsToMany::class, $this->match->managerInvites());
+		$this->assertInstanceOf(Collection::class, $this->match->managerInvites);
+		$this->assertArraySubset($players->toArray(), $this->match->managerInvites->toArray());
+		$this->assertCount(2, $this->match->managerInvites);
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_inviteManager_invites_Manager(): void {
+		$this->match->inviteManager($this->player);
+		$this->assertTrue($this->match->hasManagerInvite($this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_hasManagerInvite_returns_true_when_it_has_manager_invite(): void {
+		$this->match->inviteManager($this->player);
+		$this->assertTrue($this->match->hasManagerInvite($this->player));
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_hasManagerInvite_returns_false_when_itdoesnt_have_manager_invite(): void {
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+	}
+
 }
+
