@@ -110,7 +110,7 @@ class LeaveManagementTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveManagement
 	 * @group management
 	 */
@@ -127,7 +127,7 @@ class LeaveManagementTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group leaveManagement
 	 * @group management
 	 */

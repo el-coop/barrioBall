@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\JoinRequestCenceled;
+use App\Events\Match\ManagerJoined;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CancelJoinRequest extends FormRequest {
+class AcceptJoinManagementRequest extends FormRequest {
 	protected $match;
 
 	/**
@@ -16,7 +16,7 @@ class CancelJoinRequest extends FormRequest {
 	public function authorize(): bool {
 		$this->match = $this->route('match');
 
-		return $this->user()->can('cancelRequest', $this->match);
+		return $this->user()->can('joinManagement', $this->match);
 	}
 
 	/**
@@ -33,11 +33,9 @@ class CancelJoinRequest extends FormRequest {
 	/**
 	 *
 	 */
-	public function commit(): string {
-		$this->match->cancelJoinRequest($this->user());
-		$message = __('match/show.cancelMessage');
-		event(new JoinRequestCenceled($this->match, $this->user()));
-
-		return $message;
+	public function commit(): void {
+		$this->match->addManager($this->user());
+		$this->match->removeManageInvitation($this->user());
+		event(new ManagerJoined($this->match,$this->user()));
 	}
 }

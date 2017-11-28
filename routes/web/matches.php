@@ -20,6 +20,8 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 		Route::delete('/{match}/joinRequests','MatchUserController@rejectJoin');
 
 		Route::post('/{match}/admins/invite', 'MatchUserController@inviteManagers');
+		Route::post('/{match}/admins/join', 'MatchUserController@joinAsManager');
+		Route::delete('/{match}/admins/join', 'MatchUserController@rejectManageInvitation');
 		Route::delete('/{match}/admins', 'MatchUserController@stopManaging');
 	});
 });

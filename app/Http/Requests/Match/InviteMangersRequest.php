@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Match;
 
+use App\Events\Match\ManagersInvited;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class InviteMangersRequest extends FormRequest {
@@ -36,6 +38,10 @@ class InviteMangersRequest extends FormRequest {
 	 *
 	 */
 	public function commit(): void {
-		// TODO - handle management invitation requests
+		$invited = User::findMany($this->input('invite_managers'));
+		$invited = $invited->reject->isManager($this->match);
+		$invited = $invited->reject->hasManageInvite($this->match);
+		$invited->each->manageInvite($this->match);
+		event(new ManagersInvited($this->match,$invited));
 	}
 }

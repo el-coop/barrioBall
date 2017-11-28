@@ -42,7 +42,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_manager_can_kick_user_out(): void {
@@ -62,7 +62,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_cant_kick_user_out_finished_match(): void {
@@ -84,7 +84,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_player_cant_kick_user_out(): void {
@@ -104,7 +104,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_guest_cant_kick_user_out(): void {
@@ -124,7 +124,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_sends_notification_on_user_removed_event(): void {
@@ -139,7 +139,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_sends_notification_on_user_removed_event_empty_message(): void {
@@ -154,7 +154,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_clears_users_match_cache_when_user_is_removed(): void {
@@ -170,7 +170,7 @@ class RemovePlayerTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group removePlayer
 	 */
 	public function test_clears_match_users_cache_when_user_is_removed(): void {

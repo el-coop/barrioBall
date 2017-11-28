@@ -170,4 +170,35 @@ class Match extends Model {
 	public function ended(): bool {
 		return Carbon::now() > $this->date_time;
 	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function managerInvites(): BelongsToMany {
+		return $this->belongsToMany(User::class, 'manager_invites')
+			->withTimestamps();
+	}
+
+	/**
+	 * @param User $user
+	 */
+	public function inviteManager(User $user): void {
+		$this->managerInvites()->save($user);
+	}
+
+	/**
+	 * @param User $user
+	 */
+	public function removeManageInvitation(User $user): void {
+		$this->managerInvites()->detach($user);
+	}
+
+	/**
+	 * @param User $user
+	 *
+	 * @return bool
+	 */
+	public function hasManagerInvite(User $user): bool {
+		return $this->managerInvites()->where('id', $user->id)->exists();
+	}
 }

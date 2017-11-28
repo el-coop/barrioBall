@@ -6,7 +6,10 @@ use App\Events\Match\Created;
 use App\Events\Match\DeletedOldMatch;
 use App\Events\Match\JoinRequestCenceled;
 use App\Events\Match\JoinRequestSent;
+use App\Events\Match\ManageInvitationRejected;
+use App\Events\Match\ManagerJoined;
 use App\Events\Match\ManagerLeft;
+use App\Events\Match\ManagersInvited;
 use App\Events\Match\MatchDeleted;
 use App\Events\Match\PlayerRemoved;
 use App\Events\Match\PlayerLeft;
@@ -19,10 +22,13 @@ use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
+use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
+use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
+use App\Listeners\Match\SendManagerInvites;
 use App\Listeners\Match\SendManagerLeftNotification;
 use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Listeners\Match\SendOldMatchDeletedMessage;
@@ -89,6 +95,18 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		Deleted::class => [
 			ClearDeletedUserCache::class
+		],
+		ManagersInvited::class => [
+			SendManagerInvites::class,
+			ClearUsersMatchManagerInvitations::class
+		],
+		ManagerJoined::class => [
+			ClearUserManagedMatches::class,
+			ClearUserMatchManagerInvitation::class,
+			ClearManagersCache::class
+		],
+		ManageInvitationRejected::class => [
+			ClearUserMatchManagerInvitation::class,
 		]
 	];
 

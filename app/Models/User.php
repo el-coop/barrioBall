@@ -128,6 +128,32 @@ class User extends Authenticatable {
 	}
 
 	/**
+	 * @param Match $match
+	 */
+	public function manageInvite(Match $match): void {
+		$match->inviteManager($this);
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function manageInvites(): BelongsToMany {
+		return $this->belongsToMany(Match::class, 'manager_invites')
+			->withTimestamps();
+	}
+
+	/**
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function hasManageInvite(Match $match): bool {
+		return Cache::rememberForever(sha1("{$this->id}_{$match->id}_managerInvitation"), function () use ($match) {
+			return $this->manageInvites()->where('id', $match->id)->exists();
+		});
+	}
+
+	/**
 	 * @return bool|null
 	 */
 	public function delete(): ?bool {

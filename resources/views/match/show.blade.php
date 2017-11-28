@@ -17,6 +17,8 @@
                         @include('match.show.inviteManagers')
                         @include('match.show.stopManaging')
                         @include('match.show.deleteMatch')
+                    @elsecan('joinManagement',$match)
+                        @include('match.show.joinManagement')
                     @endcan
                 </div>
             </div>

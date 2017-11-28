@@ -28,4 +28,8 @@ return [
 	'message' => 'Send message',
 	'matchEnded' => 'Match ended, click here to go to search page',
 	'repeatMatch' => 'Repeat match',
+	'acceptManageInvitation' => 'Join management team',
+	'accept' => 'Accept',
+	'reject' => 'Reject',
+	'managerJoined' => 'You are now a manager'
 ];

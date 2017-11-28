@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Match;
 
+use App\Http\Requests\Match\AcceptJoinManagementRequest;
 use App\Http\Requests\Match\AcceptJoinRequest;
 use App\Http\Requests\Match\CancelJoinRequest;
 use App\Http\Requests\Match\InviteMangersRequest;
 use App\Http\Requests\Match\JoinMatchRequest;
 use App\Http\Requests\Match\LeaveMatchRequest;
+use App\Http\Requests\Match\RejectJoinManagementRequest;
 use App\Http\Requests\Match\RejectJoinRequest;
 use App\Http\Requests\Match\RemovePlayerRequest;
 use App\Http\Requests\Match\StopManagingRequest;
@@ -72,6 +74,31 @@ class MatchUserController extends Controller {
 		$request->commit();
 
 		return back()->with('alert', __('match/show.invitationSent'));
+	}
+
+	/**
+	 * @param AcceptJoinManagementRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function joinAsManager(AcceptJoinManagementRequest $request, Match $match): RedirectResponse {
+		$request->commit();
+
+		return back()->with('alert', __('match/show.managerJoined'));
+	}
+
+
+	/**
+	 * @param RejectJoinManagementRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function rejectManageInvitation(RejectJoinManagementRequest $request, Match $match): RedirectResponse {
+		$request->commit();
+
+		return back()->with('alert', __('global.success'));
 	}
 
 	/**

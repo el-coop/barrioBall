@@ -122,7 +122,7 @@ class CreateTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group Match
+	 * @group match
 	 * @group create
 	 */
 	public function test_clears_users_match_cache_when_match_created(): void {
