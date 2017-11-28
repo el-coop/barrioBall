@@ -55,6 +55,16 @@ class MatchPolicy {
 		return $user->isManager($match);
 	}
 
+	/**
+	 * @param User $user
+	 * @param Match $match
+	 *
+	 * @return bool
+	 */
+	public function joinManagement(User $user, Match $match): bool {
+		return $user->hasManageInvite($match);
+	}
+
 
 	/**
 	 * @param User $user

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Match;
 
+use App\Http\Requests\Match\AcceptJoinManagementRequest;
 use App\Http\Requests\Match\AcceptJoinRequest;
 use App\Http\Requests\Match\CancelJoinRequest;
 use App\Http\Requests\Match\InviteMangersRequest;
@@ -72,6 +73,18 @@ class MatchUserController extends Controller {
 		$request->commit();
 
 		return back()->with('alert', __('match/show.invitationSent'));
+	}
+
+	/**
+	 * @param InviteMangersRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function joinAsManager(AcceptJoinManagementRequest $request, Match $match): RedirectResponse {
+		$request->commit();
+
+		return back()->with('alert', __('match/show.managerJoined'));
 	}
 
 	/**

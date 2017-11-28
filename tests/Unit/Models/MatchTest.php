@@ -340,5 +340,15 @@ class MatchTest extends TestCase {
 		$this->assertFalse($this->match->hasManagerInvite($this->player));
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_removeManageInvitation_removes_invitation(): void {
+		$this->match->inviteManager($this->player);
+		$this->match->removeManageInvitation($this->player);
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+	}
+
 }
 

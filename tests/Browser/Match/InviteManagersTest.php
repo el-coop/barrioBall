@@ -19,7 +19,6 @@ class InviteManagersTest extends DuskTestCase
 
 	public function setUp() {
 		parent::setUp();
-
 		$this->match = factory(Match::class)->create();
 		$this->player = factory(User::class)->create([
 			'username' => 'player'
@@ -49,7 +48,28 @@ class InviteManagersTest extends DuskTestCase
 		});
 
 		$this->assertTrue($this->player->hasManageInvite($this->match));
+	}
+
+	/**
+	 * @test
+	 * @group inviteManagers
+	 * @group match
+	 * @group showMatch
+	 */
+	public function test_can_accept_invitation(): void {
+
+		$this->match->inviteManager($this->player);
+
+		$this->browse(function (Browser $browser) {
+			$browser->loginAs($this->player)
+				->visit(new ShowPage($this->match))
+				->click('.btn-group .btn.btn-outline-success')
+				->assertSee(__('match/show.managerJoined',[],$this->player->language));
+		});
+
+		$this->assertTrue($this->match->hasManager($this->player));
 
 	}
+
 
 }

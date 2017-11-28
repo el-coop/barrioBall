@@ -189,6 +189,15 @@ class Match extends Model {
 	/**
 	 * @param User $user
 	 */
+	public function removeManageInvitation(User $user): void {
+		$this->managerInvites()->detach($user);
+	}
+
+	/**
+	 * @param User $user
+	 *
+	 * @return bool
+	 */
 	public function hasManagerInvite(User $user): bool {
 		return $this->managerInvites()->where('id', $user->id)->exists();
 	}

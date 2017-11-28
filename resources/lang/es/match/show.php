@@ -28,4 +28,7 @@ return [
 	'message' => 'Envia mensaje',
 	'matchEnded' => 'El partido terminó, haga clic aquí para ir a la página de búsqueda',
 	'repeatMatch' => 'Repetir el partido',
+	'acceptManageInvitation' => 'Unirse a la administración',
+	'accept' => 'Aceptar',
+	'managerJoined' => 'Ahora es un gerente'
 ];

@@ -260,4 +260,54 @@ class ShowTest extends TestCase {
 			->assertDontSee('<button class="btn btn-danger"');
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManager
+	 * @group showMatch
+	 */
+	public function test_doesnt_show_acceptInvitation_button_to_non_invited() {
+		$this->actingAs($this->player)
+			->get(action('Match\MatchController@showMatch', $this->match))
+			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->player->language));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManager
+	 * @group showMatch
+	 */
+	public function test_doesnt_show_acceptInvitation_button_to_guest() {
+		$this->get(action('Match\MatchController@showMatch', $this->match))
+			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->player->language));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManager
+	 * @group showMatch
+	 */
+	public function test_doesnt_show_acceptInvitation_button_to_manager() {
+		$this->actingAs($this->manager)
+			->get(action('Match\MatchController@showMatch', $this->match))
+			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->player->language))
+			->assertDontSee(__('match/show.accept', [], $this->player->language));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManager
+	 * @group showMatch
+	 */
+	public function test_show_acceptInvitation_button_to_invited() {
+		$this->match->inviteManager($this->player);
+		$this->actingAs($this->player)
+			->get(action('Match\MatchController@showMatch', $this->match))
+			->assertSee(__('match/show.acceptManageInvitation', [], $this->player->language))
+			->assertSee(__('match/show.accept', [], $this->player->language));
+	}
+
 }
