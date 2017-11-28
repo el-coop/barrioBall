@@ -6,6 +6,7 @@ use App\Events\Match\Created;
 use App\Events\Match\DeletedOldMatch;
 use App\Events\Match\JoinRequestCenceled;
 use App\Events\Match\JoinRequestSent;
+use App\Events\Match\ManageInvitationRejected;
 use App\Events\Match\ManagerJoined;
 use App\Events\Match\ManagerLeft;
 use App\Events\Match\ManagersInvited;
@@ -103,6 +104,9 @@ class EventServiceProvider extends ServiceProvider {
 			ClearUserManagedMatches::class,
 			ClearUserMatchManagerInvitation::class,
 			ClearManagersCache::class
+		],
+		ManageInvitationRejected::class => [
+			ClearUserMatchManagerInvitation::class,
 		]
 	];
 

@@ -30,5 +30,6 @@ return [
 	'repeatMatch' => 'Repeat match',
 	'acceptManageInvitation' => 'Join management team',
 	'accept' => 'Accept',
+	'reject' => 'Reject',
 	'managerJoined' => 'You are now a manager'
 ];

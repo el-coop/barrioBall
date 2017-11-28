@@ -30,5 +30,6 @@ return [
 	'repeatMatch' => 'Repetir el partido',
 	'acceptManageInvitation' => 'Unirse a la administración',
 	'accept' => 'Aceptar',
+	'reject' => 'Rechazar',
 	'managerJoined' => 'Ahora es un gerente'
 ];

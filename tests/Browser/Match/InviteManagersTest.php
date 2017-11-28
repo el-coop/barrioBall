@@ -68,7 +68,27 @@ class InviteManagersTest extends DuskTestCase
 		});
 
 		$this->assertTrue($this->match->hasManager($this->player));
+		$this->assertFalse($this->player->hasManageInvite($this->match));
+	}
 
+	/**
+	 * @test
+	 * @group inviteManagers
+	 * @group match
+	 * @group showMatch
+	 */
+	public function test_can_reject_invitation(): void {
+
+		$this->match->inviteManager($this->player);
+
+		$this->browse(function (Browser $browser) {
+			$browser->loginAs($this->player)
+				->visit(new ShowPage($this->match))
+				->click('.btn-group .btn.btn-outline-danger')
+				->assertSee(__('global.success',[],$this->player->language));
+		});
+
+		$this->assertFalse($this->player->hasManageInvite($this->match));
 	}
 
 

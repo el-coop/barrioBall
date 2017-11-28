@@ -4,8 +4,9 @@
         <button class="btn btn-outline-success">@lang('match/show.accept')</button>
         {{csrf_field()}}
     </form>
-    <form class="btn-group">
+    <form class="btn-group" method="post" action="{{ action('Match\MatchUserController@rejectManageInvitation', $match) }}">
         {{csrf_field()}}
-        <button class="btn btn-outline-danger">Reject</button>
+        {{method_field('delete')}}
+        <button class="btn btn-outline-danger">@lang('match/show.reject')</button>
     </form>
 </div>

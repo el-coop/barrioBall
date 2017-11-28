@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Match;
 
+use App\Events\Match\ManageInvitationRejected;
 use App\Events\Match\ManagerJoined;
 use App\Events\Match\ManagersInvited;
 use App\Listeners\Match\Cache\ClearManagersCache;
@@ -288,5 +289,95 @@ class InviteManagersTest extends TestCase {
 
 		$listener = new ClearManagersCache;
 		$listener->handle(new ManagerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_invited_can_reject_join_management(): void {
+		Event::fake();
+
+		$this->match->inviteManager($this->player);
+
+		$this->actingAs($this->player)
+			->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
+			->assertSessionHas('alert', __('global.success'));
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+		$this->assertFalse($this->match->hasManager($this->player));
+
+		Event::assertDispatched(ManageInvitationRejected::class, function ($event) {
+			return $event->match->id == $this->match->id && $event->user->id == $this->player->id;
+		});
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_uninvited_can_reject_join_management(): void {
+		Event::fake();
+
+		$this->actingAs($this->player)
+			->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
+			->assertStatus(403);
+
+		Event::assertNotDispatched(ManageInvitationRejected::class);
+	}
+
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_manager_cant_reject_join_management(): void {
+		Event::fake();
+
+		$this->actingAs($this->manager)
+			->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
+			->assertStatus(403);
+
+		Event::assertNotDispatched(ManageInvitationRejected::class);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_guest_cant_reject_join_management(): void {
+		Event::fake();
+
+
+		$this->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
+			->assertRedirect(action('Auth\LoginController@showLoginForm'));
+
+		Event::assertNotDispatched(ManageInvitationRejected::class);
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_user_manage_invitation_cache_clears_when_refuses_to_join_management(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
+
+
+		$listener = new ClearUserMatchManagerInvitation;
+		$listener->handle(new ManageInvitationRejected($this->match, $this->player));
 	}
 }
