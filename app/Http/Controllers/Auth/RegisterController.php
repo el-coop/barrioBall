@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Player;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -44,9 +45,9 @@ class RegisterController extends Controller {
 	 *
 	 * @param  array $data
 	 *
-	 * @return \Illuminate\Contracts\Validation\Validator
+	 * @return ValidatorContract
 	 */
-	protected function validator(array $data) {
+	protected function validator(array $data): ValidatorContract {
 		return Validator::make($data, [
 			'email' => 'required|email|max:255|unique:users',
 			'username' => 'required|max:255|unique:users',

@@ -23,7 +23,7 @@ class ClearUserManagedMatches {
 	 *
 	 * @return void
 	 */
-	public function handle($event) {
+	public function handle($event): void {
 		Cache::tags("{$event->user->username}_managed")->flush();
 		Cache::forget(sha1("{$event->user->username}_hasManagedMatches"));
 		Cache::forget(sha1("{$event->user->id}_{$event->match->id}_manager"));

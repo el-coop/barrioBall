@@ -5,11 +5,7 @@ namespace App\Exceptions;
 use App\Models\Errors\Error;
 use App\Models\Errors\PhpError;
 use Exception;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Facades\Auth;
-use function PHPSTORM_META\type;
 
 class Handler extends ExceptionHandler {
 
@@ -40,30 +36,17 @@ class Handler extends ExceptionHandler {
 	 *
 	 * @return void
 	 */
-	public function report(Exception $exception) {
+	public function report(Exception $exception): void {
 
 		if ($this->shouldReport($exception)) {
 			try {
 				$this->LogException($exception);
-			} catch (\Exception $exception1){
+			} catch (\Exception $exception1) {
 				dump($exception1);
 			}
 		}
 		parent::report($exception);
 	}
-
-	/**
-	 * Render an exception into an HTTP response.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Exception  $exception
-	 * @return \Illuminate\Http\Response
-	 */
-	public function render($request, Exception $exception)
-	{
-		return parent::render($request, $exception);
-	}
-
 
 	/**
 	 * @param Exception $exception
@@ -83,7 +66,7 @@ class Handler extends ExceptionHandler {
 			'code' => $exception->getCode(),
 			'file' => $exception->getFile(),
 			'line' => $exception->getLine(),
-			'trace' => $exception->getTrace()
+			'trace' => $exception->getTrace(),
 		]);
 		$phpError->request = json_encode([
 			'method' => $request->method(),
@@ -92,10 +75,22 @@ class Handler extends ExceptionHandler {
 			'headers' => $request->header(),
 			'cookies' => $request->cookie(),
 			'session' => $request->hasSession() ? $request->session()->all() : '',
-			'locale' => $request->getLocale()
+			'locale' => $request->getLocale(),
 
 		]);
 		$phpError->save();
 		$phpError->error()->save($error);
+	}
+
+	/**
+	 * Render an exception into an HTTP response.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \Exception $exception
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function render($request, Exception $exception) {
+		return parent::render($request, $exception);
 	}
 }

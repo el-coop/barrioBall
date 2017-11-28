@@ -23,7 +23,7 @@ class ClearManagersCache {
 	 *
 	 * @return void
 	 */
-	public function handle($event) {
+	public function handle($event): void {
 		Cache::forget(sha1("{$event->match->id}_managers"));
 	}
 }

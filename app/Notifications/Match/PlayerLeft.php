@@ -9,9 +9,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PlayerLeft extends Notification implements ShouldQueue
-{
-    use Queueable;
+class PlayerLeft extends Notification implements ShouldQueue {
+	use Queueable;
 	/**
 	 * @var Match
 	 */
@@ -27,33 +26,32 @@ class PlayerLeft extends Notification implements ShouldQueue
 	 * @param Match $match
 	 * @param User $user
 	 */
-    public function __construct(Match $match, User $user)
-    {
-        //
+	public function __construct(Match $match, User $user) {
+		//
 		$this->match = $match;
 		$this->user = $user;
 	}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function via($notifiable)
-    {
-        return ['mail'];
-    }
+	/**
+	 * Get the notification's delivery channels.
+	 *
+	 * @param  mixed $notifiable
+	 *
+	 * @return array
+	 */
+	public function via($notifiable): array {
+		return ['mail'];
+	}
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
+	/**
+	 * Get the mail representation of the notification.
+	 *
+	 * @param  mixed $notifiable
+	 *
+	 * @return MailMessage
+	 */
+	public function toMail($notifiable): MailMessage {
+		return (new MailMessage)
 			->subject(__('mail/playerLeft.subject', [
 				'match' => $this->match->name,
 				'name' => $this->user->username,
@@ -66,18 +64,18 @@ class PlayerLeft extends Notification implements ShouldQueue
 			], $notifiable->language))
 			->action(__('mail/playerLeft.review', [], $notifiable->language), $this->match->url)
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));
-    }
+	}
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
-    }
+	/**
+	 * Get the array representation of the notification.
+	 *
+	 * @param  mixed $notifiable
+	 *
+	 * @return array
+	 */
+	public function toArray($notifiable): array {
+		return [
+			//
+		];
+	}
 }

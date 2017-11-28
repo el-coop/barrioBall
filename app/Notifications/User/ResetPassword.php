@@ -38,9 +38,9 @@ class ResetPassword extends Notification implements ShouldQueue {
 	 *
 	 * @param  mixed $notifiable
 	 *
-	 * @return array|string
+	 * @return array
 	 */
-	public function via($notifiable) {
+	public function via($notifiable): array {
 		return ['mail'];
 	}
 
@@ -49,9 +49,9 @@ class ResetPassword extends Notification implements ShouldQueue {
 	 *
 	 * @param  mixed $notifiable
 	 *
-	 * @return \Illuminate\Notifications\Messages\MailMessage
+	 * @return MailMessage
 	 */
-	public function toMail($notifiable) {
+	public function toMail($notifiable): MailMessage {
 		return (new MailMessage)
 			->language($this->language)
 			->subject(__('mail/passwordReset.subject', [], $this->language))

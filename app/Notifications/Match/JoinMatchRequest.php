@@ -36,7 +36,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function via($notifiable) {
+	public function via($notifiable): array {
 		return ['mail'];
 	}
 
@@ -47,7 +47,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 *
 	 * @return MailMessage
 	 */
-	public function toMail($notifiable) {
+	public function toMail($notifiable): MailMessage {
 		return (new MailMessage)
 			->replyTo($this->user->email, $this->user->name)
 			->language($notifiable->language)
@@ -72,7 +72,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function toArray($notifiable) {
+	public function toArray($notifiable): array {
 		return [
 			//
 		];

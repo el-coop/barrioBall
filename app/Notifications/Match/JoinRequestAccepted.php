@@ -46,7 +46,7 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function via($notifiable) {
+	public function via($notifiable): array {
 		return ['mail'];
 	}
 
@@ -56,7 +56,7 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 	 *
 	 * @return MailMessage
 	 */
-	public function toMail($notifiable) {
+	public function toMail($notifiable): MailMessage {
 		return (new MailMessage)
 			->subject(__('mail/userAccepted.subject', [
 				'name' => $this->match->name,
@@ -80,7 +80,7 @@ class JoinRequestAccepted extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function toArray($notifiable) {
+	public function toArray($notifiable): array {
 		return [
 			//
 		];

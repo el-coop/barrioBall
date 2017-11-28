@@ -34,8 +34,7 @@ class DeleteOldMatches extends Command {
 
 	/**
 	 * Execute the console command.
-	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function handle(): void {
 		$matches = Match::with('managers', 'registeredPlayers')->where('date_time', '<', new Carbon("7 days ago"))->get();
