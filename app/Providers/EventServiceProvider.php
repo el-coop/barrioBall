@@ -20,6 +20,7 @@ use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
+use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
@@ -94,7 +95,7 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		ManagersInvited::class => [
 			SendManagerInvites::class,
-			ClearUserManagedMatches::class
+			ClearUserMatchManagerInvitation::class
 		]
 	];
 
