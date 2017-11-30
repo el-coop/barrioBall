@@ -11,3 +11,4 @@ Homestead.yaml
 .env
 .env.dusk.local
 /public/mix-manifest.json
+.env.dusk
