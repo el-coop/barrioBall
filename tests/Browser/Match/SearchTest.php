@@ -19,14 +19,14 @@ class SearchTest extends DuskTestCase {
 	 * @group searchMatch
 	 * @group match
 	 */
-	public function test_shows_search_errors() {
+	public function test_shows_search_errors(): void {
 		$this->browse(function (Browser $browser) {
 			$browser->visit(new SearchPage)
 				->waitFor('@map')
 				->submitForm([
 					'date' => '',
 					'from' => '',
-					'to' => ''
+					'to' => '',
 				])
 				->waitFor('.invalid-feedback')
 				->assertSee('* The date field is required.')
@@ -49,13 +49,13 @@ class SearchTest extends DuskTestCase {
 			'lng' => $faker->randomFloat(15, 0, 5),
 		]);
 
-		$this->browse(function (Browser $browser) use($matches) {
+		$this->browse(function (Browser $browser) use ($matches) {
 			$browser->visit(new SearchPage)
 				->waitFor('@map')
 				->submitForm([
 					'date' => Carbon::now()->addDay()->format('d/m/y'),
 					'from' => '00:01',
-					'to' => '23:59'
+					'to' => '23:59',
 				])
 				->waitFor('@search-results')
 				->assertSeeMatches($matches);
@@ -84,11 +84,11 @@ class SearchTest extends DuskTestCase {
 				->submitForm([
 					'date' => Carbon::now()->addDay()->format('d/m/y'),
 					'from' => '00:01',
-					'to' => '23:59'
+					'to' => '23:59',
 				])
 				->waitFor('@search-results')
 				->click('.icon-result-4')
-				->assertSeeIn('.card.selected > .card-header',$matches->last()->name);
+				->assertSeeIn('.card.selected > .card-header', $matches->last()->name);
 		});
 
 	}

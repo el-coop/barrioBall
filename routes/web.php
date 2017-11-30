@@ -12,16 +12,17 @@
 */
 
 Auth::routes();
-foreach (File::allFiles(__DIR__ . "/web") as $routeFile){
+foreach (File::allFiles(__DIR__ . "/web") as $routeFile) {
 	require $routeFile;
 }
 
-
-
-
-Route::get('/home', 'HomeController@index')->middleware(['auth']);
 Route::get('/', 'HomeController@welcome');
+Route::get('/tech', 'HomeController@tech');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
+Route::post('jserror', 'ErrorController@store');
 
-Route::post('jserror','ErrorController@store');
+Route::group(['middleware' => ['auth']], function () {
+	Route::get('/home', 'HomeController@index');
+});
+
 

@@ -24,7 +24,7 @@ class ClearDeletedMatchUsersCaches {
 	 *
 	 * @return void
 	 */
-	public function handle($event) {
+	public function handle($event): void {
 		$event->match->registeredPlayers->each(function ($player) {
 			Cache::tags("{$player->username}_played")->flush();
 			Cache::forget(sha1("{$player->username}_nextMatch"));

@@ -9,5 +9,8 @@ return [
 	'faq' => 'FAQ',
 	'contribute' => 'Contribuir',
 	'languages' => 'Idiomas',
+	'helpTranslate' => 'Ayúdenos a traducir!',
+	'tech' => 'Tecnología',
+	'issues' => 'Encuentra fallos e informa'
 
 ];

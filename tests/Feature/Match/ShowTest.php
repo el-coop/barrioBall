@@ -226,7 +226,7 @@ class ShowTest extends TestCase {
 	 * @group removePlayer
 	 * @group showMatch
 	 */
-	public function test_doesnt_show_remove_button_to_player() {
+	public function test_doesnt_show_remove_button_to_player(): void {
 		$this->match->addPlayer($this->manager);
 		$this->actingAs($this->player)
 			->get(action('Match\MatchController@showMatch', $this->match))
@@ -240,7 +240,7 @@ class ShowTest extends TestCase {
 	 * @group showMatch
 	 */
 
-	public function test_doesnt_show_remove_button_to_guest() {
+	public function test_doesnt_show_remove_button_to_guest(): void {
 		$this->match->addPlayer($this->player);
 		$this->get(action('Match\MatchController@showMatch', $this->match))
 			->assertDontSee('<button class="btn btn-danger"');
@@ -252,7 +252,7 @@ class ShowTest extends TestCase {
 	 * @group removePlayer
 	 * @group showMatch
 	 */
-	public function test_doesnt_show_remove_button_on_manager() {
+	public function test_doesnt_show_remove_button_on_manager(): void {
 		$this->match->addPlayer($this->player);
 		$this->match->addManager($this->player);
 		$this->actingAs($this->manager)
@@ -266,7 +266,7 @@ class ShowTest extends TestCase {
 	 * @group inviteManager
 	 * @group showMatch
 	 */
-	public function test_doesnt_show_invitation_buttons_to_non_invited() {
+	public function test_doesnt_show_invitation_buttons_to_non_invited(): void {
 		$this->actingAs($this->player)
 			->get(action('Match\MatchController@showMatch', $this->match))
 			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->player->language))
@@ -280,7 +280,7 @@ class ShowTest extends TestCase {
 	 * @group inviteManager
 	 * @group showMatch
 	 */
-	public function test_doesnt_show_invitation_buttons_to_guest() {
+	public function test_doesnt_show_invitation_buttons_to_guest(): void {
 		$this->get(action('Match\MatchController@showMatch', $this->match))
 			->assertDontSee(__('match/show.acceptManageInvitation'))
 			->assertDontSee(__('match/show.accept'))
@@ -293,7 +293,7 @@ class ShowTest extends TestCase {
 	 * @group inviteManager
 	 * @group showMatch
 	 */
-	public function test_doesnt_show_invitation_buttons_to_manager() {
+	public function test_doesnt_show_invitation_buttons_to_manager(): void {
 		$this->actingAs($this->manager)
 			->get(action('Match\MatchController@showMatch', $this->match))
 			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->manager->language))
@@ -307,7 +307,7 @@ class ShowTest extends TestCase {
 	 * @group inviteManager
 	 * @group showMatch
 	 */
-	public function test_show_invitation_buttons_to_invited() {
+	public function test_show_invitation_buttons_to_invited(): void {
 		$this->match->inviteManager($this->player);
 		$this->actingAs($this->player)
 			->get(action('Match\MatchController@showMatch', $this->match))

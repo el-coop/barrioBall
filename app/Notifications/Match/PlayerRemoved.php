@@ -20,7 +20,7 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 	 * @param Match $match
 	 * @param string $message
 	 */
-	public function __construct(Match $match,string $message) {
+	public function __construct(Match $match, string $message) {
 		$this->match = $match;
 		$this->message = $message;
 	}
@@ -32,7 +32,7 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function via($notifiable) {
+	public function via($notifiable): array {
 		return ['mail'];
 	}
 
@@ -41,9 +41,9 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 	 *
 	 * @param  mixed $notifiable
 	 *
-	 * @return \Illuminate\Notifications\Messages\MailMessage
+	 * @return MailMessage
 	 */
-	public function toMail($notifiable) {
+	public function toMail($notifiable): MailMessage {
 		return (new MailMessage)
 			->subject(__('mail/playerRemoved.subject', [
 				'match' => $this->match->name,
@@ -66,7 +66,7 @@ class PlayerRemoved extends Notification implements ShouldQueue {
 	 *
 	 * @return array
 	 */
-	public function toArray($notifiable) {
+	public function toArray($notifiable): array {
 		return [
 			//
 		];

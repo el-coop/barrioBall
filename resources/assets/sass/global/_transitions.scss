@@ -1,0 +1,12 @@
+.list-leave-active, .list-enter-active {
+	transition: all .8s;
+}
+
+.list-enter-to {
+	transition-delay: .8s;
+}
+
+.list-enter, .list-leave-to {
+	opacity: 0;
+	transform: translateY(30px);
+}

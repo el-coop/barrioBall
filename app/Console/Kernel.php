@@ -22,9 +22,9 @@ class Kernel extends ConsoleKernel {
 	 *
 	 * @return void
 	 */
-	protected function schedule(Schedule $schedule) {
+	protected function schedule(Schedule $schedule): void {
 		$schedule->command('match:deleteOld')
-		          ->daily();
+			->daily();
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel {
 	 *
 	 * @return void
 	 */
-	protected function commands() {
+	protected function commands(): void {
 		$this->load(__DIR__ . '/Commands');
 		require base_path('routes/console.php');
 	}

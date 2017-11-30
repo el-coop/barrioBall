@@ -28,5 +28,13 @@ class HomeController extends Controller
 	{
 		return view('welcome.welcome');
 	}
+
+	/**
+	 * @return View
+	 */
+	public function tech(): View
+	{
+		return view('tech.tech');
+	}
 	
 }

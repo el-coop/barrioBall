@@ -16,7 +16,7 @@ class RepeatMatchRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
+	public function authorize(): bool {
 		$this->match = $this->route('match');
 
 		return $this->user()->can('update', $this->match);
@@ -27,7 +27,7 @@ class RepeatMatchRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'date' => 'required|date_format:d/m/y',
 			'time' => 'required|date_format:H:i',
@@ -53,7 +53,7 @@ class RepeatMatchRequest extends FormRequest {
 		}
 	}
 
-	public function commit() {
+	public function commit(): void {
 		$this->match->date_time = $this->dateTime;
 		$this->match->save();
 	}
