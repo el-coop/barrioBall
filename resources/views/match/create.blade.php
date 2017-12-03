@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title',__('navbar.createLink'))
+@section('title',isset($match) ? __('match/edit.title',['name' => $match->name]) : __('navbar.createLink'))
 
 @section('content')
     @parent
     <create-page inline-template
                  map-name="@lang('match/search.map')"
                  search-name="@lang('match/create.create')"
-                 init-lng="{{ old('lng') }}"
-                 init-lat="{{ old('lat') }}"
-                 init-address="{{ old('address') }}"
+                 init-lng="{{ old('lng', $match->lng ?? '') }}"
+                 init-lat="{{ old('lat', $match->lat ?? '') }}"
+                 init-address="{{ old('address', $match->address ?? '') }}"
                  :translate="{
                     'confirmAddress': '@lang('match/create.confirmAddress')'
                  }"

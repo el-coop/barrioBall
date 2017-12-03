@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\Match\Created;
 use App\Events\Match\DeletedOldMatch;
+use App\Events\Match\Edited;
 use App\Events\Match\JoinRequestCenceled;
 use App\Events\Match\JoinRequestSent;
 use App\Events\Match\ManageInvitationRejected;
@@ -25,6 +26,7 @@ use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
 use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
+use App\Listeners\Match\SendEditedNotification;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
@@ -94,20 +96,23 @@ class EventServiceProvider extends ServiceProvider {
 			ClearManagersCache::class,
 		],
 		Deleted::class => [
-			ClearDeletedUserCache::class
+			ClearDeletedUserCache::class,
 		],
 		ManagersInvited::class => [
 			SendManagerInvites::class,
-			ClearUsersMatchManagerInvitations::class
+			ClearUsersMatchManagerInvitations::class,
 		],
 		ManagerJoined::class => [
 			ClearUserManagedMatches::class,
 			ClearUserMatchManagerInvitation::class,
-			ClearManagersCache::class
+			ClearManagersCache::class,
 		],
 		ManageInvitationRejected::class => [
 			ClearUserMatchManagerInvitation::class,
-		]
+		],
+		Edited::class => [
+			SendEditedNotification::class,
+		],
 	];
 
 	/**

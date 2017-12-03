@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Match;
 
 use App\Http\Requests\Match\CreateMatchRequest;
 use App\Http\Requests\Match\DeleteMatchRequest;
+use App\Http\Requests\Match\EditMatchRequest;
 use App\Http\Requests\Match\RepeatMatchRequest;
 use App\Http\Requests\Match\SearchRequest;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -39,18 +40,44 @@ class MatchController extends Controller {
 	 *
 	 * @return View
 	 */
-	public function showMatch(Request $request, Match $match): View {
+	public function showMatch(Match $match): View {
 
-		$joinRequests = \Cache::rememberForever(sha1("{$match->id}_joinRequests"),function() use($match){
+		$joinRequests = \Cache::rememberForever(sha1("{$match->id}_joinRequests"), function () use ($match) {
 			return $match->joinRequests;
 		});
-		$managers = \Cache::rememberForever(sha1("{$match->id}_managers"),function() use($match){
+		$managers = \Cache::rememberForever(sha1("{$match->id}_managers"), function () use ($match) {
 			return $match->managers;
 		});
-		$registeredPlayers = \Cache::rememberForever(sha1("{$match->id}_registeredPlayers"),function() use($match){
+		$registeredPlayers = \Cache::rememberForever(sha1("{$match->id}_registeredPlayers"), function () use ($match) {
 			return $match->registeredPlayers;
 		});
-		return view('match.show', compact('match','managers','joinRequests','registeredPlayers'));
+
+		return view('match.show', compact('match', 'managers', 'joinRequests', 'registeredPlayers'));
+	}
+
+	/**
+	 * @param Request $request
+	 * @param Match $match
+	 *
+	 * @return View
+	 */
+	public function showEditForm(Match $match): View {
+
+		return view('match.create', compact('match'));
+	}
+
+
+	/**
+	 * @param EditMatchRequest $request
+	 * @param Match $match
+	 *
+	 * @return RedirectResponse
+	 */
+	public function edit(EditMatchRequest $request, Match $match): RedirectResponse {
+
+		$request->commit();
+
+		return redirect()->action('Match\MatchController@showMatch',$match)->with('alert',__('global.success'));
 	}
 
 	/**
@@ -88,8 +115,9 @@ class MatchController extends Controller {
 	 *
 	 * @return RedirectResponse
 	 */
-	public function repeatMatch(RepeatMatchRequest $request, Match $match): RedirectResponse{
+	public function repeatMatch(RepeatMatchRequest $request, Match $match): RedirectResponse {
 		$request->commit();
+
 		return back()->with('alert', __('global.success'));
 	}
 }

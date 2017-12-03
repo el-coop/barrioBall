@@ -1,10 +1,14 @@
 <div class="row mb-4 mt-3">
     <div class="col-12 col-md-10 mx-auto">
         <h3 class="text-center">
-            @lang('match/create.create')
+            {{isset($match) ? __('match/edit.title', ['name' => $match->name]) : __('match/create.create') }}
         </h3>
-        <form method="post">
+        <form method="post"
+              action="{{ isset($match) ? action('Match\MatchController@edit', $match) : action('Match\MatchController@create')}}">
             {{ csrf_field() }}
+            @if(isset($match))
+                {{ method_field('patch') }}
+            @endif
             @include('match.create.coordinates')
             @include('match.create.name')
             <div v-if="! lat" class="text-center">

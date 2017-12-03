@@ -23,5 +23,10 @@ Route::group(['prefix' => "matches", 'namespace' => 'Match'],function(){
 		Route::post('/{match}/admins/join', 'MatchUserController@joinAsManager');
 		Route::delete('/{match}/admins/join', 'MatchUserController@rejectManageInvitation');
 		Route::delete('/{match}/admins', 'MatchUserController@stopManaging');
+
+		Route::group(['middleware' => ['can:update,match']],function(){
+			Route::get('/{match}/edit', 'MatchController@showEditForm');
+			Route::patch('/{match}/edit', 'MatchController@edit');
+		});
 	});
 });

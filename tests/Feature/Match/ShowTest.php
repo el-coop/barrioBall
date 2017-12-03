@@ -31,7 +31,6 @@ class ShowTest extends TestCase {
 	 * @group showMatch
 	 */
 	public function test_shows_match_page(): void {
-		$this->match = Match::find($this->match->id);
 		$this->get($this->match->url)
 			->assertStatus(200)
 			->assertSee("<title>" . htmlentities($this->match->name, ENT_QUOTES))
@@ -215,7 +214,7 @@ class ShowTest extends TestCase {
 	public function test_shows_remove_button_to_manager(): void {
 		$this->match->addPlayer($this->player);
 		$this->actingAs($this->manager)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertSee("url: '" . action('Match\MatchUserController@removePlayer', $this->match) . "'")
 			->assertSee('<button class="btn btn-danger"');
 	}
@@ -229,7 +228,7 @@ class ShowTest extends TestCase {
 	public function test_doesnt_show_remove_button_to_player(): void {
 		$this->match->addPlayer($this->manager);
 		$this->actingAs($this->player)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertDontSee('<button class="btn btn-danger"');
 	}
 
@@ -242,7 +241,7 @@ class ShowTest extends TestCase {
 
 	public function test_doesnt_show_remove_button_to_guest(): void {
 		$this->match->addPlayer($this->player);
-		$this->get(action('Match\MatchController@showMatch', $this->match))
+		$this->get($this->match->url)
 			->assertDontSee('<button class="btn btn-danger"');
 	}
 
@@ -256,7 +255,7 @@ class ShowTest extends TestCase {
 		$this->match->addPlayer($this->player);
 		$this->match->addManager($this->player);
 		$this->actingAs($this->manager)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertDontSee('<button class="btn btn-danger"');
 	}
 
@@ -268,7 +267,7 @@ class ShowTest extends TestCase {
 	 */
 	public function test_doesnt_show_invitation_buttons_to_non_invited(): void {
 		$this->actingAs($this->player)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->player->language))
 			->assertDontSee(__('match/show.accept', [], $this->player->language))
 			->assertDontSee(__('match/show.reject', [], $this->player->language));
@@ -281,7 +280,7 @@ class ShowTest extends TestCase {
 	 * @group showMatch
 	 */
 	public function test_doesnt_show_invitation_buttons_to_guest(): void {
-		$this->get(action('Match\MatchController@showMatch', $this->match))
+		$this->get($this->match->url)
 			->assertDontSee(__('match/show.acceptManageInvitation'))
 			->assertDontSee(__('match/show.accept'))
 			->assertDontSee(__('match/show.reject'));
@@ -295,7 +294,7 @@ class ShowTest extends TestCase {
 	 */
 	public function test_doesnt_show_invitation_buttons_to_manager(): void {
 		$this->actingAs($this->manager)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertDontSee(__('match/show.acceptManageInvitation', [], $this->manager->language))
 			->assertDontSee(__('match/show.accept', [], $this->manager->language))
 			->assertDontSee(__('match/show.reject', [], $this->manager->language));
@@ -310,10 +309,45 @@ class ShowTest extends TestCase {
 	public function test_show_invitation_buttons_to_invited(): void {
 		$this->match->inviteManager($this->player);
 		$this->actingAs($this->player)
-			->get(action('Match\MatchController@showMatch', $this->match))
+			->get($this->match->url)
 			->assertSee(__('match/show.acceptManageInvitation', [], $this->player->language))
 			->assertSee(__('match/show.accept', [], $this->player->language))
 			->assertSee(__('match/show.reject', [], $this->player->language));
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group editMatch
+	 * @group showMatch
+	 */
+	public function test_doesnt_show_edit_match_to_non_manager(): void {
+		$this->actingAs($this->player)
+			->get($this->match->url)
+			->assertDontSee('<i class="fa fa-edit"></i>');
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group editMatch
+	 * @group showMatch
+	 */
+	public function test_doesnt_show_edit_match_to_guest(): void {
+		$this->get($this->match->url)
+			->assertDontSee('<i class="fa fa-edit"></i>');
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group editMatch
+	 * @group showMatch
+	 */
+	public function test_show_edit_match_to_manager(): void {
+		$this->actingAs($this->manager)
+			->get($this->match->url)
+			->assertSee('<i class="fa fa-edit"></i>');
+	}
 }

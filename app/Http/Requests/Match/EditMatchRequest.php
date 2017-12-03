@@ -2,21 +2,26 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\Created;
+use App\Events\Match\Edited;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Match;
 
-class CreateMatchRequest extends FormRequest {
+class EditMatchRequest extends FormRequest {
+	protected $dateTime;
+	protected $match;
+
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
 	 * @return bool
 	 */
 	public function authorize(): bool {
-		return $this->user()->can('create',Match::class);
+
+		$this->match = $this->route('match');
+
+		return $this->user()->can('update', $this->match);
 	}
 
 	/**
@@ -38,27 +43,6 @@ class CreateMatchRequest extends FormRequest {
 	}
 
 	/**
-	 * @return Match
-	 */
-	public function commit(): Match {
-		$match = new Match();
-		$match->name = $this->input('name');
-		$match->address = $this->input('address');
-		$match->lat = $this->input('lat');
-		$match->lng = $this->input('lng');
-		$match->public = 1;
-		$match->players = $this->input('players');
-		$match->description = $this->input('description');
-
-		$match->date_time = Carbon::createFromFormat('d/m/y H:i', $this->input('date') . ' ' . $this->input('time'));
-		$match->save();
-		$match->addManager($this->user());
-
-		event(new Created($match));
-		return $match;
-	}
-
-	/**
 	 * @param Validator $validator
 	 */
 	public function withValidator(Validator $validator): void {
@@ -73,4 +57,18 @@ class CreateMatchRequest extends FormRequest {
 			$validator->errors()->add('date', __('match/create.timeError'));
 		}
 	}
+
+	public function commit() {
+		$this->match->name = $this->input('name');
+		$this->match->address = $this->input('address');
+		$this->match->lat = $this->input('lat');
+		$this->match->lng = $this->input('lng');
+		$this->match->date_time = $this->dateTime;
+		$this->match->players = $this->input('players');
+		$this->match->description = $this->input('description');
+
+		$this->match->save();
+		event(new Edited($this->match));
+	}
+
 }

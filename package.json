@@ -25,13 +25,14 @@
     "leaflet": "^1.2.0",
     "leaflet-control-geocoder": "^1.5.7",
     "lodash": "^4.17.4",
-    "popper.js": "^1.12.9",
-    "vue": "^2.5.4",
+    "moment": "^2.19.3",
+    "popper.js": "^1.13.0",
+    "vue": "^2.5.9",
     "vue-json-tree-view": "^2.1.1",
-    "vue-multiselect": "^2.0.6",
+    "vue-multiselect": "^2.0.8",
     "vue-select": "^2.3.0",
     "vue-sweetalert2": "^1.0.7",
-    "vue-template-compiler": "^2.5.4",
+    "vue-template-compiler": "^2.5.9",
     "vuejs-paginate": "^0.8.4",
     "vuetable-2": "^1.7.0"
   }
