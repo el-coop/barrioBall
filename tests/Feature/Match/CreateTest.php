@@ -67,10 +67,10 @@ class CreateTest extends TestCase {
 			'lat' => 0,
 			'lng' => 0,
 			'players' => 8,
-			'date' => $time->addDays(1)->format('d/m/y'),
+			'date' => $time->addDay()->format('d/m/y'),
 			'time' => $time->format('H:i'),
 			'description' => 'description',
-		])->assertRedirect(action('Match\MatchController@showMatch', Match::first()));
+		])->assertRedirect(Match::first()->url);
 		$this->assertArraySubset([
 			'name' => 'Nurs Match',
 			'address' => 'Test Test',

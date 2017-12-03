@@ -3,7 +3,7 @@
         <span class="input-group-addon" v-if="label">
             {{label}}
         </span>
-        <input type='text' class="form-control" :name="name" :value="initValue"/>
+        <input type='text' class="form-control" :name="name" :value="initValue" />
         <span class="input-group-addon">
             <i class="fa fa-calendar"></i>
         </span>
@@ -11,31 +11,33 @@
 </template>
 
 <script>
-	export default{
+	export default {
 
 		props: {
-			label:{
-			    default: ''
-            },
-		    minDate: {
-		    	default: 'now'
-            },
-			locale:{
+			label: {
+				default: ''
+			},
+			minDate: {
+				default() {
+					return moment().startOf('day');
+				}
+			},
+			locale: {
 				default: 'en'
 			},
-			name:{
+			name: {
 				required: true
 			},
-            initValue: {
-                default: null,
-                type: String
-            }
-        },
+			initValue: {
+				default: null,
+				type: String
+			}
+		},
 
-		mounted(){
+		mounted() {
 			$(this.$el).datetimepicker({
 				minDate: this.minDate,
-                locale: this.locale,
+				locale: this.locale,
 				format: "DD/MM/YY",
 				icons: {
 					time: 'fa fa-clock-o',
@@ -49,6 +51,9 @@
 					close: 'fa fa-times'
 				},
 			});
-        }
+			if (this.initValue) {
+				$(this.$el).data('DateTimePicker').date(this.initValue);
+			}
+		}
 	}
 </script>
