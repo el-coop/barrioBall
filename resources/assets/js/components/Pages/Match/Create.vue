@@ -22,25 +22,27 @@
 				type: String,
 				default: null
 			},
-            translate: {
+			translate: {
 				type: Object,
-                required: true
-            }
+				required: true
+			}
 		},
 
 		data() {
 			return {
+				hideMapToggle: false,
 				mapToggled: false,
 				mapBtn: this.mapName,
-                lat: this.initLat,
-                lng: this.initLng,
-                address: this.initAddress,
+				lat: this.initLat,
+				lng: this.initLng,
+				address: this.initAddress,
 				calcAddress: false
 			}
 		},
 
 		methods: {
 			toggleMap() {
+				$('[data-toggle="tooltip"]').tooltip('hide');
 				this.mapToggled = !this.mapToggled;
 				if (this.mapToggled) {
 					this.mapBtn = this.createName;
@@ -61,12 +63,12 @@
 				}));
 
 				let geocoder = new L.Control.Geocoder.Nominatim();
-                geocoder.reverse(ev.latlng,100,(results) => {
-                	if(results[0]){
+				geocoder.reverse(ev.latlng, 100, (results) => {
+					if (results[0]) {
 						this.address = results[0].name;
-                    } else {
-                		this.address = '';
-                    }
+					} else {
+						this.address = '';
+					}
 					this.calcAddress = false;
 					this.$swal({
 						title: this.translate.confirmAddress,
@@ -78,17 +80,17 @@
 						this.lat = ev.latlng.lat;
 						this.lng = ev.latlng.lng;
 						this.address = text;
-                    }).catch(this.$swal.noop);
+					}).catch(this.$swal.noop);
 				});
 
 			}
 		},
 
-        mounted(){
+		mounted() {
 			$('[data-toggle="tooltip"]').tooltip();
-			$('[data-toggle="tooltip"]').on('shown.bs.tooltip',() => {
+			$('[data-toggle="tooltip"]').on('shown.bs.tooltip', () => {
 				$('[data-toggle="tooltip"]').tooltip('update');
-            });
-        }
+			});
+		}
 	}
 </script>

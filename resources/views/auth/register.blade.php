@@ -8,20 +8,21 @@
         <div class="row">
             <div class="col-12 col-md-8 mx-auto">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">
-                            @lang('auth.register')/{{config('app.name')}}
-                        </h3>
+                    <div class="card-header text-center">
+                        @lang('auth.register')|{{config('app.name')}}
                     </div>
                     <div class="card-block pt-3">
                         <form role="form" method="POST" action="{{ url('/register') }}" class="container-fluid">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <label for="username"
-                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.username'):</strong></label>
+                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.username')
+                                        :</strong></label>
 
                                 <div class="col-12 col-md-6">
-                                    <input id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username"
+                                    <input id="username" type="text"
+                                           class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}"
+                                           name="username"
                                            value="{{ old('username') }}" required>
 
                                     @if ($errors->has('username'))
@@ -34,10 +35,13 @@
 
                             <div class="form-group row">
                                 <label for="email"
-                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.email'):</strong></label>
+                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.email')
+                                        :</strong></label>
 
                                 <div class="col-12 col-md-6">
-                                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email"
+                                    <input id="email" type="email"
+                                           class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                           name="email"
                                            value="{{ old('email') }}" required>
 
                                     @if ($errors->has('email'))
@@ -50,10 +54,13 @@
 
                             <div class="form-group row">
                                 <label for="password"
-                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.password'):</strong></label>
+                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.password')
+                                        :</strong></label>
 
                                 <div class="col-12 col-md-6">
-                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                    <input id="password" type="password"
+                                           class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                           name="password" required>
 
                                     @if ($errors->has('password'))
                                         <span class="invalid-feedback">
@@ -65,7 +72,8 @@
 
                             <div class="form-group row">
                                 <label for="password-confirm"
-                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.confirmPassword'):</strong></label>
+                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.confirmPassword')
+                                        :</strong></label>
 
                                 <div class="col-12 col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
@@ -76,10 +84,12 @@
 
                             <div class="form-group row">
                                 <label for="language"
-                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.language'):</strong></label>
+                                       class="col-12 col-md-4 col-form-label text-md-right"><strong>@lang('auth.language')
+                                        :</strong></label>
 
                                 <div class="col-12 col-md-6">
-                                    <select id="language" name='language' class="form-control{{ $errors->has('language') ? ' is-invalid' : '' }}">
+                                    <select id="language" name='language'
+                                            class="form-control{{ $errors->has('language') ? ' is-invalid' : '' }}">
                                         @foreach (config('languages') as $lang => $language)
                                             <option value="{{$lang}}"{{ App::getLocale() == $lang ? ' selected' : '' }}>{{$language}}</option>
                                         @endforeach

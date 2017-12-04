@@ -9,7 +9,7 @@
             <div class="col-12 col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-header text-center">
-                            @lang('auth.login')
+                            @lang('auth.login')|{{config('app.name')}}
                     </div>
                     <div class="card-block pt-3 container-fluid">
                         <form role="form" method="POST" action="{{ action('Auth\LoginController@login') }}">

@@ -19,6 +19,7 @@
 
     	data(){
     		return {
+				hideMapToggle: false,
     			matches: null,
                 searchParams: null,
                 pages: 0,

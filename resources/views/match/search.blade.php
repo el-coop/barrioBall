@@ -18,7 +18,7 @@
                     </leaflet-map>
                 </div>
             </flipper>
-            <div class="search-toggle text-center">
+            <div class="search-toggle text-center" :class="{ 'd-none' : hideMapToggle}">
                 <button class="btn btn-primary d-md-none" @click="toggleMap">@{{mapBtn}}</button>
             </div>
         </div>

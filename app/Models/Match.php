@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Match extends Model {
 
-	protected $appends = ['url'];
+	protected $appends = [
+		'url',
+		'date',
+		'time',
+	];
 	protected $dates = [
 		'created_at',
 		'updated_at',
@@ -172,18 +176,18 @@ class Match extends Model {
 	}
 
 	/**
+	 * @param User $user
+	 */
+	public function inviteManager(User $user): void {
+		$this->managerInvites()->save($user);
+	}
+
+	/**
 	 * @return BelongsToMany
 	 */
 	public function managerInvites(): BelongsToMany {
 		return $this->belongsToMany(User::class, 'manager_invites')
 			->withTimestamps();
-	}
-
-	/**
-	 * @param User $user
-	 */
-	public function inviteManager(User $user): void {
-		$this->managerInvites()->save($user);
 	}
 
 	/**

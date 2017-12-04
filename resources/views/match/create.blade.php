@@ -16,14 +16,14 @@
         <div class="container-fluid sm-full-height"
              :class="{ 'sm-no-side-padding' : mapToggled}">
             <flipper :flipped="mapToggled">
-                <div class="content-static-right" slot="front">
+                <div class="content-static-right pb-4" slot="front">
                     @include('match.create.front')
                 </div>
                 <div class="map-static-left" slot="back">
                     @include('match.create.back')
                 </div>
             </flipper>
-            <div class="search-toggle text-center">
+            <div class="search-toggle text-center" :class="{ 'd-none' : hideMapToggle}">
                 <button class="btn btn-primary d-md-none" @click="toggleMap">@{{mapBtn}}</button>
             </div>
         </div>

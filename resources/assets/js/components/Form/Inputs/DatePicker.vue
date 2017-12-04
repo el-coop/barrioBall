@@ -50,6 +50,10 @@
 					clear: 'fa fa-trash',
 					close: 'fa fa-times'
 				},
+			}).on('dp.show', () => {
+				this.$emit('shown');
+			}).on('dp.hide', () => {
+				this.$emit('hidden');
 			});
 			if (this.initValue) {
 				$(this.$el).data('DateTimePicker').date(this.initValue);
