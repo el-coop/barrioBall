@@ -25,8 +25,6 @@ return [
     'rememberMe' => 'Remember me',
     'alreadyRegistred' => 'Already registered?',
     'forgetMe' => 'forget your password',
-    'currentLanguage' => 'English',
 	'username' => 'Username',
 	'resetPassword' => 'Reset password',
-    'Edit' => 'Edit User'
 ];

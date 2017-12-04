@@ -1,7 +1,7 @@
 <?php
 return [
 
-	'removed' => 'El usuario fue eliminado del partido',
+	'removed' => 'El usuario ha sido eliminado del partido',
 	'confirm' => 'Eliminar :user del partido',
 
 ];

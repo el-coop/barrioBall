@@ -1,6 +1,6 @@
 <?php
 return [
 
-	'subject' => 'El partido llamado :match fue actualizado',
-	'body' => ':match fue actualizado, visite la página para ver los cambios.'
+	'subject' => 'El partido :match ha sido actualizado',
+	'body' => ':match ha sido actualizado, visite la página para ver los cambios.'
 ];

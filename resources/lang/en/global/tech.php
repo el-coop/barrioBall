@@ -26,7 +26,7 @@ return [
 	'bootstrap' => 'Bootstrap is a free and open-source front-end web framework for designing websites and web applications.',
 	'phpunit' => 'PHPUnit is a unit testing framework for the PHP programming language. It is an instance of the xUnit architecture for unit testing frameworks that originated with SUnit and became popular with JUnit.',
 	'dusk' => 'Laravel Dusk provides an expressive, easy-to-use browser automation and testing API.',
-	'faker' => 'Faker is a PHP library that generates fake data for you. Whether you need to bootstrap your database, create good-looking XML documents, fill-in your persistence to stress test it, or anonymize data taken from a production service, Faker is for you.',
+	'faker' => 'Faker is a PHP library that generates fake data for the developer. Whether you need to bootstrap your database, create good-looking XML documents, fill-in your persistence to stress test it, or anonymize data taken from a production service, Faker is for you.',
 	'nodejs' => 'Node.js is an open-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side.',
 	'webpack' => 'webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.',
 	'mix' => 'Laravel Mix provides a clean, fluent API for defining basic webpack build steps for your Laravel application. Mix supports several common CSS and JavaScript pre-processors.',

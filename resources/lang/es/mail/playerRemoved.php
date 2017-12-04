@@ -1,6 +1,6 @@
 <?php
 return [
 
-	'subject' => 'Fuiste eliminado del partido :match',
-	'youWereRemoved' => 'Fuiste eliminado del partido [:match](:url) por el administrador',
+	'subject' => 'Ha sido eliminado del partido :match',
+	'youWereRemoved' => 'Ha sido eliminado del partido [:match](:url) por el administrador',
 ];
