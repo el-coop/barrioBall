@@ -25,6 +25,6 @@ return [
     'from' => 'Hora',
     'players' => 'Numero de Jugadores',
     'description' => 'Descripción',
-	'tooEarly' => 'The chosen date is in the past',
+	'tooEarly' => 'La fecha elegida esta en el pasado',
 	'timeError' => 'No se puede procesar fecha y hora'
 ];

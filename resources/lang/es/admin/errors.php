@@ -2,11 +2,11 @@
 return [
 
 	'phpErrors' => 'Errores de PHP',
-	'jsErrors' =>  "Errores Javascript",
+	'jsErrors' =>  "Errores de Javascript",
 	'error' => 'Error',
 	'user' => 'Usuario',
 	'date' => 'Fecha y hora',
 	'resolve' => 'Resolver',
-	'authorizationError' => 'Los errores JS se registran automáticamente'
+	'authorizationError' => 'Los errores de JS se registran automáticamente'
 
 ];

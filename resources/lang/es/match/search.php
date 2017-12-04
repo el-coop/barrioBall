@@ -13,12 +13,12 @@ return [
 	*/
 
 	'date' => 'Fecha',
-	'from' => 'De',
-	'to' => 'A',
+	'from' => 'Desde',
+	'to' => 'Hasta',
 	'players' => 'Jugadores',
 	'prev' => 'Anterior',
 	'next' => 'Proximo',
-	'search' => 'Pesquisa',
+	'search' => 'Busqueda',
 	'map' => 'Mapa',
 	'noMatchesFound' => 'No hay partidos en estos horarios'
 

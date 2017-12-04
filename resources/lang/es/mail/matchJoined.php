@@ -1,6 +1,6 @@
 <?php
 return [
 
-	'subject' => 'Un nuevo jugador fue autorizado a unirse a :match',
-	'hasBeenAuth' => ':name fue autorizado a unirse a [:match](:url)',
+	'subject' => 'Un nuevo jugador ha sido anotado en el :match',
+	'hasBeenAuth' => ':name se anoto para jugar en [:match](:url)',
 ];

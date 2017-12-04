@@ -1,5 +1,5 @@
 <?php
 return [
-	'subject' => 'Su solicitud a unirse a :name fue aceptada.',
-	'youWereAccepted' => 'Su solicitud a unirse a [:name](:url) fue aceptada.',
+	'subject' => 'Su solicitud de participación en :name ha sido aceptada.',
+	'youWereAccepted' => 'Su solicitud de participación e [:name](:url) ha sido aceptada.',
 ];

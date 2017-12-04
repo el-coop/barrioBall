@@ -5,12 +5,12 @@ return [
 	'subtitle' => "Juegue al fútbol en su barrio",
 	'links' => 'Enlaces útiles',
 	'about' => 'Sobre nosotros',
-	'code' => 'Código base ',
+	'code' => 'Código base',
 	'faq' => 'FAQ',
 	'contribute' => 'Contribuir',
 	'languages' => 'Idiomas',
-	'helpTranslate' => 'Ayúdenos a traducir!',
+	'helpTranslate' => '¡Ayúdenos a traducir!',
 	'tech' => 'Tecnología',
-	'issues' => 'Encuentra fallos e informa'
+	'issues' => 'Encuentre fallos e informe'
 
 ];

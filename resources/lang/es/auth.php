@@ -13,20 +13,20 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'email' => 'Correo Electronico',
+    'failed' => 'El nombre de usuario/contraseña no coinciden con nuestros registros.',
+    'throttle' => 'Demasiados intentos de conectar, por favor reintente en :seconds segundos.',
+    'email' => 'Correo Electrónico',
     'password' => 'Contraseña',
     'confirmPassword' => 'Confirmacion De Contraseña',
     'language' => 'Idioma',
-    'login' => 'Ingresar',
-    'register' => 'Registrate',
-    'notMemberYet' => '¿Todavía no tienes una cuenta?',
-    'rememberMe' => 'Recordarme',
+    'login' => 'Ingrese',
+    'register' => 'Registrese',
+    'notMemberYet' => '¿Todavía no tiene una cuenta?',
+    'rememberMe' => 'Recuerdeme',
     'forgetMe' => 'Olvidé mi contraseña',
-    'alreadyRegistred' => '¿Ya tienes una cuenta?',
+    'alreadyRegistred' => '¿Ya tiene una cuenta?',
 	'username' => 'Nombre de usuario',
-    'Edit' => 'editar usuario'
+	'resetPassword' => 'Restablecer contraseña',
 
 
 ];
