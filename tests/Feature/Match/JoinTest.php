@@ -8,7 +8,7 @@ use App\Events\Match\PlayerRejected;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
-use App\Listeners\MAtch\Cache\ClearUserPlayedMatches;
+use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
 use App\Listeners\Match\SendJoinRequestRejectedNotification;
