@@ -29,7 +29,7 @@ class ResetPasswordTest extends TestCase {
 	public function test_shows_password_reset(): void {
 		$this->get(action('Auth\ForgotPasswordController@showLinkRequestForm'))
 			->assertStatus(200)
-			->assertSee(__('auth.resetPassword', [], $this->user->language));
+			->assertSee(__('auth.resetPassword'));
 	}
 
 	/**
