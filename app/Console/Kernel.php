@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel {
 	protected function schedule(Schedule $schedule): void {
 		$schedule->command('match:deleteOld')
 			->daily();
+		$schedule->command('match:notify')
+			->everyTenMinutes();
 	}
 
 	/**
