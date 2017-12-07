@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\User\Created;
 use App\Models\Admin;
 use App\Models\Player;
 use App\Models\User;
@@ -79,6 +80,7 @@ class RegisterController extends Controller {
 		}
 		$newUser->save();
 		$newUser->user()->save($base);
+		event(new Created($base));
 
 		return $base;
 	}

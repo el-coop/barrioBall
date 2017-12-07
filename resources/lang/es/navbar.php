@@ -10,5 +10,6 @@ return [
 	'logoutLink' => 'Cerrar Sesión',
 	'loginLink' => 'Iniciar Sesión',
 	'registerLink' => 'Registrar',
+	'adminOverview' => 'Vista Administrador',
 
 ];

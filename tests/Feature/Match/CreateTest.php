@@ -3,6 +3,7 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\Created;
+use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Models\Match;
 use App\Models\User;
@@ -135,7 +136,23 @@ class CreateTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->username}_hasManagedMatches"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->id}_{$match->id}_manager"));
 
-		$listener = new ClearUserManagedMatches();
+		$listener = new ClearUserManagedMatches;
+		$listener->handle(new Created($match));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteMatch
+	 * @group overviewPage
+	 */
+	public function test_admin_match_cache_cleared_when_matchDeleted_dispatched(): void {
+		$match = factory(Match::class)->create();
+
+		Cache::shouldReceive('tags')->once()->with("admin_matches")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearMatchOverviewCache;
 		$listener->handle(new Created($match));
 	}
 }

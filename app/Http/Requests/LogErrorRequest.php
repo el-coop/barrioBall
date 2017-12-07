@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Events\Admin\Error\Created;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
+use Cache;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Validator;
@@ -51,6 +53,8 @@ class LogErrorRequest extends FormRequest {
 		$jsError->vm = $this->input('vm');
 		$jsError->save();
 		$jsError->error()->save($error);
+		Cache::tags('JSError')->flush();
+		event(new Created($error));
 	}
 
 	/**

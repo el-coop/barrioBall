@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Events\Admin\Error\Resolved;
 use App\Models\Errors\Error;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -32,5 +33,6 @@ class DeleteErrorRequest extends FormRequest {
 
 	public function commit(): void {
 		$this->error->errorable->delete();
+		event(new Resolved());
 	}
 }
