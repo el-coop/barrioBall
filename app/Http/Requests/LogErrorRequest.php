@@ -39,7 +39,7 @@ class LogErrorRequest extends FormRequest {
 		$error = new Error;
 		$jsError = new JsError;
 		if ($this->user()) {
-			$error->user_id = $this->user->id;
+			$error->user_id = $this->user()->id;
 		}
 		$error->page = $this->input('page');
 		$jsError->class = $this->input('message');
