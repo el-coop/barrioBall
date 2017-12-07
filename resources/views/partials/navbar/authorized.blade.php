@@ -17,6 +17,8 @@
                 <a class="nav-link dropdown-toggle {{ Request::is('admin/*') ? 'active' : '' }}"
                    data-toggle="dropdown">@lang('navbar.adminTitle')</a>
                 <div class="dropdown-menu">
+                    <a class="dropdown-item {{ Request::is('admin') ? 'active' : '' }}"
+                       href="{{ action( 'Admin\PageController@index') }}">@lang('navbar.adminOverview')</a>
                     <a class="dropdown-item {{ Request::is('admin/errors') ? 'active' : '' }}"
                        href="{{ action( 'Admin\ErrorController@show') }}">@lang('navbar.errorsLink')</a>
                 </div>
