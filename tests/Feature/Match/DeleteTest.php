@@ -3,6 +3,7 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\MatchDeleted;
+use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Models\Match;
@@ -94,6 +95,21 @@ class DeleteTest extends TestCase {
 			->assertStatus(403);
 
 		Event::assertNotDispatched(MatchDeleted::class);
-
 	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteMatch
+	 * @group overviewPage
+	 */
+	public function test_admin_match_cache_cleared_when_matchDeleted_dispatched(): void {
+
+		Cache::shouldReceive('tags')->once()->with("admin_matches")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearMatchOverviewCache;
+		$listener->handle(new MatchDeleted($this->match, $this->manager));
+	}
+
 }

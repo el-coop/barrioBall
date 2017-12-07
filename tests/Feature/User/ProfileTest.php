@@ -3,6 +3,7 @@
 namespace Tests\Feature\User;
 
 use App\Events\User\Deleted;
+use App\Listeners\Admin\Cache\ClearUserOverviewCache;
 use App\Listeners\User\ClearDeletedUserCache;
 use App\Models\Match;
 use App\Models\Player;
@@ -65,7 +66,7 @@ class ProfileTest extends TestCase {
 
 		$this->actingAs($this->user)->patch(action('User\UserController@updateUsername', [
 			'username' => 'newUsername',
-		]))->assertSessionHas('alert',__('profile/page.updatedUsername'));
+		]))->assertSessionHas('alert', __('profile/page.updatedUsername'));
 		$this->assertEquals('newUsername', $this->user->username);
 	}
 
@@ -103,7 +104,7 @@ class ProfileTest extends TestCase {
 		$this->actingAs($this->user)->patch(action('User\UserController@updatePassword', [
 			'password' => '12345678',
 			'password_confirmation' => '12345678',
-		]))->assertSessionHas('alert',__('profile/page.updatedPassword'));
+		]))->assertSessionHas('alert', __('profile/page.updatedPassword'));
 		$this->assertTrue(Hash::check('12345678', $this->user->password));
 	}
 
@@ -152,7 +153,7 @@ class ProfileTest extends TestCase {
 	public function test_user_can_update_email(): void {
 		$this->actingAs($this->user)->patch(action('User\UserController@updateEmail', [
 			'email' => 'new@new.new',
-		]))->assertSessionHas('alert',__('profile/page.updatedEmail'));
+		]))->assertSessionHas('alert', __('profile/page.updatedEmail'));
 		$this->assertEquals('new@new.new', $this->user->email);
 	}
 
@@ -199,7 +200,7 @@ class ProfileTest extends TestCase {
 	public function test_user_can_update_language(): void {
 		$this->actingAs($this->user)->patch(action('User\UserController@updateLanguage', [
 			'language' => 'es',
-		]))->assertSessionHas('alert',__('profile/page.updatedLanguage',[],$this->user->language));
+		]))->assertSessionHas('alert', __('profile/page.updatedLanguage', [], $this->user->language));
 		$this->assertEquals('es', $this->user->language);
 	}
 
@@ -237,8 +238,8 @@ class ProfileTest extends TestCase {
 	public function test_unlogged_cant_delete_user(): void {
 		$this->delete(action('User\UserController@delete'))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
-		$this->assertNotEquals(0,User::count());
-		$this->assertNotEquals(0,Player::count());
+		$this->assertNotEquals(0, User::count());
+		$this->assertNotEquals(0, Player::count());
 	}
 
 	/**
@@ -249,9 +250,9 @@ class ProfileTest extends TestCase {
 	public function test_user_can_delete_himself(): void {
 		Event::fake();
 		$this->actingAs($this->user)->delete(action('User\UserController@delete'));
-		$this->assertEquals(0,User::count());
-		$this->assertEquals(0,Player::count());
-		Event::assertDispatched(Deleted::class,function($event){
+		$this->assertEquals(0, User::count());
+		$this->assertEquals(0, Player::count());
+		Event::assertDispatched(Deleted::class, function ($event) {
 			return $this->user->id == $event->user->id;
 		});
 	}
@@ -275,5 +276,20 @@ class ProfileTest extends TestCase {
 		$listener = new ClearDeletedUserCache;
 		$listener->handle(new Deleted($this->user));
 
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 * @group profile
+	 * @group adminOverview
+	 */
+	public function test_clears_admin_users_cache_on_delete(): void {
+		Cache::shouldReceive('tags')->once()->with("admin_users")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearUserOverviewCache();
+		$listener->handle(new Deleted($this->user));
 	}
 }

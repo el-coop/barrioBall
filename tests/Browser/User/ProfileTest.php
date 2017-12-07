@@ -96,7 +96,7 @@ class ProfileTest extends DuskTestCase {
 				->visit(new ProfilePage)
 				->assertSee(__('profile/page.changeLanguage', [], 'es'))
 				->select('language', 'en')
-				->press('Actualizar idioma')
+				->press(__('profile/page.updateLanguage',[],'es'))
 				->assertSee(__('profile/page.updatedLanguage', [], 'en'));
 		});
 

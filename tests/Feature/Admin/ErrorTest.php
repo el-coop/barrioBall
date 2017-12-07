@@ -2,12 +2,16 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Events\Admin\Error\Created;
+use App\Events\Admin\Error\Resolved;
+use App\Listeners\Admin\Cache\ClearErrorsOverviewCache;
 use App\Models\Admin;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
 use App\Models\Errors\PhpError;
 use App\Models\User;
 use Cache;
+use Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -66,6 +70,10 @@ class ErrorTest extends TestCase {
 	 */
 	public function test_logs_js_errors(): void {
 
+		Event::fake();
+		Cache::shouldReceive('tags')->once()->with("JSError")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
 		$this->post(action('ErrorController@store'), [
 			'page' => "/",
 			'message' => "message",
@@ -89,6 +97,36 @@ class ErrorTest extends TestCase {
 			'user_agent' => 'firefox',
 			'vm' => 'vm',
 		], $error->errorable->toArray());
+
+		Event::assertDispatched(Created::class);
+
+	}
+
+	/**
+	 * @test
+	 * @group error
+	 * @group adminOverview
+	 */
+	public function test_clears_admin_errors_cache_on_created(): void {
+		$error = factory(Error::class)->create();
+		Cache::shouldReceive('tags')->once()->with("admin_errors")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearErrorsOverviewCache;
+		$listener->handle(new Created($error));
+	}
+
+	/**
+	 * @test
+	 * @group error
+	 * @group adminOverview
+	 */
+	public function test_clears_admin_errors_cache_on_resolved(): void {
+		Cache::shouldReceive('tags')->once()->with("admin_errors")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$listener = new ClearErrorsOverviewCache;
+		$listener->handle(new Resolved());
 	}
 
 	/**
@@ -118,6 +156,7 @@ class ErrorTest extends TestCase {
 	 * @group error
 	 */
 	public function test_resolves_error(): void {
+		Event::fake();
 		Cache::shouldReceive('tags')->once()->with('PHPError')->andReturn(\Mockery::self())->getMock()->shouldReceive('flush')->once();
 		$error = factory(Error::class)->create([
 			'errorable_id' => function () {
@@ -131,8 +170,10 @@ class ErrorTest extends TestCase {
 				'status' => 'Success',
 			]);
 
-		$this->assertEquals(0,Error::count());
-		$this->assertEquals(0,PhpError::count());
+		$this->assertEquals(0, Error::count());
+		$this->assertEquals(0, PhpError::count());
+		Event::assertDispatched(Resolved::class);
+
 	}
 
 	/**
@@ -151,8 +192,8 @@ class ErrorTest extends TestCase {
 		$this->delete(action('Admin\ErrorController@delete', $error))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
-		$this->assertNotEquals(0,Error::count());
-		$this->assertNotEquals(0,PhpError::count());
+		$this->assertNotEquals(0, Error::count());
+		$this->assertNotEquals(0, PhpError::count());
 	}
 
 	/**
@@ -172,7 +213,7 @@ class ErrorTest extends TestCase {
 			->delete(action('Admin\ErrorController@delete', $error))
 			->assertRedirect(action('HomeController@index'));
 
-		$this->assertNotEquals(0,Error::count());
-		$this->assertNotEquals(0,PhpError::count());
+		$this->assertNotEquals(0, Error::count());
+		$this->assertNotEquals(0, PhpError::count());
 	}
 }

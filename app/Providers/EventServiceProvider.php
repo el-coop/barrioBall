@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\Admin\Error\Created as ErrorCreated;
+use App\Events\Admin\Error\Resolved;
 use App\Events\Match\Created;
 use App\Events\Match\DeletedOldMatch;
 use App\Events\Match\Edited;
@@ -16,7 +18,11 @@ use App\Events\Match\PlayerRemoved;
 use App\Events\Match\PlayerLeft;
 use App\Events\Match\PlayerRejected;
 use App\Events\Match\PlayerJoined;
+use App\Events\User\Created as UserCreated;
 use App\Events\User\Deleted;
+use App\Listeners\Admin\Cache\ClearErrorsOverviewCache;
+use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
+use App\Listeners\Admin\Cache\ClearUserOverviewCache;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearManagersCache;
@@ -47,8 +53,15 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
+		ErrorCreated::class => [
+			ClearErrorsOverviewCache::class
+		],
+		Resolved::class => [
+			ClearErrorsOverviewCache::class
+		],
 		Created::class => [
 			ClearUserManagedMatches::class,
+			ClearMatchOverviewCache::class
 		],
 		JoinRequestSent::class => [
 			SendJoinRequestNotification::class,
@@ -85,10 +98,12 @@ class EventServiceProvider extends ServiceProvider {
 		DeletedOldMatch::class => [
 			SendOldMatchDeletedMessage::class,
 			ClearDeletedMatchUsersCaches::class,
+			ClearMatchOverviewCache::class
 		],
 		MatchDeleted::class => [
 			SendMatchDeletedNotification::class,
 			ClearDeletedMatchUsersCaches::class,
+			ClearMatchOverviewCache::class
 		],
 		ManagerLeft::class => [
 			SendManagerLeftNotification::class,
@@ -97,6 +112,7 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		Deleted::class => [
 			ClearDeletedUserCache::class,
+			ClearUserOverviewCache::class
 		],
 		ManagersInvited::class => [
 			SendManagerInvites::class,
@@ -113,6 +129,9 @@ class EventServiceProvider extends ServiceProvider {
 		Edited::class => [
 			SendEditedNotification::class,
 		],
+		UserCreated::class => [
+			ClearUserOverviewCache::class
+		]
 	];
 
 	/**

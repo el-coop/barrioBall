@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Events\Admin\Error\Created;
 use App\Models\Errors\Error;
 use App\Models\Errors\PhpError;
+use Cache;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -80,6 +82,8 @@ class Handler extends ExceptionHandler {
 		]);
 		$phpError->save();
 		$phpError->error()->save($error);
+		Cache::tags('PHPError')->flush();
+		event(new Created($error));
 	}
 
 	/**
