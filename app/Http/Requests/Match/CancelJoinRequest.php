@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
-use App\Events\Match\JoinRequestCenceled;
+use App\Events\Match\JoinRequestCanceled;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CancelJoinRequest extends FormRequest {
@@ -36,7 +36,7 @@ class CancelJoinRequest extends FormRequest {
 	public function commit(): string {
 		$this->match->cancelJoinRequest($this->user());
 		$message = __('match/show.cancelMessage');
-		event(new JoinRequestCenceled($this->match, $this->user()));
+		event(new JoinRequestCanceled($this->match, $this->user()));
 
 		return $message;
 	}

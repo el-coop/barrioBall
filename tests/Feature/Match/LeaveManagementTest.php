@@ -6,6 +6,7 @@ use App\Events\Match\Created;
 use App\Events\Match\ManagerLeft;
 use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
+use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\SendManagerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
@@ -137,5 +138,19 @@ class LeaveManagementTest extends TestCase {
 
 		$listener = new ClearManagersCache();
 		$listener->handle(new ManagerLeft($this->match,$this->manager));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group leaveManagement
+	 * @group management
+	 */
+	public function test_clears_managers_pending_requests_cache_when_leaves_management(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
+		$listener->handle(new ManagerLeft($this->match, $this->manager));
 	}
 }

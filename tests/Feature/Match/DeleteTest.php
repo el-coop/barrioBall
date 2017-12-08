@@ -5,6 +5,7 @@ namespace Tests\Feature\Match;
 use App\Events\Match\MatchDeleted;
 use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
+use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Models\Match;
 use App\Models\User;
@@ -109,6 +110,20 @@ class DeleteTest extends TestCase {
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		$listener = new ClearMatchOverviewCache;
+		$listener->handle(new MatchDeleted($this->match, $this->manager));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteMatch
+	 * @group overviewPage
+	 */
+	public function test_admin_pending_requests_cache_cleared_when_matchDeleted_dispatched(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
 		$listener->handle(new MatchDeleted($this->match, $this->manager));
 	}
 

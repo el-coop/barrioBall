@@ -7,7 +7,7 @@ use App\Events\Admin\Error\Resolved;
 use App\Events\Match\Created;
 use App\Events\Match\DeletedOldMatch;
 use App\Events\Match\Edited;
-use App\Events\Match\JoinRequestCenceled;
+use App\Events\Match\JoinRequestCanceled;
 use App\Events\Match\JoinRequestSent;
 use App\Events\Match\ManageInvitationRejected;
 use App\Events\Match\ManagerJoined;
@@ -30,6 +30,7 @@ use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
+use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendEditedNotification;
@@ -67,10 +68,12 @@ class EventServiceProvider extends ServiceProvider {
 			SendJoinRequestNotification::class,
 			ClearJoinRequestsCache::class,
 			ClearUserJoinRequests::class,
+			ClearUserPendingRequestCache::class
 		],
-		JoinRequestCenceled::class => [
+		JoinRequestCanceled::class => [
 			ClearJoinRequestsCache::class,
 			ClearUserJoinRequests::class,
+			ClearUserPendingRequestCache::class
 		],
 		PlayerJoined::class => [
 			SendUserJoinedNotification::class,
@@ -79,6 +82,7 @@ class EventServiceProvider extends ServiceProvider {
 			ClearJoinRequestsCache::class,
 			ClearPlayersCache::class,
 			ClearUserJoinRequests::class,
+			ClearUserPendingRequestCache::class
 		],
 		PlayerLeft::class => [
 			SendPlayerLeftNotification::class,
@@ -89,6 +93,7 @@ class EventServiceProvider extends ServiceProvider {
 			SendJoinRequestRejectedNotification::class,
 			ClearJoinRequestsCache::class,
 			ClearUserJoinRequests::class,
+			ClearUserPendingRequestCache::class
 		],
 		PlayerRemoved::class => [
 			SendPlayerRemovedNotification::class,
@@ -103,12 +108,14 @@ class EventServiceProvider extends ServiceProvider {
 		MatchDeleted::class => [
 			SendMatchDeletedNotification::class,
 			ClearDeletedMatchUsersCaches::class,
-			ClearMatchOverviewCache::class
+			ClearMatchOverviewCache::class,
+			ClearUserPendingRequestCache::class
 		],
 		ManagerLeft::class => [
 			SendManagerLeftNotification::class,
 			ClearUserManagedMatches::class,
 			ClearManagersCache::class,
+			ClearUserPendingRequestCache::class
 		],
 		Deleted::class => [
 			ClearDeletedUserCache::class,
@@ -122,6 +129,7 @@ class EventServiceProvider extends ServiceProvider {
 			ClearUserManagedMatches::class,
 			ClearUserMatchManagerInvitation::class,
 			ClearManagersCache::class,
+			ClearUserPendingRequestCache::class
 		],
 		ManageInvitationRejected::class => [
 			ClearUserMatchManagerInvitation::class,

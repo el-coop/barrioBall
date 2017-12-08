@@ -103,7 +103,7 @@ class UserController extends Controller {
 		$tagType = $request->has('managed') ? 'managed' : 'played';
 
 		return Cache::tags("{$request->user()->username}_{$tagType}")
-			->rememberForever(sha1($request->fullUrl()), function () use ($request) {
+			->remember(sha1($request->fullUrl()),5, function () use ($request) {
 				if ($request->has('managed')) {
 					$matches = $request->user()->managedMatches()->withCount('joinRequests');
 				} else {
