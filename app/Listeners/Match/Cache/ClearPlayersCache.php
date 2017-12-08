@@ -25,6 +25,8 @@ class ClearPlayersCache {
 	 */
 	public function handle($event): void {
 		Cache::forget(sha1("{$event->match->id}_registeredPlayers"));
-		Cache::forget(sha1("{$event->match->id}_isFull"));
+		if($event->match->players != 0){
+			Cache::forget(sha1("{$event->match->id}_isFull"));
+		}
 	}
 }

@@ -25,6 +25,7 @@ return [
     'players' => 'Number of Players',
 	'description' => 'Description',
     'tooEarly' => 'The chosen date is in the past',
-	'timeError' => 'Cant process date and time'
+	'timeError' => 'Cant process date and time',
+	'unlimited' => 'Unlimited'
 
 ];

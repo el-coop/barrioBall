@@ -163,7 +163,7 @@ class Match extends Model {
 	 */
 	public function isFull(): bool {
 		return Cache::rememberForever(sha1("{$this->id}_isFull"), function () {
-			return $this->registeredPlayers()->count() >= $this->players;
+			return $this->players != 0 && $this->registeredPlayers()->count() >= $this->players;
 		});
 	}
 

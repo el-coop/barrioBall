@@ -257,6 +257,15 @@ class MatchTest extends TestCase {
 		$this->assertTrue($this->match->isFull());
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 */
+	public function test_isFull_returns_false_when_its_unlimited(): void {
+		$this->match->players = 0;
+		$this->match->save();
+		$this->assertFalse($this->match->isFull());
+	}
 
 	/**
 	 * @test
