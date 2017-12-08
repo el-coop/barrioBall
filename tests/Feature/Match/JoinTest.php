@@ -8,6 +8,7 @@ use App\Events\Match\PlayerRejected;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
+use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
@@ -75,7 +76,7 @@ class JoinTest extends TestCase {
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
-		->assertSessionHasErrors('ended');
+			->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasPlayer($this->manager));
 
@@ -94,7 +95,7 @@ class JoinTest extends TestCase {
 		$this->match->addPlayer($this->manager);
 		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
-		->assertSessionHasErrors('request');
+			->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(PlayerJoined::class);
 	}
@@ -113,7 +114,7 @@ class JoinTest extends TestCase {
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
-		->assertSessionHasErrors('request');
+			->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(PlayerJoined::class);
 	}
@@ -189,7 +190,7 @@ class JoinTest extends TestCase {
 
 		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
 			->assertStatus(302)
-		->assertSessionHasErrors('ended');
+			->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasJoinRequest($this->manager));
 
@@ -210,7 +211,7 @@ class JoinTest extends TestCase {
 		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		])->assertStatus(302)
-		->assertSessionHasErrors('request');
+			->assertSessionHasErrors('request');
 
 		Event::assertNotDispatched(JoinRequestSent::class);
 	}
@@ -411,7 +412,7 @@ class JoinTest extends TestCase {
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
-		->assertSessionHasErrors('ended');
+			->assertSessionHasErrors('ended');
 
 		$this->assertFalse($this->match->hasPlayer($this->player));
 
@@ -481,7 +482,7 @@ class JoinTest extends TestCase {
 			'user' => $this->player->id,
 			'message' => 'bla',
 		])->assertStatus(302)
-		->assertSessionHasErrors('full');
+			->assertSessionHasErrors('full');
 
 		$this->assertTrue($this->match->hasJoinRequest($this->player));
 		$this->assertFalse($this->match->hasPlayer($this->player));
@@ -529,6 +530,19 @@ class JoinTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
 
 		$listener = new ClearUserJoinRequests();
+		$listener->handle(new JoinRequestSent($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_clears_managers_pending_requests_cache_when_user_sends_join_request(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
 		$listener->handle(new JoinRequestSent($this->match, $this->player));
 	}
 
@@ -603,6 +617,24 @@ class JoinTest extends TestCase {
 		$listener->handle(new playerJoined($this->match, $this->player));
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_clears_managers_pending_requests_cache_when_join_request_accepted(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
+		$listener->handle(new playerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
 	public function test_clears_users_requests_cache_when_user_is_rejected(): void {
 
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
@@ -624,4 +656,16 @@ class JoinTest extends TestCase {
 		$listener->handle(new PlayerRejected($this->match, $this->player));
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_clears_managers_pending_requests_cache_when_join_request_rejected(): void {
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
+		$listener->handle(new PlayerRejected($this->match, $this->player));
+	}
 }

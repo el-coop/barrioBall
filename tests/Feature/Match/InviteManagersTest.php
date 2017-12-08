@@ -8,6 +8,7 @@ use App\Events\Match\ManagersInvited;
 use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
+use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\SendManagerInvites;
 use App\Models\Match;
@@ -288,6 +289,22 @@ class InviteManagersTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
 
 		$listener = new ClearManagersCache;
+		$listener->handle(new ManagerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_match_pending_requests_cache_clears_when_joins_management(): void {
+		$this->match->addManager($this->player);
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_requests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$listener = new ClearUserPendingRequestCache;
 		$listener->handle(new ManagerJoined($this->match, $this->player));
 	}
 
