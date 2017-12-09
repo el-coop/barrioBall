@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Match;
+use Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -23,7 +25,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+		Route::bind('match', function ($value) {
+			return Cache::rememberForever(sha1("match_{$value}"), function() use ($value) {
+				return Match::find($value) ?? abort(404);
+			});
+		});
 
         parent::boot();
     }

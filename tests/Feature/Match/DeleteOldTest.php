@@ -5,6 +5,7 @@ namespace Tests\Feature\Match;
 use App\Events\Match\DeletedOldMatch;
 use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
+use App\Listeners\Match\Cache\ClearMatchCache;
 use App\Listeners\Match\SendOldMatchDeletedMessage;
 use App\Models\Match;
 use App\Models\User;
@@ -113,6 +114,21 @@ class DeleteOldTest extends TestCase {
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		$listener = new ClearMatchOverviewCache;
+		$listener->handle(new DeletedOldMatch($this->match));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group deleteMatch
+	 * @group overviewPage
+	 */
+	public function test_match_cache_cleared_when_oldMatchDeleted_dispatched(): void {
+
+		$this->createManagedMatch('8 days ago');
+		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
+
+		$listener = new ClearMatchCache;
 		$listener->handle(new DeletedOldMatch($this->match));
 	}
 

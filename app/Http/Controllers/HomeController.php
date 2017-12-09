@@ -13,6 +13,7 @@ class HomeController extends Controller {
 	 * @return View
 	 */
 	public function index(Request $request): View {
+
 		$nextMatch = Cache::remember(sha1("{$request->user()->username}_nextMatch"), 5, function () use ($request) {
 			return $request->user()->playedMatches()->where('date_time', '>', Carbon::today('Pacific/Pago_Pago'))->orderBy('date_time')->first();
 		});

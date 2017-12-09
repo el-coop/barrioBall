@@ -26,6 +26,7 @@ use App\Listeners\Admin\Cache\ClearUserOverviewCache;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearManagersCache;
+use App\Listeners\Match\Cache\ClearMatchCache;
 use App\Listeners\Match\Cache\ClearPlayersCache;
 use App\Listeners\Match\Cache\ClearUserJoinRequests;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
@@ -103,13 +104,15 @@ class EventServiceProvider extends ServiceProvider {
 		DeletedOldMatch::class => [
 			SendOldMatchDeletedMessage::class,
 			ClearDeletedMatchUsersCaches::class,
-			ClearMatchOverviewCache::class
+			ClearMatchOverviewCache::class,
+			ClearMatchCache::class
 		],
 		MatchDeleted::class => [
 			SendMatchDeletedNotification::class,
 			ClearDeletedMatchUsersCaches::class,
 			ClearMatchOverviewCache::class,
-			ClearUserPendingRequestCache::class
+			ClearUserPendingRequestCache::class,
+			ClearMatchCache::class
 		],
 		ManagerLeft::class => [
 			SendManagerLeftNotification::class,

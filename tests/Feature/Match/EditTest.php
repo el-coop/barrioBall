@@ -3,12 +3,15 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\Edited;
+use App\Listeners\Match\Cache\ClearMatchCache;
 use App\Listeners\Match\SendEditedNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\EditedNotification;
+use Cache;
 use Carbon\Carbon;
 use Event;
+use Mockery;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -191,4 +194,30 @@ class EditTest extends TestCase {
 		Notification::assertSentTo($this->manager, EditedNotification::class);
 		Notification::assertSentTo($this->player, EditedNotification::class);
 	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group editMatch
+	 */
+	public function test_match_cache_deleted_when_match_edited(): void {
+		Event::fake();
+		Cache::shouldReceive('rememberForever')->twice()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
+
+		$this->actingAs($this->manager)
+			->patch(action('Match\MatchController@edit', $this->match), [
+				'name' => 'Nurs Match',
+				'address' => 'Test Test',
+				'lat' => 0,
+				'lng' => 0,
+				'players' => 8,
+				'date' => Carbon::now()->addDay()->format('d/m/y'),
+				'time' => Carbon::now()->addMinute()->format('H:i'),
+				'description' => 'description',
+			]);
+
+	}
+
 }
