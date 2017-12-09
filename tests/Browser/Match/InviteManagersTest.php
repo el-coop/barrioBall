@@ -9,8 +9,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class InviteManagersTest extends DuskTestCase
-{
+class InviteManagersTest extends DuskTestCase {
 	use DatabaseMigrations;
 
 	protected $match;
@@ -21,7 +20,7 @@ class InviteManagersTest extends DuskTestCase
 		parent::setUp();
 		$this->match = factory(Match::class)->create();
 		$this->player = factory(User::class)->create([
-			'username' => 'player'
+			'username' => 'player',
 		]);
 		$this->manager = factory(User::class)->create();
 		$this->match->addManager($this->manager);
@@ -40,11 +39,14 @@ class InviteManagersTest extends DuskTestCase
 			$browser->loginAs($this->manager)
 				->visit(new ShowPage($this->match))
 				->click('@invite-managers-button')
-				->type('.v-select .form-control','pla')
-				->waitFor('.v-select .dropdown-menu')
+				->waitFor('.v-select .form-control')
+				->type('.v-select .form-control', 'pla')
+				->pause(1000)
+				->type('.v-select .form-control', '')
 				->click('.v-select .dropdown-menu')
+				->pause(1000)
 				->press('.modal-body .btn.btn-info.btn-block > .fa-plus-circle')
-				->assertSee(__('match/show.invitationSent',[],$this->manager->language));
+				->assertSee(__('match/show.invitationSent', [], $this->manager->language));
 		});
 
 		$this->assertTrue($this->player->hasManageInvite($this->match));
@@ -64,7 +66,7 @@ class InviteManagersTest extends DuskTestCase
 			$browser->loginAs($this->player)
 				->visit(new ShowPage($this->match))
 				->click('.btn-group .btn.btn-outline-success')
-				->assertSee(__('match/show.managerJoined',[],$this->player->language));
+				->assertSee(__('match/show.managerJoined', [], $this->player->language));
 		});
 
 		$this->assertTrue($this->match->hasManager($this->player));
@@ -85,7 +87,7 @@ class InviteManagersTest extends DuskTestCase
 			$browser->loginAs($this->player)
 				->visit(new ShowPage($this->match))
 				->click('.btn-group .btn.btn-outline-danger')
-				->assertSee(__('global.success',[],$this->player->language));
+				->assertSee(__('global.success', [], $this->player->language));
 		});
 
 		$this->assertFalse($this->player->hasManageInvite($this->match));

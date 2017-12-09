@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Match;
 
 use App\Events\Match\Edited;
+use Cache;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -69,6 +70,7 @@ class EditMatchRequest extends FormRequest {
 
 		$this->match->save();
 		event(new Edited($this->match));
+		Cache::forget(sha1("match_{$this->match->id}"));
 	}
 
 }
