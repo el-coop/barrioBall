@@ -184,18 +184,9 @@ class User extends Authenticatable {
      * @return mixed
      */
     public function getConversationWith(User $user){
-        /*return $this->conversations()->whereHas('users', function ($query) use ($user){
+        return $this->conversations()->whereHas('users', function ($query) use ($user){
             $query->whereRaw('users.id', $user->id);
-        })->first();*/
-        $conversations = $this->conversations()->with('users')->get();
-        return $conversations->first(function($value) use ($user) {
-            return $value->users->contains(function ($value) use ($user) {
-                return $value->id == $user->id;
-            });
-        });
-    }
+        })->first();
 
-    public function hasUnreadConversations(){
-        return $this->conversations()->wherePivot('read', '=', false)->exists();
     }
 }

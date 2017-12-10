@@ -300,12 +300,6 @@ class UserTest extends TestCase {
 	    $conversation->users()->attach([$this->user->id, $user2->id]);
 	    $convesationFromUser = $this->user->getConversationWith($user2);
 	    $this->assertEquals($conversation->id, $convesationFromUser->id);
-        $conversation2 = new Conversation;
-        $user3 = factory(User::class)->create();
-        $conversation2->save();
-        $conversation2->users()->attach([$this->user->id, $user3->id]);
-        $convesationFromUser2 = $this->user->getConversationWith($user3);
-        $this->assertEquals($conversation2->id, $convesationFromUser2->id);
     }
 
     public function test_getConversationWith_returns_empty_when_no_conversation(): void {
