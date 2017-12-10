@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\User\ResetPassword;
 use Cache;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -161,4 +162,31 @@ class User extends Authenticatable {
 
 		return parent::delete();
 	}
+
+    /**
+     * @return BelongsToMany
+     */
+    public function conversations() : BelongsToMany{
+	    return $this->belongsToMany(Conversation::class)->withPivot('read');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function messages() : HasMany{
+	    return $this->hasMany(Message::class);
+    }
+
+
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    public function getConversationWith(User $user){
+        return $this->conversations()->whereHas('users', function ($query) use ($user){
+            $query->whereRaw('users.id', $user->id);
+        })->first();
+
+    }
 }

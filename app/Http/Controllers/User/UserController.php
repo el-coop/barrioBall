@@ -7,6 +7,7 @@ use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdateLanguageRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUsernameRequest;
+use Auth;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -126,4 +127,9 @@ class UserController extends Controller {
 				return $matches->paginate($request->input('per_page'));
 			});
 	}
+
+    public function showConversations(Request $request){
+        $conversations = $request->user()->conversations()->get();
+        return view('user.conversations.show', compact('conversations'));
+    }
 }

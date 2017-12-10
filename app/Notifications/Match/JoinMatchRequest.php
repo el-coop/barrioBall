@@ -2,8 +2,10 @@
 
 namespace App\Notifications\Match;
 
+use App\Channels\ConversationChannel;
 use App\Mail\MailMessage;
 use App\Models\Match;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -14,7 +16,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 
 	protected $message;
 	protected $match;
-	protected $user;
+	public $user;
 
 	/**
 	 * Create a new notification instance.
@@ -37,7 +39,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 * @return array
 	 */
 	public function via($notifiable): array {
-		return ['mail'];
+		return ['mail', ConversationChannel::class];
 	}
 
 	/**
@@ -77,4 +79,12 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 			//
 		];
 	}
+
+	public function toConversation($notifiable)
+    {
+        $message = new Message;
+        $message->text = $this->message;
+        $message->title = "I want to join " . $this->match->name;
+        return $message;
+    }
 }
