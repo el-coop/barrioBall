@@ -128,6 +128,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 
 		$this->match->players = 0;
+		$this->match->date_time = Carbon::now()->addDay();
 		$this->match->save();
 
 		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
@@ -521,6 +522,7 @@ class JoinTest extends TestCase {
 		Event::fake();
 
 		$this->match->players = 0;
+		$this->match->date_time = Carbon::now()->addDay();
 		$this->match->save();
 		$this->match->addJoinRequest($this->player);
 
@@ -670,8 +672,9 @@ class JoinTest extends TestCase {
 	 * @group match
 	 * @group joinMatch
 	 */
-	public function test_doesnt_clears_match_is_full_cache_when_user_joins_unlimited_player_match(): void {
+	public function test_doesnt_clears_match_is_full_cache_when_user_joins_player_match(): void {
 		$this->match->players = 0;
+		$this->match->date_time = Carbon::now()->addDay();
 		$this->match->save();
 
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
