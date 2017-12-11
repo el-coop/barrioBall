@@ -124,6 +124,28 @@ class JoinTest extends TestCase {
 	 * @group match
 	 * @group joinMatch
 	 */
+	public function test_admin_can_join_unlimited_match(): void {
+		Event::fake();
+
+		$this->match->players = 0;
+		$this->match->save();
+
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@joinMatch', $this->match), [])
+			->assertStatus(302)
+			->assertSessionHas('alert', __('match/show.joined'));
+
+		$this->assertTrue($this->match->hasPlayer($this->manager));
+
+		Event::assertDispatched(PlayerJoined::class, function ($event) {
+			return $event->user->id === $this->manager->id;
+		});
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
 	public function test_sends_email_to_admins_when_user_joins(): void {
 		Notification::fake();
 
@@ -490,6 +512,32 @@ class JoinTest extends TestCase {
 		Event::assertNotDispatched(PlayerJoined::class);
 	}
 
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_manager_can_accept_join_request_to_unlimited_match(): void {
+		Event::fake();
+
+		$this->match->players = 0;
+		$this->match->save();
+		$this->match->addJoinRequest($this->player);
+
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+			'message' => 'bla',
+		])->assertStatus(302)
+			->assertSessionHas('alert', __('match/requests.accepted'));
+
+		$this->assertfalse($this->match->hasJoinRequest($this->player));
+		$this->assertTrue($this->match->hasPlayer($this->player));
+
+		Event::assertDispatched(PlayerJoined::class, function ($event) {
+			return $event->user->id === $this->player->id && $event->message = 'bla';
+		});
+	}
+
 
 	/**
 	 * @test
@@ -612,6 +660,21 @@ class JoinTest extends TestCase {
 
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+
+		$listener = new ClearPlayersCache;
+		$listener->handle(new playerJoined($this->match, $this->player));
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group joinMatch
+	 */
+	public function test_doesnt_clears_match_is_full_cache_when_user_joins_unlimited_player_match(): void {
+		$this->match->players = 0;
+		$this->match->save();
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
 
 		$listener = new ClearPlayersCache;
 		$listener->handle(new playerJoined($this->match, $this->player));

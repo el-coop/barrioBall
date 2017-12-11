@@ -26,5 +26,6 @@ return [
     'players' => 'Numero de Jugadores',
     'description' => 'Descripción',
 	'tooEarly' => 'La fecha elegida esta en el pasado',
-	'timeError' => 'No se puede procesar fecha y hora'
+	'timeError' => 'No se puede procesar fecha y hora',
+	'unlimited' => 'ilimitado'
 ];

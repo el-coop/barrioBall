@@ -20,7 +20,7 @@ class CreateMatchesTable extends Migration
             $table->double('lat',20,16);
             $table->double('lng',20,16);
             $table->boolean('public')->default(true);
-            $table->integer('players');
+            $table->integer('players')->unsigned();
             $table->text('description')->nullable();
             $table->timestamp('date_time');
             $table->timestamps();

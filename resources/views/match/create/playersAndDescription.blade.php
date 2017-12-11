@@ -3,6 +3,7 @@
     <select name="players" id="players"
             class="form-control{{ $errors->has('players') ? ' is-invalid' : '' }}"
             required>
+            <option value="0" {{ old('players', $match->players ?? '') == 0 ? 'selected' : '' }}>@lang('match/create.unlimited')</option>
         @for ($i = 8; $i<23; $i+=2)
             <option value="{{$i}}" {{ old('players', $match->players ?? '') == $i ? 'selected' : '' }}>{{$i}}</option>
         @endfor
