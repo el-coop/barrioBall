@@ -4,6 +4,11 @@
             <a class="nav-link {{ Request::is('search') ? 'active' : '' }}"
                href="{{ action('Match\MatchController@showSearch') }}">@lang('navbar.searchLink')</a>
         </li>
+        <li class="nav-item {{ Request::is('contact') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ action('HomeController@showContactUs') }}">
+                @lang('navbar.contactLink')
+            </a>
+        </li>
     @endslot
     @slot('navbarRight')
         <li class="nav-item">

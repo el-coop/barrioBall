@@ -38,4 +38,12 @@ class HomeController extends Controller {
 		return view('tech.tech');
 	}
 
+
+	/**
+	 * @return View
+	 */
+	public function showContactUs(): View {
+		return view('contact.contact');
+	}
+
 }
