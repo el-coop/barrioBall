@@ -37,7 +37,7 @@ class EditMatchRequest extends FormRequest {
 			'description' => 'required|min:3',
 			'lat' => 'required|numeric',
 			'lng' => 'required|numeric',
-			'players' => 'required|int|min:8|max:22',
+			'players' => 'required|int|min:0|max:22',
 			'date' => 'required|date_format:d/m/y',
 			'time' => 'required|date_format:H:i',
 		];
