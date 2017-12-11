@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Match;
 
+use Cache;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -56,5 +57,6 @@ class RepeatMatchRequest extends FormRequest {
 	public function commit(): void {
 		$this->match->date_time = $this->dateTime;
 		$this->match->save();
+		Cache::forget(sha1("match_{$this->match->id}"));
 	}
 }

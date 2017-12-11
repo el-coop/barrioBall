@@ -4,7 +4,9 @@ namespace Tests\Feature\Match;
 
 use App\Models\Match;
 use App\Models\User;
+use Cache;
 use Carbon\Carbon;
+use Mockery;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -110,6 +112,11 @@ class RepeatMatchTest extends TestCase {
 	 * @group repeatMatch
 	 */
 	public function test_can_repeat_match(): void {
+
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
+
 		$date = Carbon::now()->addDay();
 		$this->actingAs($this->manager)->patch(action('Match\MatchController@repeatMatch', $this->match), [
 			'date' => $date->format('d/m/y'),
