@@ -33,6 +33,9 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="{{ action('User\UserController@show') }}">@lang('navbar.profileLink')</a>
+                <a class="dropdown-item" href="{{ action('HomeController@showContactUs') }}">
+                    @lang('navbar.contactLink')
+                </a>
                 <div class="dropdown-divider"></div>
                 <form method="post" action="{{ action("Auth\LoginController@logout") }}">
                     {{ csrf_field() }}

@@ -18,6 +18,8 @@ foreach (File::allFiles(__DIR__ . "/web") as $routeFile) {
 
 Route::get('/', 'HomeController@welcome');
 Route::get('/tech', 'HomeController@tech');
+Route::get('/contact', 'HomeController@showContactUs');
+Route::post('/contact', 'HomeController@contactUs');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 Route::post('jserror', 'ErrorController@store');
 

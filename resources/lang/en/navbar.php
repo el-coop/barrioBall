@@ -11,6 +11,7 @@ return [
 	'loginLink' => 'Log In',
 	'registerLink' => 'Register',
 	'adminOverview' => 'Administrator Overview',
+	'contactLink' => 'Contact Us',
 
 
 ];

@@ -2,6 +2,7 @@
 @import "logo";
 @import "hero";
 @import "transitions";
+@import "inputs";
 
 .opaque {
 	opacity: 0.2;
@@ -9,4 +10,13 @@
 
 .footer {
 	background-color: darken($body-bg, 4%);
+}
+
+.overlay {
+	opacity: 0.8;
+	position: absolute;
+	height: 110%;
+	width: 100%;
+	background-color: $body-bg;
+	z-index: 100;
 }

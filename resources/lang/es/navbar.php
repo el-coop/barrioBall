@@ -11,5 +11,5 @@ return [
 	'loginLink' => 'Iniciar Sesión',
 	'registerLink' => 'Registrar',
 	'adminOverview' => 'Vista Administrador',
-
+	'contactLink' => 'Contáctenos',
 ];

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Misc\ContactRequest;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller {
@@ -36,6 +38,22 @@ class HomeController extends Controller {
 	 */
 	public function tech(): View {
 		return view('tech.tech');
+	}
+
+
+	/**
+	 * @return View
+	 */
+	public function showContactUs(): View {
+		return view('contact.contact');
+	}
+
+	/**
+	 * @return View
+	 */
+	public function contactUs(ContactRequest $request): RedirectResponse {
+		$request->commit();
+		return back()->with('alert',__('global.success'));
 	}
 
 }
