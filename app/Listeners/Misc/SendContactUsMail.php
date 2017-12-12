@@ -26,8 +26,8 @@ class SendContactUsMail implements ShouldQueue {
 	 *
 	 * @return void
 	 */
-	public function handle(ContactUsSent $event) {
+	public function handle(ContactUsSent $event): void {
 		Mail::to(env('MAIL_CONTACT_EMAIL', config('mail.from.address')))
-			->send(new ContactUs($event->email, __("global/contact.{$event->subject}",[],Admin::first()->user->language), $event->message));
+			->send(new ContactUs($event->email, __("global/contact.{$event->subject}", [], Admin::first()->user->language), $event->message));
 	}
 }

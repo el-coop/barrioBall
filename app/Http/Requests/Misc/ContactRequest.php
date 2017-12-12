@@ -11,7 +11,7 @@ class ContactRequest extends FormRequest {
 	 *
 	 * @return bool
 	 */
-	public function authorize() {
+	public function authorize(): bool {
 		return true;
 	}
 
@@ -20,7 +20,7 @@ class ContactRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
-	public function rules() {
+	public function rules(): array {
 		return [
 			'email' => 'required|email',
 			'subject' => 'required|string|in:help,feedback,coding,translation,contribute,other',
