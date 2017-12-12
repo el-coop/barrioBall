@@ -19,5 +19,7 @@ return [
                    with you.',
 	'languagesText' => 'Our team speaks more languages than a Fly Emirates flight attendant, try English, Spanish, Arabic,
                    Hebrew, Portuguese or Dutch.<br>You can also try other languages, maybe we would pick it up by then.',
+	'sending' => 'Sending',
+	'sendAgain' => 'Click here to send again.',
 
 ];

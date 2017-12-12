@@ -56,7 +56,8 @@
 			submitClicked(){
 			    if(this.autoSubmit){
 			    	this.submit();
-                } else{
+					this.$emit('submit-clicked');
+				} else{
 					this.$emit('submit-clicked');
                 }
             },

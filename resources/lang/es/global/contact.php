@@ -17,5 +17,7 @@ return [
 	'addressText' => 'Estamos ubicados en lugares aleatorios en momentos aleatorios, pero invítanos y tal vez vengamos a jugar fútbol con usted.',
 	'languagesText' => 'Nuestro equipo habla más idiomas que una azafata de Fly Emirates, prueba inglés, español, árabe,
                    Hebreo, portugués o holandés. <br> También puedes probar otros idiomas, tal vez lo recojamos para entonces.',
+	'sending' => 'Enviando',
+	'sendAgain' => 'Haga clic aquí para enviar de nuevo.',
 
 ];
