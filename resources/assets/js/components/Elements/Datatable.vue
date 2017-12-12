@@ -3,22 +3,23 @@
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="form-group" :class="{ 'form-inline' : inlineForms}">
-                    <label>Search:&nbsp;&nbsp;</label>
+                    <label>{{ translations.search}}:</label>
                     <div class="input-group">
                         <input type="text" class="form-control" v-model="filter" @keyup.enter="updateParams">
                         <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" @click="updateParams">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
+                            <button class="btn btn-primary" type="button" @click="updateParams">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-6">
                 <div class="form-group float-md-right" :class="{ 'form-inline' : inlineForms}">
-                    <label>Per Page:&nbsp;&nbsp;</label>
+                    <label>{{ translations.perPage}}:</label>
                     <select v-model="perPage" class="form-control" @change="updateParams">
-                        <option v-for="perPageOption in perPageOptions" :value="perPageOption">{{perPageOption}}</option>
+                        <option v-for="perPageOption in perPageOptions" :value="perPageOption">{{perPageOption}}
+                        </option>
                     </select>
                 </div>
             </div>
@@ -36,6 +37,7 @@
                               :per-page="perPage"
                               :append-params="params"
                               :sort-order="sortOrder"
+                              :no-data-template="translations.noData"
                               @vuetable:pagination-data="paginationData"
                               @vuetable:loading='tableLoading'
                               @vuetable:loaded='tableLoaded'>
@@ -52,8 +54,13 @@
             </div>
         </div>
         <div class="row text-center text-md-left">
-            <div class="col-12"  :class="{ 'col-md-6' : inlineForms}">
-                <vuetable-pagination-info ref="paginationInfo">
+            <div class="col-12" :class="{ 'col-md-6' : inlineForms}">
+                <vuetable-pagination-info ref="paginationInfo"
+                                          :info-template="translations.infoTemplate"
+                                          :no-data-template="translations.infoNoData"
+                                        :css="{
+                                            'infoClass' : 'pb-3'
+                                        }">
                 </vuetable-pagination-info>
             </div>
             <div class="col-12 d-flex d-md-block" :class="{ 'col-md-6' : inlineForms}">
@@ -68,7 +75,17 @@
 </template>
 
 <script>
-	export default{
+
+	import Vuetable from 'vuetable-2/src/components/Vuetable.vue';
+	import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo.vue';
+	import VuetablePagination from './DatatablePagination';
+
+	export default {
+		components: {
+			Vuetable,
+			VuetablePaginationInfo,
+			VuetablePagination
+		},
 		props: {
 			url: {
 				type: String,
@@ -90,30 +107,30 @@
 				type: String,
 				default: 'fa-trash'
 			},
-            inlineForms: {
+			inlineForms: {
 				default: true
-            },
-            perPageOptions: {
+			},
+			perPageOptions: {
 				type: Array,
-                default(){
-					return [10,20,50,100];
+				default() {
+					return [10, 20, 50, 100];
 				}
-            },
-            extraParams: {
+			},
+			extraParams: {
 				type: Object,
-                default(){
+				default() {
 					return {};
-                }
-            },
-            sortOrder: {
+				}
+			},
+			sortOrder: {
 				type: Array,
-                default(){
+				default() {
 					return []
-                }
-            }
+				}
+			}
 		},
 
-		data(){
+		data() {
 			return {
 				loading: false,
 				css: {
@@ -137,37 +154,59 @@
 				},
 				params: this.extraParams,
 				filter: null,
-				perPage: this.perPageOptions[0]
+				perPage: this.perPageOptions[0],
+			}
+		},
+
+		computed: {
+			translations() {
+				if (window.Laravel.locale == 'es') {
+					return {
+						'noData': 'Datos no disponibles',
+						'search': 'Pesquisa',
+						'perPage': 'Por Página',
+						'infoTemplate': 'Mostrando de {from} a {to} de {total} artículos',
+						'infoNoData': 'Sin datos relevantes'
+					}
+				}
+
+				return {
+					'noData': 'No Data Available',
+					'search': 'Search',
+					'perPage': 'Per Page',
+					'infoTemplate': 'Displaying {from} to {to} of {total} items',
+					'infoNoData': 'No relevant data'
+				};
 			}
 		},
 
 		methods: {
-			updateParams(){
+			updateParams() {
 				this.params.filter = this.filter;
 				Vue.nextTick(() => {
 					this.$refs.table.refresh()
 				})
 			},
-			paginationData(paginationData){
+			paginationData(paginationData) {
 				this.$refs.pagination.setPaginationData(paginationData);
 				this.$refs.paginationInfo.setPaginationData(paginationData);
 			},
-			changePage(page){
+			changePage(page) {
 				this.$refs.table.changePage(page);
 			},
-			cellClicked (data, field, event) {
+			cellClicked(data, field, event) {
 				if (!this.detailRow) {
 					return;
 				}
 				this.$refs.table.toggleDetailRow(data.id)
 			},
-			tableLoading(){
+			tableLoading() {
 				this.css.tableClass = 'table table-striped table-bordered loading';
 			},
-			tableLoaded(){
+			tableLoaded() {
 				this.css.tableClass = 'table table-striped table-bordered';
 			},
-			onAction (action, data, index) {
+			onAction(action, data, index) {
 				this.$emit(action, {
 					data,
 					index

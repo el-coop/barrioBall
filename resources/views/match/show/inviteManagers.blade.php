@@ -11,7 +11,9 @@
                               label="name"
                               action="{{ action('Match\MatchUserController@searchUsers', $match) }}"
                               placeholder="@lang('match/show.invitePlaceholder')"
-                ></multi-select>
+                              no-options="@lang('global.noOptions')"
+                >
+                </multi-select>
             </div>
             <div class="form-group">
                 <button class="btn btn-info btn-block"><i

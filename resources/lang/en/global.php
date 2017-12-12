@@ -16,6 +16,7 @@ return [
 
     'currentLanguage' => 'English',
 	'error' => 'Error',
-	'success' => 'Success'
+	'success' => 'Success',
+	'noOptions' => 'No matching options.'
 
 ];
