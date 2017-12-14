@@ -36,7 +36,7 @@ class DeleteTest extends DuskTestCase
 				->visit(new ShowPage($this->match))
 				->click('@delete-button')
 				->click('.swal2-confirm')
-				->assertPathIs(action('HomeController@welcome',[],false));
+				->assertPathIs(action('HomeController@index',[],false));
 		});
 
 		$this->assertFalse($this->match->exists());
