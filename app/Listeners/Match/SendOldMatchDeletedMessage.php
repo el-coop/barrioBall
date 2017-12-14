@@ -25,6 +25,6 @@ class SendOldMatchDeletedMessage {
 	 * @return void
 	 */
 	public function handle(DeletedOldMatch $event): void {
-		$event->match->managers->each->notify(new OldMatchDeleted($event->match));
+		$event->managers->each->notify(new OldMatchDeleted($event->match));
 	}
 }
