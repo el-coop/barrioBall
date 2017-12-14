@@ -29,14 +29,14 @@ class DeleteTest extends DuskTestCase
 	 * @group match
 	 * @group showMatch
 	 */
-	public function test_manager_can_delete_player(): void {
+	public function test_manager_can_delete_match(): void {
 
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->manager)
 				->visit(new ShowPage($this->match))
 				->click('@delete-button')
 				->click('.swal2-confirm')
-				->assertPathIs(action('HomeController@welcome',[],false));
+				->assertPathIs(action('HomeController@index',[],false));
 		});
 
 		$this->assertFalse($this->match->exists());
