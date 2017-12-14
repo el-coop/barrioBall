@@ -74,7 +74,7 @@ class DeleteOldTest extends TestCase {
 		$this->createManagedMatch();
 
 		$listener = new SendOldMatchDeletedMessage;
-		$listener->handle(new DeletedOldMatch($this->match));
+		$listener->handle(new DeletedOldMatch($this->match->managers,$this->match->registeredPlayers,$this->match->name,$this->match->id));
 
 		Notification::assertSentTo($this->user, OldMatchDeleted::class);
 	}
@@ -98,7 +98,7 @@ class DeleteOldTest extends TestCase {
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		$listener = new ClearDeletedMatchUsersCaches;
-		$listener->handle(new DeletedOldMatch($this->match));
+		$listener->handle(new DeletedOldMatch($this->match->managers,$this->match->registeredPlayers,$this->match->name,$this->match->id));
 	}
 
 	/**
@@ -114,7 +114,7 @@ class DeleteOldTest extends TestCase {
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		$listener = new ClearMatchOverviewCache;
-		$listener->handle(new DeletedOldMatch($this->match));
+		$listener->handle(new DeletedOldMatch($this->match->managers,$this->match->registeredPlayers,$this->match->name,$this->match->id));
 	}
 
 	/**
@@ -129,7 +129,7 @@ class DeleteOldTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
 
 		$listener = new ClearMatchCache;
-		$listener->handle(new DeletedOldMatch($this->match));
+		$listener->handle(new DeletedOldMatch($this->match->managers,$this->match->registeredPlayers,$this->match->name,$this->match->id));
 	}
 
 }

@@ -10,18 +10,41 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\Collection;
 
 class DeletedOldMatch {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
+
+	/**
+	 * @var Collection
+	 */
+	public $managers;
+	/**
+	 * @var string
+	 */
 	public $match;
+	/**
+	 * @var Collection
+	 */
+	public $players;
+	/**
+	 * @var int
+	 */
+	public $id;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param Match $match
+	 * @param Collection $managers
+	 * @param Collection $players
+	 * @param string $match
+	 * @param int $id
 	 */
-	public function __construct(Match $match) {
+	public function __construct(Collection $managers, Collection $players, string $match, int $id) {
+		$this->managers = $managers;
 		$this->match = $match;
+		$this->players = $players;
+		$this->id = $id;
 	}
 
 	/**
