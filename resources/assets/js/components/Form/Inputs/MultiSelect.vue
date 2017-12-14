@@ -9,6 +9,7 @@
                   label="username"
                   ref="select"
         >
+            <span slot="no-options" v-text="noOptions"></span>
         </v-select>
         <input v-for="val in values" type="checkbox" :value="val.id" :name="inputName" checked>
     </span>
@@ -20,16 +21,17 @@
 </style>
 <script>
 	import vSelect from 'vue-select'
-    export default{
+
+	export default {
 
 		components: {
-		    vSelect
-        },
+			vSelect
+		},
 
 		props: {
 			name: {
 				type: String,
-                required: true,
+				required: true,
 			},
 			action: {
 				type: String,
@@ -37,28 +39,32 @@
 			},
 			placeholder: {
 				type: String,
-			}
+			},
+            noOptions: {
+				type: String,
+                default: 'No matching options.'
+            }
 		},
 		data() {
 			return {
 				values: [],
 				options: [],
-                inputName: this.name + '[]'
+				inputName: this.name + '[]'
 			}
 		},
 
-        methods:{
-			getOptions(query,loading){
+		methods: {
+			getOptions(query, loading) {
 				loading(true);
-                axios.get(this.action + "?query=" + query).then(response => {
-                	this.options = response.data;
-                    loading(false);
+				axios.get(this.action + "?query=" + query).then(response => {
+					this.options = response.data;
+					loading(false);
 				}, error => {
-                	this.options = [];
-                	loading(false);
+					this.options = [];
+					loading(false);
 				});
-            }
-        },
+			}
+		},
 
 	}
 </script>
