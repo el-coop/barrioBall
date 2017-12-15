@@ -45,7 +45,7 @@ class DeleteOldMatches extends Command {
 			$id = $match->id;
 			$name = $match->name;
 			$match->delete();
-			event(new DeletedOldMatch($managers,$players,name,id));
+			event(new DeletedOldMatch($managers,$players,$name,$id));
 		}
 	}
 }
