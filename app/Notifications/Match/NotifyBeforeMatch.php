@@ -48,7 +48,9 @@ class NotifyBeforeMatch extends Notification implements ShouldQueue {
 			->line(__('mail/notifyBeforeMatch.body', [
 				'url' => $this->match->url,
 				'match' => $this->match->name,
+				'dateTime' => "{$this->match->date} {$this->match->time}"
 			], $notifiable->language))
+			->action(__('mail/notifyBeforeMatch.review', [], $notifiable->language), $this->match->url)
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}
 
