@@ -7,7 +7,7 @@ use App\Notifications\Match\ManageInvitation;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendManagerInvites {
+class SendManagerInvites implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *

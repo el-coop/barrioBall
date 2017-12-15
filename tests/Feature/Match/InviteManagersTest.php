@@ -8,7 +8,7 @@ use App\Events\Match\ManagersInvited;
 use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Listeners\Match\Cache\ClearUserMatchManagerInvitation;
-use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
+use App\Listeners\Match\Cache\ClearManagersPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\SendManagerInvites;
 use App\Models\Match;
@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Notifications\Match\ManageInvitation;
 use Cache;
 use Event;
+use Mockery;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -91,7 +92,6 @@ class InviteManagersTest extends TestCase {
 	 * @group inviteManagers
 	 * @group management
 	 */
-
 	public function test_cant_invite_already_invited_user(): void {
 		Event::fake();
 		$this->match->inviteManager($this->player);
@@ -106,36 +106,26 @@ class InviteManagersTest extends TestCase {
 	}
 
 
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_manager_invitation_message_sent(): void {
+	public function test_handles_managers_invitation(): void {
 		Notification::fake();
-
-		$listener = new SendManagerInvites;
-		$listener->handle(new ManagersInvited($this->match, collect([$this->player, $this->extraPlayer])));
-
-		Notification::assertSentTo($this->player, ManageInvitation::class);
-		Notification::assertSentTo($this->extraPlayer, ManageInvitation::class);
-
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_manager_invitation_cache_clears(): void {
-
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(false);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->extraPlayer->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(false);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(false);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->extraPlayer->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(false);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->extraPlayer->id}_{$this->match->id}_managerInvitation"));
 
-		$listener = new ClearUsersMatchManagerInvitations;
-		$listener->handle(new ManagersInvited($this->match, collect([$this->player, $this->extraPlayer])));
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@inviteManagers', $this->match), [
+			'invite_managers' => [$this->player->id, $this->extraPlayer->id],
+		])->assertSessionHas('alert', __('match/show.invitationSent', [], $this->manager->language));
+
+		$this->assertTrue($this->match->hasManagerInvite($this->player));
+		$this->assertTrue($this->match->hasManagerInvite($this->extraPlayer));
+
+		Notification::assertSentTo($this->player, ManageInvitation::class);
+		Notification::assertSentTo($this->extraPlayer, ManageInvitation::class);
 	}
 
 
@@ -194,6 +184,36 @@ class InviteManagersTest extends TestCase {
 		});
 	}
 
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_handles_manager_joining(): void {
+
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_hasManagedMatches"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_requests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$this->match->inviteManager($this->player);
+
+		$this->actingAs($this->player)
+			->post(action('Match\MatchUserController@joinAsManager', $this->match))
+			->assertSessionHas('alert', __('match/show.managerJoined'));
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+		$this->assertTrue($this->match->hasManager($this->player));
+
+	}
+
 	/**
 	 * @test
 	 * @group match
@@ -244,69 +264,6 @@ class InviteManagersTest extends TestCase {
 		Event::assertNotDispatched(ManagerJoined::class);
 	}
 
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_user_managed_matches_cache_clears_when_joins_management(): void {
-
-		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_managed")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_hasManagedMatches"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"));
-
-
-		$listener = new ClearUserManagedMatches;
-		$listener->handle(new ManagerJoined($this->match, $this->player));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_user_manage_invitation_cache_clears_when_joins_management(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
-
-
-		$listener = new ClearUserMatchManagerInvitation;
-		$listener->handle(new ManagerJoined($this->match, $this->player));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_match_manager_cache_clears_when_joins_management(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
-
-		$listener = new ClearManagersCache;
-		$listener->handle(new ManagerJoined($this->match, $this->player));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_match_pending_requests_cache_clears_when_joins_management(): void {
-		$this->match->addManager($this->player);
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_requests"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
-
-		$listener = new ClearUserPendingRequestCache;
-		$listener->handle(new ManagerJoined($this->match, $this->player));
-	}
 
 	/**
 	 * @test
@@ -328,6 +285,28 @@ class InviteManagersTest extends TestCase {
 		Event::assertDispatched(ManageInvitationRejected::class, function ($event) {
 			return $event->match->id == $this->match->id && $event->user->id == $this->player->id;
 		});
+	}
+
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_handles_join_management_reject(): void {
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
+
+		$this->match->inviteManager($this->player);
+
+		$this->actingAs($this->player)
+			->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
+			->assertSessionHas('alert', __('global.success'));
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+		$this->assertFalse($this->match->hasManager($this->player));
+
 	}
 
 
@@ -375,26 +354,10 @@ class InviteManagersTest extends TestCase {
 	public function test_guest_cant_reject_join_management(): void {
 		Event::fake();
 
-
 		$this->delete(action('Match\MatchUserController@rejectManageInvitation', $this->match))
 			->assertRedirect(action('Auth\LoginController@showLoginForm'));
 
 		Event::assertNotDispatched(ManageInvitationRejected::class);
 	}
 
-
-	/**
-	 * @test
-	 * @group match
-	 * @group inviteManagers
-	 * @group management
-	 */
-	public function test_user_manage_invitation_cache_clears_when_refuses_to_join_management(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
-
-
-		$listener = new ClearUserMatchManagerInvitation;
-		$listener->handle(new ManageInvitationRejected($this->match, $this->player));
-	}
 }

@@ -37,6 +37,6 @@ class DeleteMatchRequest extends FormRequest {
 	public function commit(): void {
 		$this->match->load('managers','registeredPlayers');
 		$this->match->delete();
-		event(new MatchDeleted($this->match, $this->user()));
+		event(new MatchDeleted($this->match->id,$this->match->name, $this->match->registeredPlayers, $this->match->managers, $this->user()));
 	}
 }

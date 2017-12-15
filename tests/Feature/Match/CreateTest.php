@@ -3,12 +3,11 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\Created;
-use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
-use App\Listeners\Match\Cache\ClearUserManagedMatches;
 use App\Models\Match;
 use App\Models\User;
 use Cache;
 use Carbon\Carbon;
+use DB;
 use Event;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -123,36 +122,36 @@ class CreateTest extends TestCase {
 
 	/**
 	 * @test
-	 * @group match
 	 * @group create
+	 * @group match
 	 */
-	public function test_clears_users_match_cache_when_match_created(): void {
-		$match = factory(Match::class)->create();
-		$match->addManager($this->user);
-
+	public function test_handles_create_match_event(): void {
+		$id = DB::select("show table status like 'matches'")[0]->Auto_increment;
 		Cache::shouldReceive('tags')->once()->with("{$this->user->username}_managed")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->username}_hasManagedMatches"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->id}_{$match->id}_manager"));
-
-		$listener = new ClearUserManagedMatches;
-		$listener->handle(new Created($match));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_admin_match_cache_cleared_when_matchDeleted_dispatched(): void {
-		$match = factory(Match::class)->create();
-
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->user->id}_{$id}_manager"));
 		Cache::shouldReceive('tags')->once()->with("admin_matches")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
-		$listener = new ClearMatchOverviewCache;
-		$listener->handle(new Created($match));
+
+		$time = Carbon::now();
+		$this->actingAs($this->user)->post(action('Match\MatchController@create'), [
+			'name' => 'Nurs Match',
+			'address' => 'Test Test',
+			'lat' => 0,
+			'lng' => 0,
+			'players' => 8,
+			'date' => $time->addDay()->format('d/m/y'),
+			'time' => $time->format('H:i'),
+			'description' => 'description',
+		])->assertRedirect(Match::first()->url);
+		$this->assertArraySubset([
+			'name' => 'Nurs Match',
+			'address' => 'Test Test',
+		], Match::first()->toArray());
+		$this->assertEquals($time->format('d/m/y H:i'), Match::first()->date_time->format('d/m/y H:i'));
+
 	}
 }

@@ -40,8 +40,12 @@ class DeleteOldMatches extends Command {
 		$matches = Match::with('managers', 'registeredPlayers')->where('date_time', '<', new Carbon("7 days ago"))->get();
 
 		foreach ($matches as $match) {
+			$players = $match->registeredPlayers;
+			$managers = $match->managers;
+			$id = $match->id;
+			$name = $match->name;
 			$match->delete();
-			event(new DeletedOldMatch($match->managers,$match->registeredPlayers,$match->name,$match->id));
+			event(new DeletedOldMatch($managers,$players,name,id));
 		}
 	}
 }

@@ -3,8 +3,6 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\Edited;
-use App\Listeners\Match\Cache\ClearMatchCache;
-use App\Listeners\Match\SendEditedNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\EditedNotification;
@@ -184,28 +182,13 @@ class EditTest extends TestCase {
 	 * @group match
 	 * @group editMatch
 	 */
-	public function test_notification_dispached_on_event(): void {
-		$this->match->addPlayer($this->player);
+	public function test_handles_match_editing(): void {
 		Notification::fake();
 
-		$listener = new SendEditedNotification;
-		$listener->handle(new Edited($this->match));
-
-		Notification::assertSentTo($this->manager, EditedNotification::class);
-		Notification::assertSentTo($this->player, EditedNotification::class);
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group editMatch
-	 */
-	public function test_match_cache_deleted_when_match_edited(): void {
-		Event::fake();
 		Cache::shouldReceive('rememberForever')->twice()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
 		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
-
+		$this->match->addPlayer($this->player);
 		$this->actingAs($this->manager)
 			->patch(action('Match\MatchController@edit', $this->match), [
 				'name' => 'Nurs Match',
@@ -218,6 +201,8 @@ class EditTest extends TestCase {
 				'description' => 'description',
 			]);
 
+		Notification::assertSentTo($this->manager, EditedNotification::class);
+		Notification::assertSentTo($this->player, EditedNotification::class);
 	}
 
 }

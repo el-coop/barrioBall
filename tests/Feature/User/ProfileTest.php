@@ -262,7 +262,7 @@ class ProfileTest extends TestCase {
 	 * @group user
 	 * @group profile
 	 */
-	public function refreshes_user_matches_caches_on_delete(): void {
+	public function test_handles_deleted_user(): void {
 		$match = factory(Match::class)->create();
 		$matchWithRequest = factory(Match::class)->create();
 		$match->addPlayer($this->user);
@@ -272,24 +272,13 @@ class ProfileTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$matchWithRequest->id}_joinRequests"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$match->id}_managers"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$match->id}_registeredPlayers"));
-
-		$listener = new ClearDeletedUserCache;
-		$listener->handle(new Deleted($this->user));
-
-	}
-
-
-	/**
-	 * @test
-	 * @group user
-	 * @group profile
-	 * @group adminOverview
-	 */
-	public function test_clears_admin_users_cache_on_delete(): void {
 		Cache::shouldReceive('tags')->once()->with("admin_users")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
-		$listener = new ClearUserOverviewCache();
-		$listener->handle(new Deleted($this->user));
+		$this->actingAs($this->user)->delete(action('User\UserController@delete'));
+		$this->assertEquals(0, User::count());
+		$this->assertEquals(0, Player::count());
+
 	}
+
 }

@@ -29,7 +29,7 @@ class DeleteTest extends DuskTestCase
 	 * @group match
 	 * @group showMatch
 	 */
-	public function test_manager_can_delete_player(): void {
+	public function test_manager_can_delete_match(): void {
 
 		$this->browse(function (Browser $browser) {
 			$browser->loginAs($this->manager)

@@ -7,7 +7,7 @@ use App\Notifications\Match\EditedNotification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendEditedNotification {
+class SendEditedNotification implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *
