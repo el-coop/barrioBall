@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EditedNotification extends Notification {
+class EditedNotification extends Notification implements ShouldQueue {
 	use Queueable;
 	/**
 	 * @var Match
@@ -51,7 +51,7 @@ class EditedNotification extends Notification {
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/matchEdited.body', [
-				'match' => $this->match->name
+				'match' => $this->match->name,
 			], $notifiable->language))
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));
 	}

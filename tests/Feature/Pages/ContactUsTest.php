@@ -87,7 +87,7 @@ class ContactUsTest extends TestCase {
 			'message' => 'This is a test! does it work?',
 		])->assertSessionHas('alert', __('global.success'));
 
-		Mail::assertSent(ContactUs::class, function ($message) {
+		Mail::assertQueued(ContactUs::class, function ($message) {
 			return $message->sender == 'test@best.com' && $message->content == 'This is a test! does it work?' && $message->topic == __('global/contact.other', [], $this->admin->language);
 		});
 	}

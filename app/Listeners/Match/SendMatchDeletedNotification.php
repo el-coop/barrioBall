@@ -7,7 +7,7 @@ use App\Notifications\Match\Deleted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendMatchDeletedNotification {
+class SendMatchDeletedNotification implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *
@@ -25,6 +25,6 @@ class SendMatchDeletedNotification {
 	 * @return void
 	 */
 	public function handle(MatchDeleted $event): void {
-		$event->match->registeredPlayers->concat($event->match->managers)->unique('id')->each->notify(new Deleted($event->match, $event->user));
+		$event->players->concat($event->managers)->unique('id')->each->notify(new Deleted($event->name, $event->user));
 	}
 }

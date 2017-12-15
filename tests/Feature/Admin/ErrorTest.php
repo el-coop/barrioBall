@@ -4,7 +4,6 @@ namespace Tests\Feature\Admin;
 
 use App\Events\Admin\Error\Created;
 use App\Events\Admin\Error\Resolved;
-use App\Listeners\Admin\Cache\ClearErrorsOverviewCache;
 use App\Models\Admin;
 use App\Models\Errors\Error;
 use App\Models\Errors\JsError;
@@ -69,10 +68,7 @@ class ErrorTest extends TestCase {
 	 * @group error
 	 */
 	public function test_logs_js_errors(): void {
-
 		Event::fake();
-		Cache::shouldReceive('tags')->once()->with("JSError")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
 		$this->post(action('ErrorController@store'), [
 			'page' => "/",
@@ -104,29 +100,38 @@ class ErrorTest extends TestCase {
 
 	/**
 	 * @test
+	 * @group global
 	 * @group error
-	 * @group adminOverview
 	 */
-	public function test_clears_admin_errors_cache_on_created(): void {
-		$error = factory(Error::class)->create();
+	public function test_handles_error_created_event(): void {
+		Cache::shouldReceive('tags')->once()->with("JSError")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 		Cache::shouldReceive('tags')->once()->with("admin_errors")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 
-		$listener = new ClearErrorsOverviewCache;
-		$listener->handle(new Created($error));
-	}
+		$this->post(action('ErrorController@store'), [
+			'page' => "/",
+			'message' => "message",
+			'source' => "source",
+			'lineNo' => "1",
+			'trace' => "[]",
+			'userAgent' => 'firefox',
+			'vm' => "vm",
+		], ['HTTP_X-Requested-With' => 'XMLHttpRequest'])
+			->assertJson([
+				'status' => 'Success',
+			]);
 
-	/**
-	 * @test
-	 * @group error
-	 * @group adminOverview
-	 */
-	public function test_clears_admin_errors_cache_on_resolved(): void {
-		Cache::shouldReceive('tags')->once()->with("admin_errors")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		$listener = new ClearErrorsOverviewCache;
-		$listener->handle(new Resolved());
+		$error = Error::first();
+		$this->assertArraySubset([
+			'page' => "/",
+			'errorable_type' => 'JSError',
+		], $error->toArray());
+		$this->assertArraySubset([
+			'class' => 'message',
+			'user_agent' => 'firefox',
+			'vm' => 'vm',
+		], $error->errorable->toArray());
 	}
 
 	/**
@@ -175,6 +180,33 @@ class ErrorTest extends TestCase {
 		Event::assertDispatched(Resolved::class);
 
 	}
+
+	/**
+	 * @test
+	 * @group error
+	 * @group adminOverview
+	 */
+	public function test_clears_admin_errors_cache_on_resolved(): void {
+		Cache::shouldReceive('tags')->once()->with('PHPError')->andReturn(\Mockery::self())->getMock()->shouldReceive('flush')->once();
+		Cache::shouldReceive('tags')->once()->with("admin_errors")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		$error = factory(Error::class)->create([
+			'errorable_id' => function () {
+				return factory(PhpError::class)->create()->id;
+			},
+			'errorable_type' => 'PHPError',
+		]);
+
+		$this->actingAs($this->admin)->delete(action('Admin\ErrorController@delete', $error))
+			->assertJson([
+				'status' => 'Success',
+			]);
+
+		$this->assertEquals(0, Error::count());
+		$this->assertEquals(0, PhpError::count());
+	}
+
 
 	/**
 	 * @test

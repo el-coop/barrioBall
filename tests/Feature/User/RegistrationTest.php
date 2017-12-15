@@ -70,19 +70,24 @@ class RegistrationTest extends TestCase {
 		Event::assertDispatched(Created::class);
 	}
 
+
 	/**
 	 * @test
 	 * @group user
 	 * @group registration
-	 * @group adminOverview
 	 */
-	public function test_clears_admin_users_cache_on_register(): void {
-		$user = factory(User::class)->create();
+	public function test_handles_user_registration(): void {
 		Cache::shouldReceive('tags')->once()->with("admin_users")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		$this->post(action('Auth\RegisterController@register'), [
+			'username' => 'test',
+			'email' => 'test@test.com',
+			'password' => 'password',
+			'password_confirmation' => 'password',
+			'language' => 'en',
+		])->assertRedirect(action('HomeController@index'));
 
-		$listener = new ClearUserOverviewCache();
-		$listener->handle(new Created($user));
+		$this->assertAuthenticated();
 	}
 
 	/**

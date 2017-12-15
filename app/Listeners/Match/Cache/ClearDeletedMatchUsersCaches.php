@@ -25,14 +25,26 @@ class ClearDeletedMatchUsersCaches {
 	 * @return void
 	 */
 	public function handle($event): void {
-		$event->match->registeredPlayers->each(function ($player) {
-			Cache::tags("{$player->username}_played")->flush();
-			Cache::forget(sha1("{$player->username}_nextMatch"));
-		});
+		if(isset($event->match)){
+			$event->match->registeredPlayers->each(function ($player) {
+				Cache::tags("{$player->username}_played")->flush();
+				Cache::forget(sha1("{$player->username}_nextMatch"));
+			});
 
-		$event->match->managers->each(function ($manager) {
-			Cache::tags("{$manager->username}_managed")->flush();
-			Cache::forget(sha1("{$manager->username}_hasManagedMatches"));
-		});
+			$event->match->managers->each(function ($manager) {
+				Cache::tags("{$manager->username}_managed")->flush();
+				Cache::forget(sha1("{$manager->username}_hasManagedMatches"));
+			});
+		} else {
+			$event->players->each(function ($player) {
+				Cache::tags("{$player->username}_played")->flush();
+				Cache::forget(sha1("{$player->username}_nextMatch"));
+			});
+
+			$event->managers->each(function ($manager) {
+				Cache::tags("{$manager->username}_managed")->flush();
+				Cache::forget(sha1("{$manager->username}_hasManagedMatches"));
+			});
+		}
 	}
 }

@@ -6,13 +6,14 @@ use App\Events\Match\Created;
 use App\Events\Match\ManagerLeft;
 use App\Listeners\Match\Cache\ClearManagersCache;
 use App\Listeners\Match\Cache\ClearUserManagedMatches;
-use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
+use App\Listeners\Match\Cache\ClearManagersPendingRequestCache;
 use App\Listeners\Match\SendManagerLeftNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\ManagerLeft as ManagerLeftNotification;
 use Cache;
 use Event;
+use Mockery;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -57,14 +58,27 @@ class LeaveManagementTest extends TestCase {
 	 * @group leaveManagement
 	 * @group management
 	 */
-	public function test_manager_left_notification_sent(): void {
+	public function test_handles_user_leave_management(): void {
 		Notification::fake();
 
-		$listener = new SendManagerLeftNotification();
-		$listener->handle(new ManagerLeft($this->match, $this->player));
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
 
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_hasManagedMatches"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_requests"));
+
+		$this->match->addManager($this->player);
+		$this->actingAs($this->player)
+			->delete(action('Match\MatchUserController@stopManaging', $this->match))
+			->assertSessionHas('alert', __('match/show.managementLeft'));
+		$this->assertFalse($this->match->hasManager($this->player));
 		Notification::assertSentTo($this->manager, ManagerLeftNotification::class);
 	}
+
 
 	/**
 	 * @test
@@ -109,48 +123,4 @@ class LeaveManagementTest extends TestCase {
 		Event::assertNotDispatched(ManagerLeft::class);
 	}
 
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveManagement
-	 * @group management
-	 */
-	public function test_clears_users_managed_match_cache_when_leaves_management(): void {
-
-		Cache::shouldReceive('tags')->once()->with("{$this->manager->username}_managed")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_hasManagedMatches"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"));
-
-		$listener = new ClearUserManagedMatches();
-		$listener->handle(new ManagerLeft($this->match,$this->manager));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveManagement
-	 * @group management
-	 */
-	public function test_clears_match_managers_cache_when_leaves_management(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
-
-		$listener = new ClearManagersCache();
-		$listener->handle(new ManagerLeft($this->match,$this->manager));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveManagement
-	 * @group management
-	 */
-	public function test_clears_managers_pending_requests_cache_when_leaves_management(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
-
-		$listener = new ClearUserPendingRequestCache;
-		$listener->handle(new ManagerLeft($this->match, $this->manager));
-	}
 }

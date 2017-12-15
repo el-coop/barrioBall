@@ -3,10 +3,6 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\DeletedOldMatch;
-use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
-use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
-use App\Listeners\Match\Cache\ClearMatchCache;
-use App\Listeners\Match\SendOldMatchDeletedMessage;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\OldMatchDeleted;
@@ -69,23 +65,8 @@ class DeleteOldTest extends TestCase {
 	 * @group deleteOld
 	 * @group match
 	 */
-	public function test_sends_old_match_deleted_notification(): void {
+	public function test_handles_match_deleted(): void {
 		Notification::fake();
-		$this->createManagedMatch();
-
-		$listener = new SendOldMatchDeletedMessage;
-		$listener->handle(new DeletedOldMatch($this->match));
-
-		Notification::assertSentTo($this->user, OldMatchDeleted::class);
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteOld
-	 */
-	public function test_cache_cleared_when_matchDeleted_dispatched(): void {
-
 		$this->createManagedMatch('8 days ago');
 		$this->match->addPlayer($player = factory(User::class)->create());
 
@@ -96,40 +77,15 @@ class DeleteOldTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$player->username}_nextMatch"));
 		Cache::shouldReceive('tags')->once()->with("{$player->username}_played")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		$listener = new ClearDeletedMatchUsersCaches;
-		$listener->handle(new DeletedOldMatch($this->match));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_admin_match_cache_cleared_when_matchDeleted_dispatched(): void {
-
-		$this->createManagedMatch('8 days ago');
 		Cache::shouldReceive('tags')->once()->with("admin_matches")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		$listener = new ClearMatchOverviewCache;
-		$listener->handle(new DeletedOldMatch($this->match));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_match_cache_cleared_when_oldMatchDeleted_dispatched(): void {
-
-		$this->createManagedMatch('8 days ago');
 		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
 
-		$listener = new ClearMatchCache;
-		$listener->handle(new DeletedOldMatch($this->match));
+
+		$this->artisan('match:deleteOld');
+		$this->assertEquals(0, Match::count());
+
+		Notification::assertSentTo($this->user, OldMatchDeleted::class);
 	}
 
 }

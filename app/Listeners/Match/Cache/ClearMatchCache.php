@@ -26,6 +26,10 @@ class ClearMatchCache
      */
     public function handle($event)
     {
-		Cache::forget(sha1("match_{$event->match->id}"));
+    	if(isset($event->match)){
+			Cache::forget(sha1("match_{$event->match->id}"));
+		} else {
+			Cache::forget(sha1("match_{$event->id}"));
+		}
     }
 }

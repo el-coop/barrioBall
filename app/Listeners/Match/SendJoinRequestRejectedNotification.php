@@ -7,7 +7,7 @@ use App\Notifications\Match\JoinRequestRejected;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendJoinRequestRejectedNotification {
+class SendJoinRequestRejectedNotification implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *

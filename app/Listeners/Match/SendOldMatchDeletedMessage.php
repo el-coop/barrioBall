@@ -7,7 +7,7 @@ use App\Notifications\Match\OldMatchDeleted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendOldMatchDeletedMessage {
+class SendOldMatchDeletedMessage implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *
@@ -25,6 +25,6 @@ class SendOldMatchDeletedMessage {
 	 * @return void
 	 */
 	public function handle(DeletedOldMatch $event): void {
-		$event->match->managers->each->notify(new OldMatchDeleted($event->match));
+		$event->managers->each->notify(new OldMatchDeleted($event->name));
 	}
 }

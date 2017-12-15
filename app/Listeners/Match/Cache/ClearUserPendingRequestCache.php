@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Match\Cache;
 
+use App\Events\Match\ManagerLeft;
 use Cache;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,10 +25,8 @@ class ClearUserPendingRequestCache
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(ManagerLeft $event)
     {
-		$event->match->managers->each(function ($manager) {
-			Cache::forget(sha1("{$manager->username}_requests"));
-		});
-	}
+			Cache::forget(sha1("{$event->user->username}_requests"));
+    }
 }
