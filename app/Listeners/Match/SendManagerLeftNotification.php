@@ -7,7 +7,7 @@ use App\Notifications\Match\ManagerLeft as Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendManagerLeftNotification {
+class SendManagerLeftNotification implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *

@@ -7,7 +7,7 @@ use App\Notifications\Match\PlayerRemoved as Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendPlayerRemovedNotification {
+class SendPlayerRemovedNotification implements ShouldQueue {
 	/**
 	 * Create the event listener.
 	 *

@@ -12,6 +12,7 @@ use App\Notifications\Match\PlayerLeft as PlayerLeftNotification;
 use Cache;
 use Carbon\Carbon;
 use Event;
+use Mockery;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,11 +44,40 @@ class LeaveTest extends TestCase {
 
 		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertSessionHas('alert', __('match/show.left'));
-		Cache::flush();
-		$this->assertFalse($this->manager->inMatch($this->match));
+		$this->assertFalse($this->match->hasPlayer($this->manager));
 		Event::assertDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
+
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group leaveMatch
+	 */
+	public function test_handles_player_left(): void {
+		Notification::fake();
+
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_player"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_nextMatch"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_player"));
+
+		Cache::shouldReceive('tags')->once()->with("{$this->manager->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+
+		$this->match->addPlayer($this->manager);
+
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@leaveMatch', $this->match))
+			->assertSessionHas('alert', __('match/show.left'));
+		$this->assertFalse($this->match->hasPlayer($this->manager));
+
+		Notification::assertSentTo($this->manager, PlayerLeftNotification::class);
 
 	}
 
@@ -65,7 +95,7 @@ class LeaveTest extends TestCase {
 		$this->actingAs($this->manager)
 			->delete(action('Match\MatchUserController@leaveMatch', $this->match))
 			->assertStatus(302)
-		->assertSessionHasErrors('ended');
+			->assertSessionHasErrors('ended');
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
@@ -88,22 +118,6 @@ class LeaveTest extends TestCase {
 		});
 	}
 
-
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveMatch
-	 * @group management
-	 */
-	public function test_player_left_notification_sent(): void {
-		Notification::fake();
-
-		$listener = new SendPlayerLeftNotification;
-		$listener->handle(new PlayerLeft($this->match, $this->player));
-
-		Notification::assertSentTo($this->manager, PlayerLeftNotification::class);
-	}
-
 	/**
 	 * @test
 	 * @group match
@@ -117,35 +131,5 @@ class LeaveTest extends TestCase {
 		Event::assertNotDispatched(PlayerLeft::class, function ($event) {
 			return $event->user->id == $this->manager->id;
 		});
-	}
-
-
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveMatch
-	 */
-	public function test_clears_users_match_cache_when_user_leaves(): void {
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_player"));
-
-		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		$listener = new ClearUserPlayedMatches();
-		$listener->handle(new PlayerLeft($this->match, $this->player));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group leaveMatch
-	 */
-	public function test_clears_match_players_cache_when_user_leaves(): void {
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
-
-		$listener = new ClearPlayersCache();
-		$listener->handle(new PlayerLeft($this->match, $this->player));
 	}
 }

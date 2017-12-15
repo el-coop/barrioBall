@@ -18,10 +18,10 @@ class Deleted extends Notification implements ShouldQueue {
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @param Match $match
-	 * @param User $user
+	 * @param string $match
+	 * @param User $deleter
 	 */
-	public function __construct(Match $match, User $deleter) {
+	public function __construct(string $match, User $deleter) {
 		$this->match = $match;
 		$this->deleter = $deleter;
 	}
@@ -47,12 +47,12 @@ class Deleted extends Notification implements ShouldQueue {
 	public function toMail($notifiable): MailMessage {
 		return (new MailMessage)
 			->subject(__('mail/matchDeleted.subject', [
-				'match' => $this->match->name,
+				'match' => $this->match,
 			], $notifiable->language))
 			->language($notifiable->language)
 			->greeting(__('mail/global.hello', [], $notifiable->language) . ',')
 			->line(__('mail/matchDeleted.body', [
-				'match' => $this->match->name,
+				'match' => $this->match,
 				'name' => $this->deleter->username,
 			], $notifiable->language))
 			->salutation(__('mail/global.dontReply', [], $notifiable->language));

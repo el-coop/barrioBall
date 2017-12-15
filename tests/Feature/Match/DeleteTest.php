@@ -3,16 +3,12 @@
 namespace Tests\Feature\Match;
 
 use App\Events\Match\MatchDeleted;
-use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
-use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
-use App\Listeners\Match\Cache\ClearMatchCache;
-use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
-use App\Listeners\Match\SendMatchDeletedNotification;
 use App\Models\Match;
 use App\Models\User;
 use App\Notifications\Match\Deleted;
 use Cache;
 use Event;
+use Mockery;
 use Notification;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,24 +52,10 @@ class DeleteTest extends TestCase {
 	 * @group match
 	 * @group deleteMatch
 	 */
-	public function test_notification_sent_when_matchDeleted_dispatched(): void {
+	public function test_handles_deleted_match(): void {
 		Notification::fake();
-
-		$listener = new SendMatchDeletedNotification;
-		$listener->handle(new MatchDeleted($this->match, $this->manager));
-
-		Notification::assertSentTo($this->manager, Deleted::class);
-		Notification::assertSentTo($this->player, Deleted::class);
-	}
-
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 */
-	public function test_cache_cleared_when_matchDeleted_dispatched(): void {
-
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->manager->id}_{$this->match->id}_manager"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
 		Cache::shouldReceive('tags')->once()->with("{$this->manager->username}_managed")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_hasManagedMatches"));
@@ -81,10 +63,19 @@ class DeleteTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
 		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('tags')->once()->with("admin_matches")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
 
-		$listener = new ClearDeletedMatchUsersCaches;
-		$listener->handle(new MatchDeleted($this->match, $this->manager));
+		$this->actingAs($this->manager)
+			->delete(action('Match\MatchController@delete', $this->match));
+
+		$this->assertDatabaseMissing('matches', ['id' => $this->match->id]);
+		Notification::assertSentTo($this->manager, Deleted::class);
+		Notification::assertSentTo($this->player, Deleted::class);
 	}
+
 
 	/**
 	 * @test
@@ -97,48 +88,5 @@ class DeleteTest extends TestCase {
 			->assertStatus(403);
 
 		Event::assertNotDispatched(MatchDeleted::class);
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_admin_match_cache_cleared_when_matchDeleted_dispatched(): void {
-
-		Cache::shouldReceive('tags')->once()->with("admin_matches")
-			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
-
-		$listener = new ClearMatchOverviewCache;
-		$listener->handle(new MatchDeleted($this->match, $this->manager));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_admin_pending_requests_cache_cleared_when_matchDeleted_dispatched(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
-
-		$listener = new ClearUserPendingRequestCache;
-		$listener->handle(new MatchDeleted($this->match, $this->manager));
-	}
-
-	/**
-	 * @test
-	 * @group match
-	 * @group deleteMatch
-	 * @group overviewPage
-	 */
-	public function test_match_cache_cleared_when_matchDeleted_dispatched(): void {
-
-		Cache::shouldReceive('forget')->once()->with(sha1("match_{$this->match->id}"));
-
-		$listener = new ClearMatchCache;
-		$listener->handle(new MatchDeleted($this->match, $this->manager));
 	}
 }

@@ -11,7 +11,12 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css')
+	.autoload({
+		jquery: ['$', 'jQuery', 'jquery', 'window.jQuery'],
+		'popper.js/dist/umd/popper.js': ['Popper']
+	})
+	.extract(['vue', 'jquery', 'popper.js', 'bootstrap', 'axios', 'moment', 'leaflet/dist/leaflet', 'leaflet-control-geocoder/dist/Control.Geocoder'])
+	.sass('resources/assets/sass/app.scss', 'public/css')
 	.version()
 	.sourceMaps(true)
 	.browserSync('barrioball.dev');

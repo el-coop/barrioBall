@@ -40,7 +40,7 @@ class AcceptJoinRequest extends FormRequest {
 	public function withValidator(Validator $validator): void {
 		$this->user = User::find($this->input('user'));
 		$validator->after(function ($validator) {
-			if (!$this->match->hasJoinRequest($this->user)) {
+			if (!$this->user->sentRequest($this->match)) {
 				$validator->errors()->add('request', __('match/requests.requestNotExistent'));
 			}
 			if ($this->match->isFull()) {

@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactUs extends Mailable {
+class ContactUs extends Mailable implements ShouldQueue {
 	use Queueable, SerializesModels;
 
 	/**
@@ -30,7 +30,7 @@ class ContactUs extends Mailable {
 	 * @param string $subject
 	 * @param string $message
 	 */
-	public function __construct(string $sender ,string $subject, string $message) {
+	public function __construct(string $sender, string $subject, string $message) {
 		//
 		$this->topic = $subject;
 		$this->content = $message;
