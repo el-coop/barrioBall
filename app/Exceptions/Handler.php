@@ -54,6 +54,7 @@ class Handler extends ExceptionHandler {
 	 * @param Exception $exception
 	 */
 	protected function LogException(Exception $exception): void {
+		dump($exception);
 		$request = request();
 		$error = new Error;
 		$phpError = new PhpError;
