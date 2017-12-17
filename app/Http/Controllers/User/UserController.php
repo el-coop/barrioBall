@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Requests\User\DeleteUserRequest;
+use App\Http\Requests\User\GetConversationMessagesRequest;
 use App\Http\Requests\User\UpdateEmailRequest;
 use App\Http\Requests\User\UpdateLanguageRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUsernameRequest;
+use App\Models\Conversation;
 use Auth;
 use Cache;
 use Carbon\Carbon;
@@ -129,7 +131,11 @@ class UserController extends Controller {
 	}
 
     public function showConversations(Request $request){
-        $conversations = $request->user()->conversations()->get();
+        $conversations = $request->user()->conversations()->with(['users', 'messages'])->get();
         return view('user.conversations.show', compact('conversations'));
+    }
+
+    public function getConversationMessages(Conversation $conversation){
+        return $conversation->messages;
     }
 }
