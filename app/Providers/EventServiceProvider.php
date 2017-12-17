@@ -36,6 +36,7 @@ use App\Listeners\Match\Cache\ClearManagersPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUserPendingRequestCache;
 use App\Listeners\Match\Cache\ClearUsersMatchManagerInvitations;
 use App\Listeners\Match\Cache\ClearUserPlayedMatches;
+use App\Listeners\Match\ConfirmNewManagersRequest;
 use App\Listeners\Match\SendEditedNotification;
 use App\Listeners\Match\SendJoinRequestAcceptedNotification;
 use App\Listeners\Match\SendJoinRequestNotification;
@@ -135,7 +136,8 @@ class EventServiceProvider extends ServiceProvider {
 			ClearUserManagedMatches::class,
 			ClearUserMatchManagerInvitation::class,
 			ClearManagersCache::class,
-			ClearManagersPendingRequestCache::class,
+			ClearUserPendingRequestCache::class,
+			ConfirmNewManagersRequest::class,
 		],
 		ManageInvitationRejected::class => [
 			ClearUserMatchManagerInvitation::class,

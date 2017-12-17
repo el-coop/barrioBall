@@ -194,6 +194,7 @@ class InviteManagersTest extends TestCase {
 	public function test_handles_manager_joining(): void {
 
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"), Mockery::any())->andReturn(false);
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
 		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_managed")
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
@@ -202,7 +203,6 @@ class InviteManagersTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_requests"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
 
 		$this->match->inviteManager($this->player);
 
@@ -211,6 +211,48 @@ class InviteManagersTest extends TestCase {
 			->assertSessionHas('alert', __('match/show.managerJoined'));
 		$this->assertFalse($this->match->hasManagerInvite($this->player));
 		$this->assertTrue($this->match->hasManager($this->player));
+		$this->assertFalse($this->match->hasPlayer($this->player));
+
+	}
+
+	/**
+	 * @test
+	 * @group match
+	 * @group inviteManagers
+	 * @group management
+	 */
+	public function test_handles_manager_joining_when_has_join_request(): void {
+
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"), Mockery::any())->andReturn(true);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->match->id}_isFull"), Mockery::any())->andReturn(false);
+		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_managed")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('tags')->once()->with("{$this->player->username}_played")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_nextMatch"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_player"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->username}_hasManagedMatches"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_manager"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_managers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_joinRequests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
+		Cache::shouldReceive('forget')->twice()->with(sha1("{$this->player->username}_requests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+
+		$this->match->inviteManager($this->player);
+		$this->match->addJoinRequest($this->player);
+
+		$this->actingAs($this->player)
+			->post(action('Match\MatchUserController@joinAsManager', $this->match))
+			->assertSessionHas('alert', __('match/show.managerJoined'));
+		$this->assertFalse($this->match->hasManagerInvite($this->player));
+		$this->assertTrue($this->match->hasManager($this->player));
+		$this->assertTrue($this->match->hasPlayer($this->player));
 
 	}
 
