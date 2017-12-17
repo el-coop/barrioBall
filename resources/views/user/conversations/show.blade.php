@@ -3,10 +3,22 @@
 
 @section('content')
     @parent
-    @foreach($conversations as $conversation)
-        @foreach($conversation->messages as $message)
-            <li>{{$message->user->username}}</li>
-            <li>{{$message->text}}</li>
-        @endforeach
-    @endforeach
+    <conversations-page inline-template
+                        :current-user="{{$user->id}}">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <ul class="list-group">
+                        <conversation-button v-for="conversation in conversations" :conversation="conversation"
+                                             :current-user="currentUser" @conversation-change="changeConversation">
+                        </conversation-button>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    <conversation :conversation="currentConversation">
+                    </conversation>
+                </div>
+            </div>
+        </div>
+    </conversations-page>
 @endsection
