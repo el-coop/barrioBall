@@ -24,6 +24,7 @@ use App\Events\User\Deleted;
 use App\Listeners\Admin\Cache\ClearErrorsOverviewCache;
 use App\Listeners\Admin\Cache\ClearMatchOverviewCache;
 use App\Listeners\Admin\Cache\ClearUserOverviewCache;
+use App\Events\User\MessageSent;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearManagersCache;
@@ -50,6 +51,7 @@ use App\Listeners\Match\SendPlayerRemovedNotification;
 use App\Listeners\Match\SendUserJoinedNotification;
 use App\Listeners\Misc\SendContactUsMail;
 use App\Listeners\User\ClearDeletedUserCache;
+use App\Listeners\User\GetMessage;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider {
@@ -151,6 +153,9 @@ class EventServiceProvider extends ServiceProvider {
 		ContactUsSent::class => [
 			SendContactUsMail::class,
 		],
+        MessageSent::class => [
+            GetMessage::class
+        ]
 	];
 
 	/**
