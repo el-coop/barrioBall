@@ -12,8 +12,8 @@
             <a class="nav-link {{ Request::is('search') ? 'active' : '' }}"
                href="{{ action('Match\MatchController@showSearch') }}">@lang('navbar.searchLink')</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-lin" href="{{ action('User\UserController@showConversations') }}" >Conversations</a>
+        <li class="nav-item {{ Request::is('user/conversations') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ action('User\UserController@showConversations') }}" >Conversations</a>
         </li>
         @can('admin', \App\Models\Admin::class)
             <li class="nav-item dropdown">
