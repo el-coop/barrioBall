@@ -4,6 +4,7 @@ namespace App\Notifications\User;
 
 use App\Channels\ConversationChannel;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,14 +14,18 @@ class Conversation extends Notification
 {
     use Queueable;
 
+    protected $message;
+    public $user;
+
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param User $user
+     * @param string $message
      */
-    public function __construct()
-    {
-        //
+    public function __construct(User $user, string $message) {
+        $this->message = $message;
+        $this->user = $user;
     }
 
     /**
@@ -60,7 +65,6 @@ class Conversation extends Notification
     public function toConversation($notifiable){
         $message = new Message;
         $message->text = $this->message;
-        $message->title = "I want to join " . $this->match->name;
         return $message;
     }
 }

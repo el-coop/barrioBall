@@ -1,11 +1,6 @@
 <template>
-        <button @click="select" class="list-group-item list-group-item-action" type="button" :class="{unread: !isRead, active: isActive}">{{user}}</button>
+        <button @click="select" class="list-group-item list-group-item-action" type="button" :class="{'btn-warning': !read, active: isActive}">{{user}}</button>
 </template>
-<style scoped>
-    .unread {
-        background-color: #e6ffff;
-    }
-</style>
 <script>
     export default {
         props: {
@@ -16,7 +11,17 @@
             currentUser: {
                 type: Number,
                 required: true
+            },
+            current: {
+                type: Number,
+                required: true
             }
+        },
+
+        data(){
+          return {
+              read: this.conversation.pivot.read
+          }
         },
 
         computed: {
@@ -25,20 +30,17 @@
                     return user.id != this.currentUser;
                 })[0].username;
             },
-            isRead() {
-                return this.conversation.pivot.read;
-            },
-
             isActive() {
-                return true;
-            }
+                return this.conversation.id == this.current;
+            },
         },
 
         methods: {
             select() {
-                this.$emit('conversationChange', this.conversation.id)
+                this.read = true;
+                this.$emit('conversation-change', this.conversation.id);
             }
-        },
+        }
 
     }
 </script>

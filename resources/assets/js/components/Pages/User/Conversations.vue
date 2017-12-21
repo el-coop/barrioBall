@@ -12,14 +12,31 @@
 
         data() {
             return {
-                currentConversation: 1
+                currentConversation: 0,
+                sender: ''
             }
         },
 
+
+
         methods: {
             changeConversation(id) {
-                console.log(id)
+                this.currentConversation = id;
+                let conversation = this.conversations.filter((conversation) => {
+                    return conversation.id == this.currentConversation
+                })[0];
+                this.sender = conversation.users.filter((user) => {
+                    return user.id != this.currentUser;
+                })[0].username;
             }
-        }
+        },
+
+
+        mounted(){
+            this.currentConversation = this.conversations[0].id;
+            this.sender =  this.conversations[0].users.filter((user) => {
+                return user.id != this.currentUser;
+            })[0].username;
+        },
     }
 </script>
