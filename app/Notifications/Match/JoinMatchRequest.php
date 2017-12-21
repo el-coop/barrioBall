@@ -84,7 +84,6 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
     {
         $message = new Message;
         $message->text = $this->message;
-        $message->title = "I want to join " . $this->match->name;
         return $message;
     }
 }

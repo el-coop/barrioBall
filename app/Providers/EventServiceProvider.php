@@ -17,6 +17,7 @@ use App\Events\Match\PlayerLeft;
 use App\Events\Match\PlayerRejected;
 use App\Events\Match\PlayerJoined;
 use App\Events\User\Deleted;
+use App\Events\User\MessageSent;
 use App\Listeners\Match\Cache\ClearDeletedMatchUsersCaches;
 use App\Listeners\Match\Cache\ClearJoinRequestsCache;
 use App\Listeners\Match\Cache\ClearManagersCache;
@@ -38,6 +39,7 @@ use App\Listeners\Match\SendPlayerLeftNotification;
 use App\Listeners\Match\SendPlayerRemovedNotification;
 use App\Listeners\Match\SendUserJoinedNotification;
 use App\Listeners\User\ClearDeletedUserCache;
+use App\Listeners\User\GetMessage;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider {
@@ -113,6 +115,9 @@ class EventServiceProvider extends ServiceProvider {
 		Edited::class => [
 			SendEditedNotification::class,
 		],
+        MessageSent::class => [
+            GetMessage::class
+        ]
 	];
 
 	/**
