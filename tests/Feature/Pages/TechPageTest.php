@@ -14,6 +14,6 @@ class TechPageTest extends TestCase {
 	public function test_tech_page_is_accessible(): void {
 		$this->get(action('HomeController@tech'))
 			->assertStatus(200)
-			->assertSee(__('global/tech.title'));
+			->assertSee('<title>' . __('global/welcome.tech'));
 	}
 }
