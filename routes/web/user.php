@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Conversation;
+use App\Models\User;
+
 Route::group(['prefix' => 'user','middleware' => 'auth','namespace' => 'User'],function(){
 	Route::get('/', 'UserController@show');
 	Route::delete('/', 'UserController@delete');
@@ -11,5 +14,4 @@ Route::group(['prefix' => 'user','middleware' => 'auth','namespace' => 'User'],f
     Route::get('/conversations', 'UserController@showConversations');
     Route::get('/conversations/{conversation}', 'UserController@getConversationMessages');
     Route::post('/conversations/{conversation}', 'UserController@sendMessage');
-
 });

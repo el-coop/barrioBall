@@ -1,3 +1,13 @@
+<style scoped>
+    .list-group {
+        height: 60vh;
+        overflow-y: auto;
+    }
+    .container {
+
+    }
+</style>
+
 <script>
     export default {
         props: {
