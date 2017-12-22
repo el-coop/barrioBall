@@ -4,35 +4,48 @@
 	text-transform: uppercase;
 }
 
-.about-content {
-	font-size: 3.75 * $font-size-base;
-	font-style: italic;
-	line-height: 0.7 * $line-height-base;
-	color: $gray-600;
+.about-content-wrapper {
 
-	.blockquote {
-		color: $gray-500;
-		font-size: 3 * $font-size-base;
-		& > .blockquote-footer {
-			color: $gray-400;
-		}
-	}
+	height: 470px;
 
 	@media #{$under-wide-screen}{
-		font-size: 3.25 * $font-size-base;
+		height: 465px;
 	}
 
 	@media #{$under-desktop}{
-		font-size: 2.5 * $font-size-base;
+		height: auto;
+	}
+
+	.about-content {
+		font-size: 3.75 * $font-size-base;
+		font-style: italic;
+		line-height: 0.7 * $line-height-base;
+		color: $gray-600;
+
 		.blockquote {
-			font-size: 2 * $font-size-base;
+			color: $gray-500;
+			font-size: 3 * $font-size-base;
+			& > .blockquote-footer {
+				color: $gray-400;
+			}
 		}
-	}
 
-	@media #{$under-tablet}{
-		font-size: 1.5 * $font-size-base;
-	}
+		@media #{$under-wide-screen}{
+			font-size: 3.25 * $font-size-base;
+		}
 
+		@media #{$under-desktop}{
+			font-size: 2.5 * $font-size-base;
+			.blockquote {
+				font-size: 2 * $font-size-base;
+			}
+		}
+
+		@media #{$under-tablet}{
+			font-size: 1.5 * $font-size-base;
+		}
+
+	}
 }
 
 .about-choices {

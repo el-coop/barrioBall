@@ -12,47 +12,36 @@
     <about-page inline-template>
         <div class="container my-5">
             <div class="row">
-                <div class="col-12 col-lg-8 ox-hidden">
+                <div class="col-12 col-lg-8 ox-hidden about-content-wrapper">
                     <transition name="slide-fade">
                         <div v-if="active == 'barrioball'" key="barrioball">
                             <h5 class="about-header text-center text-lg-left">Barrio Ball</h5>
                             <p class="about-content">
-                                Barrio-Ball is a tool for the pick-up football community. We aim to connect players who
-                                want to play, with groups who are missing players.
+                                @lang('global/about.barrioBallText')
                             </p>
                         </div>
                         <div v-if="active == 1" key="1">
-                            <h5 class="about-header text-center text-lg-left">The Team</h5>
-                            <p class="about-content">
-                                Cras mattis eros ac purus blandit consectetur. Sed in lectus nulla. Nullam vehicula sem
-                                sed justo laoreet, non dapibus elit faucibus
-                            </p>
+                            <h5 class="about-header text-center text-lg-left">@lang('global/about.coopTitle')</h5>
+                            <div class="about-content">
+                                @lang('global/about.coopText')
+                            </div>
                         </div>
                         <div v-if="active == 2" key="2">
-                            <h5 class="about-header text-center text-lg-left">Privacy</h5>
-                            <p class="about-content">
-                                We believe in complete privacy for all our users. We only save the necessary data to
-                                function. We also avoid services and code that would track our users.
-                            </p>
+                            <h5 class="about-header text-center text-lg-left">@lang('global/about.privacyTitle')</h5>
+                            <div class="about-content">
+                                @lang('global/about.privacyText')
+                            </div>
                         </div>
                         <div v-if="active == 3" key="3">
-                            <h5 class="about-header text-center text-lg-left">Open Source</h5>
-                            <p class="about-content">
-                                All our code is open source and released under GPL-3.0 licence. We believe that open
-                                source code provides opportunities to share and learn.
-                            </p>
+                            <h5 class="about-header text-center text-lg-left">@lang('global/about.openSourceTitle')</h5>
+                            <div class="about-content">
+                                @lang('global/about.openSourceText')
+                            </div>
                         </div>
                         <div v-if="active == 4" key="4">
-                            <h5 class="about-header text-center text-lg-left">Football</h5>
+                            <h5 class="about-header text-center text-lg-left">@lang('global/about.footballTitle')</h5>
                             <div class="about-content">
-                                <blockquote class="blockquote">
-                                    <p class="mb-0">Football, bloody hell!</p>
-                                    <footer class="blockquote-footer">Sir Alex Ferguson</footer>
-                                </blockquote>
-                                <p>
-                                    No matter their level, no matter if they get paid for it, Every day millions of people
-                                    experience that.
-                                </p>
+                                @lang('global/about.footballText')
                             </div>
                         </div>
                     </transition>
@@ -69,7 +58,7 @@
                                 <i class="fa fa-4x fa-users m-auto"></i>
                             </div>
                             <div class="mt-1 text-center about-title">
-                                The Team
+                                @lang('global/about.coopButton')
                             </div>
                         </div>
                         <div class="col-3 col-lg-6 py-3 circle-container">
@@ -77,7 +66,7 @@
                                 <i class="fa fa-4x fa-user-secret"></i>
                             </div>
                             <div class="mt-1 text-center about-title">
-                                Privacy
+                                @lang('global/about.privacyTitle')
                             </div>
                         </div>
                         <div class="col-3 col-lg-6 py-3 circle-container">
@@ -85,7 +74,7 @@
                                 <i class="fa fa-4x fa-folder-open m-auto"></i>
                             </div>
                             <div class="mt-1 text-center about-title">
-                                Open Source
+                                @lang('global/about.openSourceTitle')
                             </div>
                         </div>
                         <div class="col-3 col-lg-6 py-3 circle-container">
@@ -93,7 +82,7 @@
                                 <i class="fa fa-4x fa-futbol-o m-auto"></i>
                             </div>
                             <div class="mt-1 text-center about-title">
-                                Football
+                                @lang('global/about.footballTitle')
                             </div>
                         </div>
                         <button class="btn btn-logo smaller-hover d-none d-lg-block"
