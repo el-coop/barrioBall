@@ -134,18 +134,22 @@ class UserController extends Controller {
 
     public function showConversations(Request $request){
 
+
         $conversations = $request->user()->conversations()->with(['users', 'messages'])->get();
-        $conversations->first()->markAsRead($request->user());
+        if ($conversations->first()){
+            $conversations->first()->markAsRead($request->user());
+        }
         return view('user.conversations.show', compact('conversations'));
     }
 
     public function getConversationMessages(Conversation $conversation, Request $request){
-        $conversation->markAsRead($request->user());
-        return $conversation->messages;
+            $conversation->markAsRead($request->user());
+            return $conversation->messages;
     }
 
     public function sendMessage(Conversation $conversation, SendMessageRequest $request){
         $request->commit();
+
         return $request;
     }
 }

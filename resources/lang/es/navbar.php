@@ -10,5 +10,7 @@ return [
 	'logoutLink' => 'Cerrar Sesión',
 	'loginLink' => 'Iniciar Sesión',
 	'registerLink' => 'Registrar',
+    'conversationsLink' => 'Conversaciones'
+
 
 ];
