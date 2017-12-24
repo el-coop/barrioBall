@@ -20,5 +20,5 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/rentCollectionEmail', function(Request $request){
     $request = $request->all();
-   Mail::to($request->email, $request->host)->send(new InvoiceMail($request['url']));
+   Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
 });
