@@ -1,2 +1,2 @@
 <h3>Rent Collection mail</h3>
-<a href="{{$lease}}">Pay rent here</a>
+<a href="{{$url}}">Pay rent here</a>

@@ -18,10 +18,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::post('/rentCollectionEmail', function(Request $request){
-    if ($request->path() != '104.131.94.84/invoice'){
+Route::post('/rentCollection', function (Request $request) {
+    if ($request->ip() != '104.131.94.84'){
         exit();
     }
-    $request = $request->all();
-   Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
+    Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
+});
+Route::get('/rentCollection', function (Request $request) {
+    dd($request);
 });
