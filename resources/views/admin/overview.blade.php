@@ -8,6 +8,9 @@
                          :translate="{
                     username: '@lang('auth.username')',
                     email: '@lang('auth.email')',
+                    name: '@lang('match/create.name')',
+                    time: '@lang('match/create.startTime')',
+                    view: '@lang('profile/page.view')'
                  }">
         <div class="container">
             @if($errors > 0)

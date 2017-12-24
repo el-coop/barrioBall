@@ -12,9 +12,29 @@
 }
 
 .fade-enter-active, .fade-leave-active {
-	transition: opacity 1s
+	transition: opacity .5s
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+{
+	opacity: 0
+}
+
+.slide-fade-leave-active, .slide-fade-enter-active {
+	transition: all .8s;
+}
+
+.slide-fade-enter {
+	transform: translateX(100%);
+	opacity: 0;
+}
+
+.slide-fade-enter-active {
+	position: absolute;
+	top: 0;
+}
+
+.slide-fade-leave-to {
+	transform: translateX(-100%);
 	opacity: 0;
 }

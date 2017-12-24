@@ -68,7 +68,7 @@
                         <div class="form-group textarea-button">
                     <textarea class="form-control form-control-lg" placeholder="@lang('global/contact.yourMessage')"
                               rows="5" name="message" required></textarea>
-                            <button class="btn btn-logo">
+                            <button class="btn btn-logo bigger-scale-hover">
                                 <i class="fa fa-send"></i>
                             </button>
                         </div>
