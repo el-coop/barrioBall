@@ -19,6 +19,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::post('/rentCollectionEmail', function(Request $request){
+    if ($request->path() != '104.131.94.84/invoice'){
+        exit();
+    }
     $request = $request->all();
    Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
 });
