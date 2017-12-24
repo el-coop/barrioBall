@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\InvoiceMail;
 use Illuminate\Http\Request;
 
 /*
@@ -16,3 +17,8 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+
+Route::post('/rentCollectionEmail', function(Request $request){
+    $request = $request->all();
+   Mail::to($request->email, $request->host)->send(new InvoiceMail($request['url']));
+});
