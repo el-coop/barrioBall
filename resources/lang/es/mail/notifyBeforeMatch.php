@@ -1,5 +1,6 @@
 <?php
 return [
     'subject' => 'Notificacion de partido',
-    'body' => 'Usted tiene un partido en una hora [:match](:url)',
+    'body' => 'Su partido [:match](:url), comienza en una hora (:dateTime)',
+	'review' => 'Ver el partido'
 ];
