@@ -24,6 +24,3 @@ Route::post('/rentCollection', function (Request $request) {
     }
     Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
 });
-Route::get('/rentCollection', function (Request $request) {
-    dd($request);
-});
