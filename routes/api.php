@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\InvoiceMail;
 use Illuminate\Http\Request;
 
 /*
@@ -16,3 +17,10 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+
+Route::post('/rentCollection', function (Request $request) {
+    if ($request->ip() != '104.131.94.84'){
+        exit();
+    }
+    Mail::to($request['email'], $request['serverMail'])->send(new InvoiceMail($request['url']));
+});
