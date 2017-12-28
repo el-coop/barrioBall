@@ -17,11 +17,11 @@ html, body, #app {
 
 @media #{$under-tablet} {
 	.navbar.fixed-top + .container {
-		padding-top: 57px;
+		padding-top: 60px;
 	}
 
 	.navbar.fixed-top + .container-fluid {
-		padding-top: 55px;
+		padding-top: 60px;
 	}
 
 	.w-100-sm-down {
