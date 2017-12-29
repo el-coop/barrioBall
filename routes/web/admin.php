@@ -6,6 +6,7 @@ Route::group(['prefix' => "admin", 'namespace' => 'Admin', 'middleware' => ['aut
 	Route::get('/','PageController@index');
 	Route::get('/getUsers','PageController@getUsers');
 	Route::get('/getMatches','PageController@getMatches');
+	Route::post('/addAdmin/{user}','UserController@addAdmin');
 
 	Route::group(['prefix' => "errors"],function(){
 		Route::get('/', 'ErrorController@show');
