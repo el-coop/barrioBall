@@ -20,11 +20,6 @@ Route::get('/', 'HomeController@welcome');
 Route::get('/tech', 'HomeController@tech');
 Route::get('lang/{lang}', 'LanguageController@switchLang');
 Route::post('jserror', 'ErrorController@store');
-Route::get('/convo', function (){
-    dump(\App\Models\User::find(1)->getConversationWith(\App\Models\User::find(2)));
-    dd(\App\Models\Conversation::with('users')->get());
-});
-
 Route::group(['middleware' => ['auth']], function () {
 	Route::get('/home', 'HomeController@index');
 });
