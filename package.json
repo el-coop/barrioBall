@@ -29,6 +29,7 @@
     "popper.js": "^1.13.0",
     "vue": "^2.5.9",
     "vue-json-tree-view": "^2.1.1",
+    "vue-mq": "^0.1.0",
     "vue-select": "^2.3.0",
     "vue-sweetalert2": "^1.0.7",
     "vue-template-compiler": "^2.5.9",

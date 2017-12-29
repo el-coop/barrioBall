@@ -10,16 +10,18 @@
         </div>
     </div>
     <tech-page inline-template
-                active="@lang('global/tech.serverSide')">
+               active="@lang('global/tech.serverSide')">
         <div class="container mb-4">
-            <div class="row">
-                <div class="col-12 col-md-4">
+            <mobile-view-parent class="row" ref="mobileView">
+                <mobile-view-child class="col-12 col-lg-4"
+                                   icon="fa-list">
                     @include('tech.menu')
-                </div>
-                <div class="col-12 col-md-8">
+                </mobile-view-child>
+                <mobile-view-child class="col-12 col-md-8"
+                                   icon="fa-info">
                     @include('tech.cards')
-                </div>
-            </div>
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </tech-page>
     <div class="footer py-2">

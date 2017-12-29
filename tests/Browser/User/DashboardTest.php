@@ -37,7 +37,7 @@ class DashboardTest extends DuskTestCase
 			->andReturn(\Mockery::self())->getMock()->shouldReceive('rememberForever');*/
 
 		$this->browse(function (Browser $browser) use($matches){
-
+			$browser->resize(1200,1200);
 			$browser->loginAs($this->user)
 				->visit(new DashboardPage)
 				->waitFor('@tables-loaded')
@@ -57,7 +57,7 @@ class DashboardTest extends DuskTestCase
 		});
 
 		$this->browse(function (Browser $browser) use ($matches) {
-
+			$browser->resize(1200,1200);
 			$browser->loginAs($this->user)
 				->visit(new DashboardPage)
 				->waitFor('@tables-loaded')

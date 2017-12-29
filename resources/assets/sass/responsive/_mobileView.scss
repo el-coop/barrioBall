@@ -1,0 +1,28 @@
+.mobile-view {
+	position: relative;
+
+	& > .bubble-wrapper{
+		position: fixed;
+		bottom: 2rem;
+		right: 0.1rem;
+		z-index: 100;
+		width: 3rem;
+
+		& > .bubble {
+			position: relative;
+			box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.1);
+			border-radius: 100%;
+			width: 3rem;
+			height: 3rem;
+			margin-bottom: 0.3rem;
+
+			&  > i {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
+		}
+	}
+
+}

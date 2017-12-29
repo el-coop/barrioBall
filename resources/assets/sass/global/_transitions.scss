@@ -1,3 +1,4 @@
+// list
 .list-leave-active, .list-enter-active {
 	transition: all .8s;
 }
@@ -11,15 +12,17 @@
 	transform: translateY(30px);
 }
 
+// fade
 .fade-enter-active, .fade-leave-active {
 	transition: opacity .5s
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+.fade-enter, .fade-leave-to
 {
 	opacity: 0
 }
 
+//slide-fade
 .slide-fade-leave-active, .slide-fade-enter-active {
 	transition: all .8s;
 }
@@ -36,5 +39,24 @@
 
 .slide-fade-leave-to {
 	transform: translateX(-100%);
+	opacity: 0;
+}
+
+//switch-fade
+
+.switch-fade-leave-active, .switch-fade-enter-active {
+	transition: opacity .5s;
+}
+
+.switch-fade-enter {
+	opacity: 0;
+}
+
+.switch-fade-enter-active {
+	position: absolute;
+	top: 0;
+}
+
+.switch-fade-leave-to {
 	opacity: 0;
 }

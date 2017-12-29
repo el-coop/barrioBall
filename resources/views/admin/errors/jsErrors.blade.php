@@ -9,6 +9,7 @@
             ref="jsTable"
             delete-class="btn-success"
             delete-icon="fa-check"
-            @delete="onDelete">
+            @delete="onDelete"
+            class="mt-3">
     </datatable>
 @endcomponent

@@ -33,7 +33,7 @@ class ProfileTest extends DuskTestCase {
 		});
 
 		$this->browse(function (Browser $browser) use ($matches) {
-
+			$browser->resize(1200,1200);
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)
 				->waitFor('@tables-loaded')
@@ -53,6 +53,7 @@ class ProfileTest extends DuskTestCase {
 		});
 
 		$this->browse(function (Browser $browser) use ($matches) {
+			$browser->resize(1200,1200);
 
 			$browser->loginAs($this->user)
 				->visit(new ProfilePage)

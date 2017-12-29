@@ -13,21 +13,27 @@
                     resolve: '@lang('admin/errors.resolve')'
                  }">
         <div class="container-fluid mb-5 mt-5">
-            <div class="row">
-                <div class="col-12">
-                    @include('admin.errors.phpErrors')
+            <mobile-view-parent>
+                <mobile-view-child class="row"
+                                    icon="fa-server"
+                                    btn="btn-danger">
+                    <div class="col-12">
+                        @include('admin.errors.phpErrors')
+                    </div>
+                </mobile-view-child>
+                <div class="row d-none d-lg-block">
+                    <div class="col-12">
+                        <hr>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <hr>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    @include('admin.errors.jsErrors')
-                </div>
-            </div>
+                <mobile-view-child class="row"
+                                   icon="fa-code"
+                                   btn="btn-danger">
+                    <div class="col-12">
+                        @include('admin.errors.jsErrors')
+                    </div>
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </errors-page>
 @stop

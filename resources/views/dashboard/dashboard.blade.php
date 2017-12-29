@@ -13,8 +13,9 @@
                     date: '@lang('match/search.date')',
                   }">
         <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-6">
+            <mobile-view-parent class="row">
+                <mobile-view-child class="col-12 col-lg-6"
+                                   icon="fa-futbol-o">
                     @include('dashboard.nextMatchAlert')
                     <div class="card mb-2">
                         @include('user.profile.playedTable')
@@ -24,8 +25,9 @@
                             </a>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-6">
+                </mobile-view-child>
+                <mobile-view-child class="col-12 col-lg-6"
+                                   icon="fa-cog">
                     @include('dashboard.requestsAlert')
 
                     <div class="card mb-2">
@@ -36,8 +38,8 @@
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </profile-page>
 @endsection

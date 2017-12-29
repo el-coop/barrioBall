@@ -65,6 +65,7 @@
             </div>
             <div class="col-12 d-flex d-md-block" :class="{ 'col-md-6' : inlineForms}">
                 <vuetable-pagination ref="pagination"
+                                     onEachSide="1"
                                      :css="cssPagination"
                                      @vuetable-pagination:change-page="changePage">
                 </vuetable-pagination>

@@ -57,7 +57,7 @@ class ErrorsTest extends DuskTestCase {
 		]);
 
 		$this->browse(function (Browser $browser) use ($errors) {
-
+			$browser->resize(1200,1200);
 			$browser->loginAs($this->admin)->visit(new ErrorsPage)
 				->waitFor('@tables-loaded')
 				->assertSeeJsErrors($errors);
