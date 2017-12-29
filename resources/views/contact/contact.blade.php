@@ -11,8 +11,9 @@
     </div>
     <contact-page inline-template v-cloak>
         <div class="container">
-            <div class="row justify-content-between my-5">
-                <div class="col-12 col-md-7 mb-5">
+            <mobile-view-parent class="row justify-content-between my-5">
+                <mobile-view-child class="col-12 col-lg-7 mb-5"
+                                   icon="fa-comment-o">
                     <transition name="fade">
                         <div class="overlay d-flex justify-content-center align-items-center flex-column"
                              v-if="sending || sent || error">
@@ -73,8 +74,10 @@
                             </button>
                         </div>
                     </ajax-form>
-                </div>
-                <div class="col-12 col-md-3">
+                </mobile-view-child>
+
+                <mobile-view-child class="col-12 col-lg-3"
+                                   icon="fa-id-card-o">
                     <h4 class="mb-3">@lang('global/contact.connect')</h4>
                     <p>@lang('global/contact.connectText')</p>
                     <h5 class="font-weight-bold">@lang('global/contact.address')</h5>
@@ -82,8 +85,8 @@
                     </p>
                     <h5 class="font-weight-bold">@lang('global/welcome.languages')</h5>
                     <p>@lang('global/contact.languagesText')</p>
-                </div>
-            </div>
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </contact-page>
     <div class="footer py-2">

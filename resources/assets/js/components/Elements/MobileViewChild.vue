@@ -12,6 +12,10 @@
 				type: String,
 				required: true
 			},
+            btn: {
+				type: String,
+                default: 'btn-primary'
+            }
 		},
 
 		data() {

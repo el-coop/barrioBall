@@ -13,20 +13,10 @@
                     date: '@lang('match/search.date')',
                   }">
         <div class="container mb-5 mt-5">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="card mb-2">
-                        @include('user.profile.playedTable')
-                    </div>
+            <mobile-view-parent class="row">
+                <mobile-view-child class="col-12 col-lg-7 order-4"
+                                   icon="fa-futbol-o">
 
-                    @if($hasManagedMatches)
-                        <div class="card">
-                            @include('user.profile.managedTable')
-                        </div>
-                    @endif
-                </div>
-
-                <div class="col-12 col-md-7">
                     <div>
                         @include('user.profile.updateUsername')
                     </div>
@@ -42,8 +32,20 @@
                     <div class="mt-5">
                         @include('user.profile.deleteUser')
                     </div>
-                </div>
-            </div>
+                </mobile-view-child>
+                <mobile-view-child class="col-12 col-lg-5 order-1"
+                                   icon="fa-futbol-o">
+                    <div class="card mb-2">
+                        @include('user.profile.playedTable')
+                    </div>
+
+                    @if($hasManagedMatches)
+                        <div class="card">
+                            @include('user.profile.managedTable')
+                        </div>
+                    @endif
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </profile-page>
 @endsection

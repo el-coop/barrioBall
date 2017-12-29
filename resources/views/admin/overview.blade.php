@@ -13,31 +13,33 @@
                     view: '@lang('profile/page.view')'
                  }">
         <div class="container">
-            @if($errors > 0)
-            <div class="row">
-                <div class="col-12">
-                    @include('admin.overview.errorsCount')
-                </div>
-            </div>
-            @endif
-            <div class="row">
-                <div class="col-12 col-md-6">
+            <mobile-view-parent class="row">
+                @if($errors > 0)
+                    <mobile-view-child class="col-12"
+                                       icon="fa-exclamation-circle"
+                                        btn="btn-danger">
+                        @include('admin.overview.errorsCount')
+                    </mobile-view-child>
+                @endif
+                <mobile-view-child class="col-12 col-lg-6"
+                                   icon="fa-user">
                     @include('admin.overview.usersCount')
                     <div class="card mb-2">
                         <div class="card-footer text-center">
                             @include('admin.overview.userTable')
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-6">
+                </mobile-view-child>
+                <mobile-view-child class="col-12 col-lg-6"
+                                   icon="fa-futbol-o">
                     @include('admin.overview.matchCount')
                     <div class="card mb-2">
                         <div class="card-footer text-center">
                             @include('admin.overview.matchTable')
                         </div>
                     </div>
-                </div>
-            </div>
+                </mobile-view-child>
+            </mobile-view-parent>
         </div>
     </admin-overview-page>
 @stop

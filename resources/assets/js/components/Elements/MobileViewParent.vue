@@ -2,7 +2,7 @@
     <div class="mobile-view">
         <div class="bubble-wrapper d-lg-none">
             <div v-for="child in children" key="child._uid" v-show="child._uid != active"
-                 class="btn btn-primary bubble" @click="activate(child)">
+                 class="btn bubble" @click="activate(child)" :class="child.btn">
                 <i class="fa m-auto fa-2x" :class="child.icon"></i>
             </div>
         </div>
@@ -25,7 +25,11 @@
 					element.toggle(child._uid);
 				});
 				this.active = child._uid;
-			}
+			},
+
+            toggle(index){
+				this.activate(this.children[index]);
+            }
 		},
 
 		mounted() {
