@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\Admin\AdminAdded;
 use App\Events\Admin\Error\Created as ErrorCreated;
 use App\Events\Admin\Error\Resolved;
 use App\Events\Match\Created;
@@ -59,6 +60,9 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
+		AdminAdded::class => [
+			ClearUserOverviewCache::class
+		],
 		ErrorCreated::class => [
 			ClearErrorsOverviewCache::class,
 		],

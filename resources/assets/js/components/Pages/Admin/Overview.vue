@@ -1,5 +1,9 @@
 <script>
+	import swal from '../../Mixins/swal.vue'
+
 	export default {
+		mixins: [swal],
+
 		props: {
 			translate: {
 				required: true,
@@ -18,6 +22,11 @@
 					{
 						name: 'email',
 						title: this.translate.email,
+						dataClass: 'align-middle',
+					},
+					{
+						name: '__slot:makeAdmin',
+						title: this.translate.makeAdmin,
 						dataClass: 'align-middle',
 					}
 				],

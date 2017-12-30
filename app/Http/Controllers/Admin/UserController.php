@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\AddAdminRequest;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller {
 
@@ -16,7 +16,7 @@ class UserController extends Controller {
 	 *
 	 * @return Redirect
 	 */
-	public function addAdmin(AddAdminRequest $request, User $user): Redirect {
+	public function addAdmin(AddAdminRequest $request, User $user): RedirectResponse {
 		$request->commit();
 
 		return back()->with('alert', __('global.success'));

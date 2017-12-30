@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Events\Admin\AdminAdded;
 use App\Models\Admin;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -46,5 +47,6 @@ class AddAdminRequest extends FormRequest {
 	 */
 	public function commit(): void {
 		$this->user->makeAdmin();
+		event(new AdminAdded);
 	}
 }

@@ -10,4 +10,5 @@ return [
 	'newErrorsCount' => ':errors created in the last 24 hours',
 	'jsErrorsCount' => ':errors js errors',
 	'phpErrorsCount' => ':errors php errors',
+	'makeAdmin' => 'Make Admin'
 ];

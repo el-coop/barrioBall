@@ -2,8 +2,11 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Events\Admin\AdminAdded;
 use App\Models\Admin;
 use App\Models\User;
+use Cache;
+use Event;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,6 +33,25 @@ class AddAdminsTest extends TestCase
 	 * @group addAdmin
 	 */
 	public function test_admin_can_convert_users_to_admin(): void {
+		Event::fake();
+		$user = factory(User::class)->create();
+
+		$this->actingAs($this->admin)->post(action('Admin\UserController@addAdmin',$user))
+			->assertSessionHas('alert',__('global.success',[],$this->admin->language));
+
+		$this->assertTrue($user->fresh()->isAdmin());
+
+		Event::assertDispatched(AdminAdded::class);
+	}
+
+	/**
+	 * @test
+	 * @group admin
+	 * @group addAdmin
+	 */
+	public function test_added_admin_clears_user_overview_cache(): void {
+		Cache::shouldReceive('tags')->once()->with("admin_users")
+			->andReturn(\Mockery::self())->getMock()->shouldReceive('flush');
 		$user = factory(User::class)->create();
 
 		$this->actingAs($this->admin)->post(action('Admin\UserController@addAdmin',$user))
