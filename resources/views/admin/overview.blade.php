@@ -5,18 +5,20 @@
     @parent
 
     <admin-overview-page inline-template
+                         @include('partials.swal')
                          :translate="{
                     username: '@lang('auth.username')',
                     email: '@lang('auth.email')',
                     name: '@lang('match/create.name')',
                     time: '@lang('match/create.startTime')',
-                    view: '@lang('profile/page.view')'
+                    view: '@lang('profile/page.view')',
+                    makeAdmin: '@lang('admin/overview.makeAdmin')'
                  }">
         <div class="container">
             <mobile-view-parent class="row">
-                @if($errors > 0)
+                @if($errorsCount > 0)
                     <mobile-view-child class="col-12"
-                                       icon="fa-exclamation-circle"
+                                       icon="fa-bug"
                                         btn="btn-danger">
                         @include('admin.overview.errorsCount')
                     </mobile-view-child>

@@ -67,7 +67,7 @@
 
 		methods: {
 			link(value) {
-				return "<a href='" + value + "'><button class='btn btn-dark'><i class='fa fa-search' ></button></i></a>";
+				return "<a href='" + value + "'><button class='btn btn-dark'><i class='fa fa-search' ></i></button></a>";
 			}
 		}
 

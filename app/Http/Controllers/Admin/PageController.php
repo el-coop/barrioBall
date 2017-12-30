@@ -20,7 +20,7 @@ class PageController extends Controller {
 	 * @return View
 	 */
 	public function index(): View {
-		$errors = Cache::tags('admin_errors', 'admin_overview')->rememberForever('admin_error_count', function () {
+		$errorsCount = Cache::tags('admin_errors', 'admin_overview')->rememberForever('admin_error_count', function () {
 			return Error::count();
 		});
 		$newErrors = Cache::tags('admin_errors', 'admin_overview')->remember('admin_new_error_count',5, function () {
@@ -45,12 +45,12 @@ class PageController extends Controller {
 			return Match::where('created_at', '>', Carbon::now()->subDay())->count();
 		});
 
-		return view('admin.overview', compact('users', 'newUsers', 'matches', 'newMatches', 'errors', 'newErrors', 'jsErrors', 'phpErrors'));
+		return view('admin.overview', compact('users', 'newUsers', 'matches', 'newMatches', 'errorsCount', 'newErrors', 'jsErrors', 'phpErrors'));
 	}
 
 	public function getUsers(Request $request): LengthAwarePaginator {
 		return Cache::tags('admin_users', 'admin_overview')->rememberForever(sha1($request->fullUrl()), function () use ($request) {
-			$users = User::select('username', 'email');
+			$users = User::select('id','username', 'email','user_type');
 
 			if ($request->filled('sort')) {
 				$sort = explode('|', $request->input('sort'));

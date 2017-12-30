@@ -34,7 +34,7 @@
 
 					},
 					{
-						name: '__slot:actions',
+						name: '__slot:delete',
 						title: this.translate.resolve,
 						dataClass: 'text-center'
 					}
@@ -60,7 +60,7 @@
 						sortField: 'created_at'
 					},
                     {
-						name: '__slot:actions',
+						name: '__slot:delete',
 						title: this.translate.resolve,
 						dataClass: 'text-center'
 					}

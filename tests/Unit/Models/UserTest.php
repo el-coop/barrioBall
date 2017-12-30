@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Match;
 use App\Models\Player;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
@@ -286,5 +287,39 @@ class UserTest extends TestCase {
 	 */
 	public function test_hasManageInvite_returns_false_when_doesnt_has_invite(): void {
 		$this->assertFalse($this->user->hasManageInvite($this->match));
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 * @group admin
+	 */
+
+	public function test_makeAdmin_adds_admin(): void {
+		$oldUser = $this->user->user;
+		$this->user->makeAdmin();
+		$this->assertTrue($this->user->isAdmin());
+		$this->assertDatabaseMissing('players', [
+			'id' => $oldUser->id,
+		]);
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 * @group admin
+	 */
+
+	public function test_makeAdmin_throws_exception_when_already_admin(): void {
+		$this->expectException(Exception::class);
+		$user = factory(User::class)->create([
+			'user_id' => function () {
+				return factory(Admin::class)->create()->id;
+			},
+			'user_type' => 'Admin',
+		]);
+		$user->makeAdmin();
 	}
 }

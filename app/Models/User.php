@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\User\ResetPassword;
 use Cache;
+use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
@@ -160,5 +161,20 @@ class User extends Authenticatable {
 		$this->user->delete();
 
 		return parent::delete();
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function makeAdmin(): void {
+		if($this->user_type == 'Player'){
+			$oldUser = $this->user;
+			$admin = new Admin;
+			$admin->save();
+			$admin->user()->save($this);
+			$oldUser->delete();
+		} else {
+			throw new Exception('Already Admin');
+		}
 	}
 }

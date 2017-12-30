@@ -3,7 +3,7 @@
         <h4 class="mb-0">@lang('admin/overview.users')</h4>
     @endslot
     <datatable
-            url="{{ action('Admin\PageController@getUsers')}}"
+            url="{{ action('Admin\PageController@getUsers') }}"
             :fields="userTableFields"
             :inline-forms="false"
             :per-page-options="[5,10]"

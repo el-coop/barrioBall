@@ -41,14 +41,22 @@
                               @vuetable:pagination-data="paginationData"
                               @vuetable:loading='tableLoading'
                               @vuetable:loaded='tableLoaded'>
-                        <template slot="actions" slot-scope="props">
-                            <div class="custom-actions">
-                                <button class="btn" :class="deleteClass"
-                                        @click="onAction('delete', props.rowData, props.rowIndex)">
-                                    <i class="fa" :class="deleteIcon"></i>
+                        <div slot="makeAdmin" slot-scope="props" class="custom-actions"
+                             v-if="props.rowData.user_type == 'Player'">
+                            <form method="post" :action="'/admin/addAdmin/' + props.rowData.id">
+                                <input type="hidden" name="_token" :value="csrfToken">
+                                <button class="btn btn-outline-dark"
+                                        @click="onAction('make-admin', props.rowData, props.rowIndex)">
+                                    <i class="fa fa-angle-double-up"></i>
                                 </button>
-                            </div>
-                        </template>
+                            </form>
+                        </div>
+                        <div slot="delete" slot-scope="props" class="custom-actions">
+                            <button class="btn" :class="deleteClass"
+                                    @click="onAction('delete', props.rowData, props.rowIndex)">
+                                <i class="fa" :class="deleteIcon"></i>
+                            </button>
+                        </div>
                     </vuetable>
                 </div>
             </div>
@@ -58,14 +66,14 @@
                 <vuetable-pagination-info ref="paginationInfo"
                                           :info-template="translations.infoTemplate"
                                           :no-data-template="translations.infoNoData"
-                                        :css="{
+                                          :css="{
                                             'infoClass' : 'pb-3'
                                         }">
                 </vuetable-pagination-info>
             </div>
             <div class="col-12 d-flex d-md-block" :class="{ 'col-md-6' : inlineForms}">
                 <vuetable-pagination ref="pagination"
-                                     onEachSide="1"
+                                     :onEachSide="1"
                                      :css="cssPagination"
                                      @vuetable-pagination:change-page="changePage">
                 </vuetable-pagination>
@@ -156,6 +164,7 @@
 				params: this.extraParams,
 				filter: null,
 				perPage: this.perPageOptions[0],
+                csrfToken: window.Laravel.csrfToken
 			}
 		},
 
