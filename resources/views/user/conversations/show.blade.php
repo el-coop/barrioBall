@@ -8,8 +8,8 @@
                             :conversations="{{$conversations}}"
                             :current-user="{{$user->id}}">
             <div class="container">
-                <div class="row">
-                    <div class="col-3 padding-0">
+                <mobile-view-parent class="row" ref="mobileView">
+                    <mobile-view-child class="col-lg-3 col-12 px-0 btn-col" icon="fa-list">
                         <ul class="list-group">
                             <conversation-button v-for="conversation in conversations" :key="conversation.id"
                                                  :conversation="conversation"
@@ -18,13 +18,13 @@
                                                  :current="currentConversation">
                             </conversation-button>
                         </ul>
-                    </div>
-                    <div class="col-8 padding-0">
+                    </mobile-view-child>
+                    <mobile-view-child class="col-lg-8 col-12 px-0" icon="fa-comment">
                         <conversation btn-txt="@lang('conversations/conversation.button')" :current-user="currentUser"
                                       :sender="sender" :conversation="currentConversation">
                         </conversation>
-                    </div>
-                </div>
+                    </mobile-view-child>
+                </mobile-view-parent>
             </div>
         </conversations-page>
     @else

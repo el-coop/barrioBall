@@ -1,10 +1,9 @@
 <style scoped>
     .list-group {
-        height: 60vh;
         overflow-y: auto;
     }
-    .container {
-
+    .btn-col {
+        background-color: white;
     }
 </style>
 
@@ -38,6 +37,7 @@
                 this.sender = conversation.users.filter((user) => {
                     return user.id != this.currentUser;
                 })[0].username;
+                this.$refs.mobileView.toggle(1);
             }
         },
 
@@ -47,6 +47,7 @@
             this.sender =  this.conversations[0].users.filter((user) => {
                 return user.id != this.currentUser;
             })[0].username;
+
         },
     }
 </script>

@@ -6,6 +6,7 @@
                  class="message-wrapper">
             <span class="message"
                   :class="[isCurrent(message.user_id) ? 'current-user' : 'sender']">{{message.text}}</span>
+                <span class="time" :class="[isCurrent(message.user_id) ? 'current-user-time' : 'sender-time']">{{message.created_at}}</span>
             </div>
         </div>
         <div class="card-footer">
@@ -15,19 +16,37 @@
                 <div class="form-group">
                     <input type="text" name="message" id="message" class="form-control" required>
                 </div>
-                <span class="float-right" slot="submit">{{this.btnTxt}}</span>
+                <span class="float-lg-right" slot="submit" >{{this.btnTxt}}</span>
             </ajax-form>
         </div>
     </div>
 </template>
 <style scoped>
     .current-user {
-        text-align: left;
         background-color: #dcf8c6;
+        float: right;
+        clear: right;
     }
 
     .sender {
         background-color: #cccdce;
+        float: left;
+        clear: left;
+    }
+
+    .current-user-time {
+        float: right;
+        clear: right;
+    }
+
+    .sender-time {
+        float: left;
+        clear: left;
+    }
+
+    .time {
+        margin: 0px 7px;
+        font-size: 10px;
     }
 
     .message {
