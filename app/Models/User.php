@@ -6,6 +6,7 @@ use App\Notifications\User\ResetPassword;
 use Cache;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -177,4 +178,41 @@ class User extends Authenticatable {
 			throw new Exception('Already Admin');
 		}
 	}
+
+    /**
+     * @return BelongsToMany
+     */
+    public function conversations() : BelongsToMany{
+	    return $this->belongsToMany(Conversation::class)->withPivot('read');
+    }
+
+
+    /**
+     * @return HasMany
+     */
+    public function messages() : HasMany{
+	    return $this->hasMany(Message::class);
+    }
+
+
+	/**
+	 * @param User $user
+	 *
+	 * @return Conversation|null
+	 */
+    public function getConversationWith(User $user): ?Conversation{
+        $conversations = $this->conversations()->with('users')->get();
+        return $conversations->first(function($value) use ($user) {
+            return $value->users->contains(function ($value) use ($user) {
+                return $value->id == $user->id;
+            });
+        });
+    }
+
+	/**
+	 * @return bool
+	 */
+	public function hasUnreadConversations(): bool{
+        return $this->conversations()->wherePivot('read', '=', false)->exists();
+    }
 }

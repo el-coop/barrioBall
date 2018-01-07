@@ -9,3 +9,4 @@ Vue.component('techPage', require('./Misc/Tech.vue'));
 Vue.component('aboutPage', require('./Misc/About.vue'));
 Vue.component('contactPage', require('./Misc/Contact.vue'));
 Vue.component('adminOverviewPage', require('./Admin/Overview.vue'));
+Vue.component('conversationsPage', require('./User/Conversations.vue'));

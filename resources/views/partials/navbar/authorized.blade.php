@@ -26,6 +26,13 @@
         @endif
     @endslot
     @slot('navbarRight')
+        <li class="nav-item {{ Request::is('user/conversations') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ action('User\UserController@showConversations') }}" >
+                <i class="fa {{$user->hasUnreadConversations() ? 'fa-comment'  : 'fa-comment-o'}}">
+                </i>
+                <span class="d-md-hidden">| @lang('navbar.conversationsLink')</span>
+            </a>
+        </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-user" aria-hidden="true"></i> |

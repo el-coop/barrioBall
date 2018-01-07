@@ -10,6 +10,7 @@ return [
 	'logoutLink' => 'Log Out',
 	'loginLink' => 'Log In',
 	'registerLink' => 'Register',
+    'conversationsLink' => 'Conversations',
 	'adminOverview' => 'Administrator Overview',
 	'contactLink' => 'Contact Us',
 

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Admin;
+use App\Models\Conversation;
 use App\Models\Match;
 use App\Models\Player;
 use App\Models\User;
@@ -322,4 +323,33 @@ class UserTest extends TestCase {
 		]);
 		$user->makeAdmin();
 	}
+
+    /**
+     * @test
+     * @group user
+     */
+    public function test_getConversationWith_when_exists_return_conversation_between_users(): void {
+	    $conversation = new Conversation;
+	    $user2 = factory(User::class)->create();
+	    $conversation->save();
+	    $conversation->users()->attach([$this->user->id, $user2->id]);
+	    $convesationFromUser = $this->user->getConversationWith($user2);
+	    $this->assertEquals($conversation->id, $convesationFromUser->id);
+        $conversation2 = new Conversation;
+        $user3 = factory(User::class)->create();
+        $conversation2->save();
+        $conversation2->users()->attach([$this->user->id, $user3->id]);
+        $convesationFromUser2 = $this->user->getConversationWith($user3);
+        $this->assertEquals($conversation2->id, $convesationFromUser2->id);
+    }
+
+    /**
+     * @test
+     * @group user
+     */
+    public function test_getConversationWith_returns_empty_when_no_conversation(): void {
+        $user2 = factory(User::class)->create();
+        $conversation = $this->user->getConversationWith($user2);
+        $this->assertEmpty($conversation);
+    }
 }
