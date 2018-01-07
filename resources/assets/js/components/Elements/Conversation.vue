@@ -5,8 +5,13 @@
             <div v-for="message in messages" :class="{'text-right': isCurrent(message.user_id)}"
                  class="message-wrapper">
             <span class="message"
-                  :class="[isCurrent(message.user_id) ? 'current-user' : 'sender']">{{message.text}}</span>
-                <span class="time" :class="[isCurrent(message.user_id) ? 'current-user-time' : 'sender-time']">{{message.date}} {{message.time}}</span>
+                  :class="[isCurrent(message.user_id) ? 'current-user' : 'sender']">
+                <h5 v-if="message.action_type">
+                    {{message.action_type}} <a :href="'/matches/' + message.action_match_id">{{message.action_match}}</a>
+                </h5>
+                <p>{{message.text}}</p></span>
+                <span class="time"
+                      :class="[isCurrent(message.user_id) ? 'current-user-time' : 'sender-time']">{{message.date}} {{message.time}}</span>
             </div>
         </div>
         <div class="card-footer">
@@ -16,7 +21,7 @@
                 <div class="form-group">
                     <input type="text" name="message" id="message" class="form-control" required>
                 </div>
-                <span class="float-lg-right" slot="submit" >{{this.btnTxt}}</span>
+                <span class="float-lg-right" slot="submit">{{this.btnTxt}}</span>
             </ajax-form>
         </div>
     </div>
@@ -96,10 +101,10 @@
             conversation() {
                 axios.get('/user/conversations/' + this.conversation).then((response) => {
                     this.messages = response.data;
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         let chat = this.$el.querySelector(".card-body");
                         chat.scrollTop = chat.scrollHeight;
-                    },50);
+                    }, 50);
                 });
 
             },
@@ -111,7 +116,13 @@
             },
 
             updateConversation(response, data) {
-                this.messages.push({'text': response.message, 'user_id': this.currentUser});
+                this.messages.push({
+                    'text': response.message,
+                    'user_id': this.currentUser,
+                    'date': moment().format('M/D/Y'),
+                    'time': moment().format('HH:mm')
+                });
+                $('#message').val('');
             },
         },
     }

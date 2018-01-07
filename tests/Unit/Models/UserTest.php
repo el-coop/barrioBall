@@ -308,6 +308,10 @@ class UserTest extends TestCase {
         $this->assertEquals($conversation2->id, $convesationFromUser2->id);
     }
 
+    /**
+     * @test
+     * @group user
+     */
     public function test_getConversationWith_returns_empty_when_no_conversation(): void {
         $user2 = factory(User::class)->create();
         $conversation = $this->user->getConversationWith($user2);

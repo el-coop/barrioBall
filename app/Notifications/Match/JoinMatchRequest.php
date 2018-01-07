@@ -84,6 +84,9 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
     {
         $message = new Message;
         $message->text = $this->message;
+        $message->action_type = (__('conversations/conversation.join', [], $notifiable->language));
+        $message->action_match = $this->match->name;
+        $message->action_match_id = $this->match->id;
         return $message;
     }
 }

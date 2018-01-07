@@ -3,14 +3,14 @@
 namespace App\Notifications\User;
 
 use App\Channels\ConversationChannel;
-use App\Models\Message;
+use App\Models\Message as MessageModel;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class Conversation extends Notification
+class Message extends Notification
 {
     use Queueable;
 
@@ -63,7 +63,7 @@ class Conversation extends Notification
     }
 
     public function toConversation($notifiable){
-        $message = new Message;
+        $message = new MessageModel;
         $message->text = $this->message;
         return $message;
     }

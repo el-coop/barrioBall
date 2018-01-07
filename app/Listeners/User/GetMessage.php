@@ -3,7 +3,7 @@
 namespace App\Listeners\User;
 
 use App\Events\User\MessageSent;
-use App\Notifications\User\Conversation;
+use App\Notifications\User\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -29,6 +29,6 @@ class GetMessage
     {
         $users = $event->conversation->users;
         $recipient = $users->firstWhere('id','!=', $event->sender->id);
-        $recipient->notify(new Conversation($event->sender,$event->message));
+        $recipient->notify(new Message($event->sender,$event->message));
     }
 }
