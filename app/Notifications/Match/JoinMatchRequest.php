@@ -8,15 +8,16 @@ use App\Models\Match;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class JoinMatchRequest extends Notification implements ShouldQueue {
 	use Queueable;
 
+	public $user;
 	protected $message;
 	protected $match;
-	public $user;
 
 	/**
 	 * Create a new notification instance.
@@ -39,7 +40,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 * @return array
 	 */
 	public function via($notifiable): array {
-		return ['mail', ConversationChannel::class];
+		return ['mail', ConversationChannel::class, 'broadcast'];
 	}
 
 	/**
@@ -80,13 +81,31 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 		];
 	}
 
-	public function toConversation($notifiable)
-    {
-        $message = new Message;
-        $message->text = $this->message;
-        $message->action_type = (__('conversations/conversation.join', [], $notifiable->language));
-        $message->action_match = $this->match->name;
-        $message->action_match_id = $this->match->id;
-        return $message;
-    }
+	/**
+	 * @param $notifiable
+	 *
+	 * @return BroadcastMessage
+	 */
+	public function toBroadcast($notifiable): BroadcastMessage {
+		return new BroadcastMessage([
+			'match_url' => $this->match->url,
+			'match_name' => $this->match->name,
+			'conversation' => $this->user->getConversationWith($notifiable)->id,
+		]);
+	}
+
+	/**
+	 * @param $notifiable
+	 *
+	 * @return Message
+	 */
+	public function toConversation($notifiable): Message {
+		$message = new Message;
+		$message->text = $this->message;
+		$message->action_type = (__('conversations/conversation.join', [], $notifiable->language));
+		$message->action_match = $this->match->name;
+		$message->action_match_id = $this->match->id;
+
+		return $message;
+	}
 }

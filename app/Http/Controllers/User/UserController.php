@@ -136,9 +136,11 @@ class UserController extends Controller {
 
 
         $conversations = $request->user()->conversations()->with(['users', 'messages'])->get();
-        if ($conversations->first()){
-            $conversations->first()->markAsRead($request->user());
-        }
+        if ($conversation = $conversations->pop()){
+        	$conversation->markAsRead($request->user());
+        	$conversation->pivot->read = 1;
+        	$conversations->prepend($conversation);
+		}
         return view('user.conversations.show', compact('conversations'));
     }
 
@@ -147,9 +149,17 @@ class UserController extends Controller {
             return $conversation->messages;
     }
 
-    public function sendMessage(Conversation $conversation, SendMessageRequest $request){
+    public function sendMessage(SendMessageRequest $request,Conversation $conversation){
         $request->commit();
 
-        return $request;
+        return [
+			'action_type' => null,
+			'action_match' => null,
+			'action_match_id' => null,
+			'text' => $request->input('message'),
+			'user_id' => $request->user()->id,
+			'date' => Carbon::now()->format('d/m/y'),
+			'time' => Carbon::now()->format('H:i'),
+		];
     }
 }

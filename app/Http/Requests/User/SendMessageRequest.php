@@ -32,6 +32,5 @@ class SendMessageRequest extends FormRequest
     public function commit(){
         $conversation = $this->route('conversation');
         event(new MessageSent($this->user(), $this->input('message'), $conversation));
-
     }
 }
