@@ -15,7 +15,7 @@
                                                  :conversation="conversation"
                                                  :current-user="currentUser"
                                                  v-on:conversation-change="changeConversation"
-                                                 :current="currentConversation">
+                                                 :class="{active: conversation.id == currentConversation}">
                             </conversation-button>
                         </ul>
                     </mobile-view-child>

@@ -213,6 +213,13 @@ class User extends Authenticatable {
 	 * @return bool
 	 */
 	public function hasUnreadConversations(): bool{
-        return $this->conversations()->wherePivot('read', '=', false)->exists();
-    }
+		return $this->conversations()->wherePivot('read', '=', false)->exists();
+	}
+
+	/**
+	 * @return int
+	 */
+	public function countUnreadConversations(): int{
+		return $this->conversations()->wherePivot('read', '=', false)->count();
+	}
 }
