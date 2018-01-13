@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-7"><strong>@{{ match.address }}</strong></div>
                     <div class="col-5 text-right">
-                        <strong>@{{ match.players }} @lang('match/search.players')</strong></div>
+                        <strong>@{{ match.players ? match.players : '&infin;' }} @lang('match/search.players')</strong></div>
                     <div class="col-12">
                         <p>@{{ match.description }}</p>
                     </div>
