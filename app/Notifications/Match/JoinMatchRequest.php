@@ -7,6 +7,7 @@ use App\Mail\MailMessage;
 use App\Models\Match;
 use App\Models\Message;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
@@ -88,9 +89,17 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 */
 	public function toBroadcast($notifiable): BroadcastMessage {
 		return new BroadcastMessage([
-			'match_url' => $this->match->url,
-			'match_name' => $this->match->name,
 			'conversation' => $this->user->getConversationWith($notifiable)->id,
+			'message' => [
+				'action' => __('conversations/conversation.join', [
+					'name' => $this->match->name,
+					'url' => $this->match->url,
+				], $notifiable->language),
+				'text' => $this->message,
+				'user_id' => $this->user->id,
+				'date' => Carbon::now()->format('d/m/y'),
+				'time' => Carbon::now()->format('H:i'),
+			],
 		]);
 	}
 
@@ -102,9 +111,11 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	public function toConversation($notifiable): Message {
 		$message = new Message;
 		$message->text = $this->message;
-		$message->action_type = (__('conversations/conversation.join', [], $notifiable->language));
-		$message->action_match = $this->match->name;
-		$message->action_match_id = $this->match->id;
+		$message->user_id = $this->user->id;
+		$message->action = __('conversations/conversation.join', [
+			'name' => $this->match->name,
+			'url' => $this->match->url,
+		], $notifiable->language);
 
 		return $message;
 	}

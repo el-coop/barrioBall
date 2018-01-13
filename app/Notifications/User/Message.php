@@ -91,6 +91,7 @@ class Message extends Notification {
 	public function toConversation($notifiable): MessageModel {
 		$message = new MessageModel;
 		$message->text = $this->message;
+		$message->user_id = $this->user->id;
 
 		return $message;
 	}

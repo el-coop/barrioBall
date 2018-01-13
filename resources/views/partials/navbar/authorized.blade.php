@@ -27,7 +27,7 @@
     @endslot
     @slot('navbarRight')
         <li class="nav-item {{ Request::is('user/conversations') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ action('User\UserController@showConversations') }}">
+            <a class="nav-link" href="{{ action('User\ConversationsController@showConversations') }}">
                 <span class="position-relative">
                     <i class="fa" :class="{'fa-comment': messagesCount > 0, 'fa-comment-o' : messagesCount == 0}">
                     </i>

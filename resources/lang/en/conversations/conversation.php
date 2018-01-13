@@ -2,6 +2,6 @@
 return [
     'button' => 'Send',
     'noConversations' => "You don't have conversations",
-    'join' => 'Join Request'
+    'join' => 'Requested to join <a href=":url">:name</a>'
 
 ];

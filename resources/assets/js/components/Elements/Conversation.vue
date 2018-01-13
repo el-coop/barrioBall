@@ -5,9 +5,7 @@
             <div v-for="message in messages" class="d-flex flex-column mb-1"
                  :class="messageClass(message.user_id)">
                 <span class="message px-2 pt-2 pb-1" :class="[messageBackground(message.user_id)]">
-                    <h6 v-if="message.action_type">
-                        {{message.action_type}} <a :href="'/matches/' + message.action_match_id">{{message.action_match}}</a>
-                    </h6>
+                    <h6 v-if="message.action" v-html="message.action"></h6>
                     <p class="m-0">
                         {{message.text}}
                     </p>
@@ -85,10 +83,10 @@
 
 		created() {
 			this.$bus.$on('new-notification', (notification) => {
-				console.log(notification);
 				if (notification.conversation == this.conversation) {
 					this.updateConversation(notification.message,false);
 					this.$bus.$emit('decrement-notifications');
+					this.markAsRead();
 				}
 			});
 		},
@@ -109,9 +107,7 @@
 
 			updateConversation(data, resetInput = true) {
 				this.messages.push({
-					action_type: data.action_type,
-					action_match: data.action_match,
-					action_match_id: data.action_match_id,
+					action: data.action,
 					text: data.text,
 					user_id: data.user_id,
 					date: data.date,
@@ -123,6 +119,10 @@
                 }
 				this.scrollToBottom();
 			},
+
+            markAsRead(){
+				axios.post('/user/conversations/read/' + this.conversation).then(()=>{});
+            },
 
 			load() {
 				axios.get('/user/conversations/' + this.conversation).then((response) => {
