@@ -8,7 +8,7 @@
          id="date_group">
         <date-picker label="@lang('match/search.date'):" name="date" @shown="hideMapToggle = true" @hidden="hideMapToggle = false"></date-picker>
         <span class="invalid-feedback"
-              v-if="errors.hasOwnProperty('to')">* @{{ errors.date[0]}}</span>
+              v-if="errors.hasOwnProperty('date')">* @{{ errors.date[0]}}</span>
     </div>
     <div class="mb-2 mr-sm-2 w-100-sm-down align-self-baseline"
          :class="{'is-invalid' : errors.hasOwnProperty('from')}"
