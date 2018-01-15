@@ -6,14 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $appends = [
-        'date',
-        'time',
-    ];
     protected $dates = [
         'created_at',
-        'updated_at',
-        'date_time',
+        'updated_at'
     ];
 
     /**

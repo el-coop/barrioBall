@@ -42,6 +42,6 @@ class InviteMangersRequest extends FormRequest {
 		$invited = $invited->reject->isManager($this->match);
 		$invited = $invited->reject->hasManageInvite($this->match);
 		$invited->each->manageInvite($this->match);
-		event(new ManagersInvited($this->match,$invited));
+		event(new ManagersInvited($this->match,$this->user(),$invited));
 	}
 }

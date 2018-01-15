@@ -25,6 +25,6 @@ class SendJoinRequestRejectedNotification implements ShouldQueue {
 	 * @return void
 	 */
 	public function handle(PlayerRejected $event): void {
-		$event->user->notify(new JoinRequestRejected($event->match, $event->message ?? ''));
+		$event->user->notify(new JoinRequestRejected($event->match, $event->manager,$event->message ?? ''));
 	}
 }

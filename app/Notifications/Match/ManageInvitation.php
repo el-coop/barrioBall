@@ -2,27 +2,40 @@
 
 namespace App\Notifications\Match;
 
+use App\Channels\ConversationChannel;
 use App\Mail\MailMessage;
 use App\Models\Match;
+use App\Models\Message;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ManageInvitation extends Notification implements ShouldQueue {
 	use Queueable;
 	/**
+	 * @var User
+	 */
+	public $user;
+	/**
 	 * @var Match
 	 */
 	protected $match;
+	protected $notifiable;
 
 	/**
 	 * Create a new notification instance.
 	 *
 	 * @param Match $match
+	 * @param User $user
 	 */
-	public function __construct(Match $match) {
+	public function __construct(Match $match, User $user) {
 		//
 		$this->match = $match;
+		$this->user = $user;
 	}
 
 	/**
@@ -33,7 +46,7 @@ class ManageInvitation extends Notification implements ShouldQueue {
 	 * @return array
 	 */
 	public function via($notifiable): array {
-		return ['mail'];
+		return ['mail', ConversationChannel::class, 'broadcast'];
 	}
 
 	/**
@@ -67,6 +80,56 @@ class ManageInvitation extends Notification implements ShouldQueue {
 	public function toArray($notifiable): array {
 		return [
 			//
+		];
+	}
+
+	/**
+	 * @param $notifiable
+	 *
+	 * @return BroadcastMessage
+	 */
+	public function toBroadcast($notifiable): BroadcastMessage {
+		$this->notifiable = $notifiable;
+
+		return new BroadcastMessage([
+			'conversation' => $this->user->getConversationWith($notifiable)->id,
+			'message' => [
+				'action' => __('conversations/conversation.manageInvite', [
+					'name' => $this->match->name,
+					'url' => $this->match->url
+				], $notifiable->language),
+				'text' => '',
+				'user_id' => $this->user->id,
+				'date' => Carbon::now()->format('d/m/y'),
+				'time' => Carbon::now()->format('H:i'),
+			],
+		]);
+	}
+
+	/**
+	 * @param $notifiable
+	 *
+	 * @return Message
+	 */
+	public function toConversation($notifiable): Message {
+		$message = new Message;
+		$message->text = '';
+		$message->user_id = $this->user->id;
+		$message->action = __('conversations/conversation.manageInvite', [
+			'name' => $this->match->name,
+			'url' => $this->match->url
+		], $notifiable->language);
+
+		return $message;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function broadcastOn(): array {
+		return [
+			new PrivateChannel('App.Models.User.' . $this->user->id),
+			new PrivateChannel('App.Models.User.' . $this->notifiable->id),
 		];
 	}
 }

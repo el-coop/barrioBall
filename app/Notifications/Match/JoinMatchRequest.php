@@ -8,6 +8,7 @@ use App\Models\Match;
 use App\Models\Message;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
@@ -19,6 +20,7 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	public $user;
 	protected $message;
 	protected $match;
+	protected $notifiable;
 
 	/**
 	 * Create a new notification instance.
@@ -88,6 +90,8 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 	 * @return BroadcastMessage
 	 */
 	public function toBroadcast($notifiable): BroadcastMessage {
+		$this->notifiable = $notifiable;
+
 		return new BroadcastMessage([
 			'conversation' => $this->user->getConversationWith($notifiable)->id,
 			'message' => [
@@ -119,4 +123,15 @@ class JoinMatchRequest extends Notification implements ShouldQueue {
 
 		return $message;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function broadcastOn(): array {
+		return [
+			new PrivateChannel('App.Models.User.' . $this->user->id),
+			new PrivateChannel('App.Models.User.' . $this->notifiable->id),
+		];
+	}
+
 }

@@ -25,6 +25,6 @@ class SendManagerInvites implements ShouldQueue {
 	 * @return void
 	 */
 	public function handle(ManagersInvited $event): void {
-		$event->managers->each->notify(new ManageInvitation($event->match));
+		$event->managers->each->notify(new ManageInvitation($event->match, $event->manager));
 	}
 }

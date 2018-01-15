@@ -15,7 +15,7 @@
         },
 
 		created() {
-			this.$bus.$on('new-notification', ()=>{
+			this.$bus.$on('increment-notification', ()=>{
 				this.messagesCount++;
 			});
 
@@ -24,7 +24,7 @@
 			});
 		},
 		beforeDestroy() {
-			this.$bus.$off('new-notification');
+			this.$bus.$off('increment-notification');
 			this.$bus.$off('decrement-notifications');
 		},
 	}

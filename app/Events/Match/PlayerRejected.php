@@ -17,19 +17,25 @@ class PlayerRejected {
 	public $user;
 	public $match;
 	public $message;
+	/**
+	 * @var User
+	 */
+	public $manager;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param User $user
 	 * @param Match $match
+	 * @param User $manager
+	 * @param User $user
 	 * @param string $message
 	 */
-	public function __construct(Match $match, User $user, ?string $message = '') {
+	public function __construct(Match $match, User $manager, User $user, ?string $message = '') {
 		//
 		$this->user = $user;
 		$this->match = $match;
 		$this->message = $message;
+		$this->manager = $manager;
 	}
 
 	/**

@@ -48,6 +48,6 @@ class RejectJoinRequest extends FormRequest {
 
 	public function commit():void {
 		$this->match->joinRequests()->detach($this->user);
-		event(new PlayerRejected($this->match, $this->user, $this->input('message')));
+		event(new PlayerRejected($this->match, $this->user(), $this->user, $this->input('message')));
 	}
 }

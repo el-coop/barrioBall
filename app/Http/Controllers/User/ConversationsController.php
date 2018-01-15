@@ -23,7 +23,7 @@ class ConversationsController extends Controller {
 	public function getConversationMessages(Conversation $conversation, Request $request) {
 		$conversation->markAsRead($request->user());
 
-		return $conversation->messages;
+		return $conversation->messages->each->append(['date','time']);
 	}
 
 	public function sendMessage(SendMessageRequest $request, Conversation $conversation) {

@@ -6,6 +6,7 @@ use App\Channels\ConversationChannel;
 use App\Models\Message as MessageModel;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
@@ -17,6 +18,7 @@ class Message extends Notification {
 
 	public $user;
 	protected $message;
+	protected $notifiable;
 
 	/**
 	 * Create a new notification instance.
@@ -69,12 +71,12 @@ class Message extends Notification {
 	 * @return BroadcastMessage
 	 */
 	public function toBroadcast($notifiable): BroadcastMessage {
+		$this->notifiable = $notifiable;
+
 		return new BroadcastMessage([
 			'conversation' => $this->user->getConversationWith($notifiable)->id,
 			'message' => [
-				'action_type' => null,
-				'action_match' => null,
-				'action_match_id' => null,
+				'action' => null,
 				'text' => $this->message,
 				'user_id' => $this->user->id,
 				'date' => Carbon::now()->format('d/m/y'),
@@ -94,5 +96,15 @@ class Message extends Notification {
 		$message->user_id = $this->user->id;
 
 		return $message;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function broadcastOn(): array {
+		return [
+			new PrivateChannel('App.Models.User.' . $this->user->id),
+			new PrivateChannel('App.Models.User.' . $this->notifiable->id),
+		];
 	}
 }

@@ -19,8 +19,7 @@
         <div class="card-footer">
             <ajax-form event="sent" ref="form"
                        btnWrapperClass="d-none"
-                       :action="'/user/conversations/' + conversation"
-                       @sent="updateConversation">
+                       :action="'/user/conversations/' + conversation">
                 <div class="input-group">
                     <input type="text" name="message" id="message" class="form-control" v-model="input">
                     <div class="input-group-append">
@@ -84,8 +83,15 @@
 		created() {
 			this.$bus.$on('new-notification', (notification) => {
 				if (notification.conversation == this.conversation) {
-					this.updateConversation(notification.message,false);
-					this.$bus.$emit('decrement-notifications');
+                    let reset = false;
+					if(notification.action == null){
+						reset = true;
+                    }
+					if (notification.message.user_id != this.currentUser) {
+						this.$bus.$emit('decrement-notifications');
+						reset = false;
+					}
+					this.updateConversation(notification.message, reset);
 					this.markAsRead();
 				}
 			});
@@ -113,16 +119,17 @@
 					date: data.date,
 					time: data.time
 				});
-				if(resetInput){
+				if (resetInput) {
 					this.input = '';
 					this.sending = false;
-                }
+				}
 				this.scrollToBottom();
 			},
 
-            markAsRead(){
-				axios.post('/user/conversations/read/' + this.conversation).then(()=>{});
-            },
+			markAsRead() {
+				axios.post('/user/conversations/read/' + this.conversation).then(() => {
+				});
+			},
 
 			load() {
 				axios.get('/user/conversations/' + this.conversation).then((response) => {
