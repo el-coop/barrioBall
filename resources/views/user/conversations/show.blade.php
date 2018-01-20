@@ -5,7 +5,7 @@
     @parent
     @if (!$conversations->isEmpty())
         <conversations-page inline-template
-                            :conversations="{{$conversations}}"
+                            :init-conversations="{{$conversations}}"
                             :current-user="{{$user->id}}">
             <div class="container">
                 <mobile-view-parent class="row" ref="mobileView">

@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ConversationsController extends Controller {
+
 	public function showConversations(Request $request) {
-		$conversations = $request->user()->conversations()->with(['users', 'messages'])->orderBy('updated_at')->get();
-		if ($conversation = $conversations->pop()) {
+		$conversations = $request->user()->conversations()->with(['users', 'messages'])->orderBy('updated_at','desc')->get();
+		if ($conversation = $conversations->shift()) {
 			$conversation->markAsRead($request->user());
 			$conversation->pivot->read = 1;
 			$conversations->prepend($conversation);

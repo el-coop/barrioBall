@@ -2,7 +2,7 @@
     <a @click="select" href="#" class="list-group-item list-group-item-action">
         {{user}}
         <span class="float-right">
-            <span class="badge badge-warning" v-if="!read">New</span>
+            <span class="badge badge-warning" v-if="! conversation.pivot.read">New</span>
         </span>
     </a>
 </template>
@@ -25,7 +25,7 @@
 			}
 		},
 
-		computed: {
+        computed: {
 			user() {
 				return this.conversation.users.filter((user) => {
 					return user.id != this.currentUser;
@@ -40,7 +40,7 @@
 					this.read = true;
 				}
 				this.$emit('conversation-change', this.conversation);
-			}
+			},
 		}
 
 	}
