@@ -18,12 +18,8 @@ class ConversationTest extends DuskTestCase
     {
 
         parent::setUp();
-        $this->user = factory(User::class)->create([
-            'language' => 'en'
-        ]);
-        $this->user2 = factory(User::class)->create([
-            'language' => 'en'
-        ]);
+        $this->user = factory(User::class)->create();
+        $this->user2 = factory(User::class)->create();
         $this->conversation = factory(Conversation::class)->create();
         $this->conversation->users()->attach([$this->user->id, $this->user2->id]);
         $this->message = factory(Message::class)->create([
@@ -57,9 +53,7 @@ class ConversationTest extends DuskTestCase
      */
     public function test_can_change_conversations(): void
     {
-        $user3 = factory(User::class)->create([
-            'language' => 'en'
-        ]);
+        $user3 = factory(User::class)->create();
         $conversation2 = factory(Conversation::class)->create();
         $conversation2->users()->attach([$this->user->id, $user3->id]);
         $message2 = factory(Message::class)->create([
@@ -73,9 +67,8 @@ class ConversationTest extends DuskTestCase
 
             $browser->loginAs($this->user)
                 ->visit(new ConversationPage)
-                ->press($user3->username)
-                ->pause(500)
-                ->assertSee($message2->text);
+                ->clickLink($user3->username)
+                ->waitForText($message2->text);
         });
     }
 
@@ -92,8 +85,7 @@ class ConversationTest extends DuskTestCase
                 ->waitFor('@conversation-loaded')
                 ->type('@text', 'New Test Message')
                 ->press('@submit-button')
-                ->pause(500)
-                ->assertSee('New Test Message');
+                ->waitForText('New Test Message');
         });
     }
 }

@@ -79,7 +79,7 @@
 					}).then((text) => {
 						this.lat = ev.latlng.lat;
 						this.lng = ev.latlng.lng;
-						this.address = text;
+						this.address = text.value;
 					}).catch(this.$swal.noop);
 				});
 

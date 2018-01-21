@@ -11,8 +11,8 @@ Route::group(['prefix' => 'user','middleware' => 'auth','namespace' => 'User'],f
     Route::patch('/email','UserController@updateEmail');
     Route::patch('/password','UserController@updatePassword');
     Route::patch('/language','UserController@updateLanguage');
-    Route::get('/conversations', 'ConversationsController@showConversations');
-    Route::get('/conversations/{conversation}', 'ConversationsController@getConversationMessages');
-	Route::post('/conversations/{conversation}', 'ConversationsController@sendMessage');
-	Route::post('/conversations/read/{conversation}', 'ConversationsController@markAsRead');
+    Route::get('/conversations', 'ConversationController@showConversations');
+    Route::get('/conversations/{conversation}', 'ConversationController@getConversationMessages');
+	Route::post('/conversations/{conversation}', 'ConversationController@sendMessage');
+	Route::post('/conversations/read/{conversation}', 'ConversationController@markAsRead');
 });

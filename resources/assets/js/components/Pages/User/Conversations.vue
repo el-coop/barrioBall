@@ -44,7 +44,6 @@
 
 		created() {
 			this.$bus.$on('new-notification', (notification) => {
-				console.log(notification);
 				let conversationIndex = this.conversations.findIndex((conversation)=>{
                     return conversation.id == notification.conversation;
                 });

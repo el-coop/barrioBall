@@ -14,7 +14,7 @@ class ConversationPage extends BasePage
      */
     public function url()
     {
-        return action('User\UserController@showConversations', [], false);
+        return action('User\ConversationController@showConversations', [], false);
     }
 
     /**
@@ -36,7 +36,7 @@ class ConversationPage extends BasePage
     public function elements()
     {
         return [
-            '@submit-button' => '.float-lg-right',
+            '@submit-button' => '.input-group-append > .btn.btn-info',
             '@text' => '#message',
             '@conversation-loaded' => '.message'
         ];

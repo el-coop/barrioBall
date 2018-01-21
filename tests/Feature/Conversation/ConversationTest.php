@@ -28,7 +28,7 @@ class ConversationTest extends TestCase
      * @group conversation
      */
     public function test_no_conversations_when_no_join_requests(): void{
-        $response = $this->actingAs($this->player)->get(action('User\UserController@showConversations'));
+        $response = $this->actingAs($this->player)->get(action('User\ConversationController@showConversations'));
         $response->assertSee(__('conversations/conversation.noConversations',[],$this->player->language));
     }
 
@@ -43,8 +43,10 @@ class ConversationTest extends TestCase
             ]);
         $this->assertDatabaseHas('conversation_user', ['user_id' => $this->player->id, 'conversation_id' => 1]);
         $this->assertDatabaseHas('conversation_user', ['user_id' => $this->manager->id, 'conversation_id' => 1]);
-        $this->assertDatabaseHas('messages', ['text' => 'bla', 'conversation_id' => 1, 'action_match_id' => $this->match->id]);
-
+        $this->assertDatabaseHas('messages', ['text' => 'bla', 'action' => __('conversations/conversation.join', [
+			'name' => $this->match->name,
+			'url' => $this->match->url,
+		], $this->manager->language)]);
     }
 
     /**
@@ -55,8 +57,7 @@ class ConversationTest extends TestCase
         $this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
             'message' => 'bla',
         ]);
-        $response = $this->actingAs($this->player)->get(action('User\UserController@showConversations'));
-        $response->assertSee('bla');
+        $response = $this->actingAs($this->player)->get(action('User\ConversationController@showConversations'));
         $response->assertSee($this->manager->username);
 
     }

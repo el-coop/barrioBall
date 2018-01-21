@@ -8,10 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ConversationsController extends Controller {
+class ConversationController extends Controller {
 
 	public function showConversations(Request $request) {
-		$conversations = $request->user()->conversations()->with(['users', 'messages'])->orderBy('updated_at','desc')->get();
+		$conversations = $request->user()->conversations()->with(['users'])->orderBy('updated_at','desc')->get();
 		if ($conversation = $conversations->shift()) {
 			$conversation->markAsRead($request->user());
 			$conversation->pivot->read = 1;

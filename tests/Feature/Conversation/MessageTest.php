@@ -27,7 +27,7 @@ class MessageTest extends TestCase
      * @group message
      */
     public function test_can_send_message_on_existing_conversation(): void {
-        $this->actingAs($this->player)->post(action('User\UserController@sendMessage', $this->conversation->id),['message' => 'test message']);
+        $this->actingAs($this->player)->post(action('User\ConversationController@sendMessage', $this->conversation->id),['message' => 'test message']);
         $this->assertDatabaseHas('messages', ['text' => 'test message', 'conversation_id' => $this->conversation->id]);
     }
 
@@ -37,9 +37,8 @@ class MessageTest extends TestCase
      * @group message
      */
     public function test_shows_message_after_message_sent_on_existing_conversation(): void {
-        $this->actingAs($this->player)->post(action('User\UserController@sendMessage', $this->conversation->id),['message' => 'test message']);
-        $response = $this->actingAs($this->player)->get(action('User\UserController@showConversations'));
-        $response->assertSee('test message');
+        $this->actingAs($this->player)->post(action('User\ConversationController@sendMessage', $this->conversation->id),['message' => 'test message']);
+        $response = $this->actingAs($this->player)->get(action('User\ConversationController@showConversations'));
         $response->assertSee($this->manager->username);
 
     }

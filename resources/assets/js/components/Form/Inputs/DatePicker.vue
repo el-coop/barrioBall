@@ -1,12 +1,13 @@
 <template>
     <div class='input-group date'>
-        <span class="input-group-addon" v-if="label">
-            {{label}}
-        </span>
+        <div class="input-group-prepend input-group-addon" v-if="label">
+            <span class="input-group-text" v-html="label"></span>
+        </div>
         <input type='text' class="form-control" :name="name" :value="initValue" />
-        <span class="input-group-addon">
-            <i class="fa fa-calendar"></i>
-        </span>
+        <div class="input-group-append input-group-addon">
+            <span class="input-group-text">
+                <i class="fa fa-calendar"></i></span>
+        </div>
     </div>
 </template>
 
