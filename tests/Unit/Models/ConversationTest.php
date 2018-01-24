@@ -26,6 +26,7 @@ class ConversationTest extends TestCase {
 	}
 
 
+
 	/**
 	 * @test
 	 * @group conversation
@@ -50,7 +51,10 @@ class ConversationTest extends TestCase {
 	 * @return void
 	 */
 	public function test_message_relationship_works(): void {
-		$messages = factory(Message::class, 3)->create()->each(function ($message) {
+		$messages = factory(Message::class, 3)->make([
+			'user_id' => $this->user->id,
+			'conversation_id' => null
+		])->each(function ($message) {
 			$this->conversation->addMessage($message);
 		});
 

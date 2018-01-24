@@ -6,6 +6,6 @@ return [
 	'accepted' => 'Aceptó la solicitud participar en <a href=":url">:name</a>',
 	'rejected' => 'Rechazó la solicitud participar en <a href=":url">:name</a>',
 	'manageInvite' => 'Mandó invitación a administrar <a href=":url">:name</a>',
-	'removed' => 'Le :player eliminó de <a href=":url">:name</a>',
+	'removed' => 'Eliminó :player de <a href=":url">:name</a>',
 
 ];

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Conversation;
 
 use App\Models\Conversation;
+use App\Models\Match;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,51 +12,111 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class MessageTest extends TestCase {
 	use RefreshDatabase;
 
+	protected $manager;
+	protected $player;
+	protected $match;
+
+
 	public function setUp() {
 
 		parent::setUp();
 		$this->manager = factory(User::class)->create();
 		$this->player = factory(User::class)->create();
-		$this->conversation = factory(Conversation::class)->create();
-		$this->conversation->users()->attach([$this->player->id, $this->manager->id]);
-
+		$this->match = factory(Match::class)->create();
+		$this->match->addManager($this->manager);
 	}
 
 	/**
-	 * @return void
-	 * @group conversation
-	 * @group message
-	 */
-	public function test_can_send_message_on_existing_conversation(): void {
-		$this->actingAs($this->player)->post(action('User\ConversationController@sendMessage', $this->conversation->id), ['message' => 'test message']);
-		$this->assertDatabaseHas('messages', ['text' => 'test message', 'conversation_id' => $this->conversation->id]);
-	}
-
-	/**
-	 * @return void
-	 * @group conversation
-	 * @group message
-	 */
-	public function test_shows_message_after_message_sent_on_existing_conversation(): void {
-		$this->actingAs($this->player)->post(action('User\ConversationController@sendMessage', $this->conversation->id), ['message' => 'test message']);
-		$response = $this->actingAs($this->player)->get(action('User\ConversationController@showConversations'));
-		$response->assertSee($this->manager->username);
-
-	}
-
-	/**
-	 * @group conversation
+	 * @group messages
 	 * @return void
 	 */
-	public function test_create_conversation_on_join_request(): void {
+	public function test_send_message_on_join_request(): void {
 		$this->actingAs($this->player)->post(action('Match\MatchUserController@joinMatch', $this->match), [
 			'message' => 'bla',
 		]);
-		$this->assertDatabaseHas('conversation_user', ['user_id' => $this->player->id, 'conversation_id' => 1]);
-		$this->assertDatabaseHas('conversation_user', ['user_id' => $this->manager->id, 'conversation_id' => 1]);
-		$this->assertDatabaseHas('messages', ['text' => 'bla', 'action' => __('conversations/conversation.join', [
-			'name' => $this->match->name,
+		$conversation = $this->manager->getConversationWith($this->player);
+		$this->assertCount(1,$conversation->messages);
+		$this->assertTrue($this->manager->hasUnreadConversations());
+		$this->assertFalse($this->player->hasUnreadConversations());
+		$this->assertEquals(__('conversations/conversation.join',[
 			'url' => $this->match->url,
-		], $this->manager->language)]);
+			'name' => $this->match->name
+		],$this->manager->language),$conversation->messages()->first()->action);
+	}
+
+	/**
+	 * @group messages
+	 * @return void
+	 */
+	public function test_send_message_on_join_request_accepted(): void {
+		$this->match->addJoinRequest($this->player);
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@acceptJoin', $this->match), [
+			'user' => $this->player->id,
+		]);
+		$conversation = $this->manager->getConversationWith($this->player);
+		$this->assertCount(1,$conversation->messages);
+		$this->assertTrue($this->player->hasUnreadConversations());
+		$this->assertfalse($this->manager->hasUnreadConversations());
+		$this->assertEquals(__('conversations/conversation.accepted',[
+			'url' => $this->match->url,
+			'name' => $this->match->name
+		],$this->player->language),$conversation->messages()->first()->action);
+	}
+
+	/**
+	 * @group messages
+	 * @return void
+	 */
+	public function test_send_message_on_join_request_rejected(): void {
+		$this->match->addJoinRequest($this->player);
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@rejectJoin', $this->match), [
+			'user' => $this->player->id,
+		]);
+		$conversation = $this->manager->getConversationWith($this->player);
+		$this->assertCount(1,$conversation->messages);
+		$this->assertTrue($this->player->hasUnreadConversations());
+		$this->assertfalse($this->manager->hasUnreadConversations());
+		$this->assertEquals(__('conversations/conversation.rejected',[
+			'url' => $this->match->url,
+			'name' => $this->match->name
+		],$this->player->language),$conversation->messages()->first()->action);
+	}
+
+
+	/**
+	 * @group messages
+	 * @return void
+	 */
+	public function test_send_message_on_manage_invite(): void {
+		$this->actingAs($this->manager)->post(action('Match\MatchUserController@inviteManagers', $this->match), [
+			'invite_managers' => [$this->player->id],
+		]);
+		$conversation = $this->manager->getConversationWith($this->player);
+		$this->assertCount(1,$conversation->messages);
+		$this->assertTrue($this->player->hasUnreadConversations());
+		$this->assertfalse($this->manager->hasUnreadConversations());
+		$this->assertEquals(__('conversations/conversation.manageInvite',[
+			'url' => $this->match->url,
+			'name' => $this->match->name
+		],$this->player->language),$conversation->messages()->first()->action);
+	}
+
+	/**
+	 * @group messages
+	 * @return void
+	 */
+	public function test_send_message_on_remove_player(): void {
+		$this->actingAs($this->manager)->delete(action('Match\MatchUserController@removePlayer', $this->match), [
+			'user' => $this->player->id,
+		]);
+		$conversation = $this->manager->getConversationWith($this->player);
+		$this->assertCount(1,$conversation->messages);
+		$this->assertTrue($this->player->hasUnreadConversations());
+		$this->assertfalse($this->manager->hasUnreadConversations());
+		$this->assertEquals(__('conversations/conversation.removed',[
+			'url' => $this->match->url,
+			'name' => $this->match->name,
+			'player' => $this->player->username
+		],$this->player->language),$conversation->messages()->first()->action);
 	}
 }
