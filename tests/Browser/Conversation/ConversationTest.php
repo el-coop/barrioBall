@@ -145,7 +145,7 @@ class ConversationTest extends DuskTestCase {
 				->clickLink($this->user2->username)
 				->waitForText('second message')
 				->assertDontSee('New')
-				->assertDontSeeIn('.badge.badge-info.small-badge','1');
+				->assertDontSee('.badge.badge-info.small-badge');
 		});
 	}
 }
