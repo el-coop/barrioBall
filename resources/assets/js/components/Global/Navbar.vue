@@ -20,7 +20,9 @@
 			});
 
 			this.$bus.$on('decrement-notifications', ()=>{
-				this.messagesCount--;
+				if(this.messagesCount > 0){
+					this.messagesCount--;
+                }
 			});
 		},
 		beforeDestroy() {

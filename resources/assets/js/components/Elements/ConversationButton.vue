@@ -19,12 +19,6 @@
 			},
 		},
 
-		data() {
-			return {
-				read: this.conversation.pivot.read
-			}
-		},
-
         computed: {
 			user() {
 				return this.conversation.users.filter((user) => {
@@ -35,9 +29,8 @@
 
 		methods: {
 			select() {
-				if (!this.read) {
+				if (!this.conversation.pivot.read) {
 					this.$bus.$emit('decrement-notifications');
-					this.read = true;
 				}
 				this.$emit('conversation-change', this.conversation);
 			},
