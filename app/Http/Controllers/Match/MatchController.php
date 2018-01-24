@@ -35,7 +35,6 @@ class MatchController extends Controller {
 	}
 
 	/**
-	 * @param Request $request
 	 * @param Match $match
 	 *
 	 * @return View
@@ -56,7 +55,6 @@ class MatchController extends Controller {
 	}
 
 	/**
-	 * @param Request $request
 	 * @param Match $match
 	 *
 	 * @return View
@@ -93,11 +91,9 @@ class MatchController extends Controller {
 	}
 
 	/**
-	 * @param Request $request
-	 *
 	 * @return View
 	 */
-	public function showSearch(Request $request): View {
+	public function showSearch(): View {
 		return view('match.search');
 	}
 

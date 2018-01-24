@@ -25,10 +25,11 @@ class ManagerJoined
 	public $user;
 
 	/**
-     * Create a new event instance.
-     *
-     * @return void
-     */
+	 * Create a new event instance.
+	 *
+	 * @param Match $match
+	 * @param User $user
+	 */
     public function __construct(Match $match, User $user)
     {
 		$this->match = $match;

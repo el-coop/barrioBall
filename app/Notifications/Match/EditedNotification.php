@@ -18,7 +18,7 @@ class EditedNotification extends Notification implements ShouldQueue {
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @return void
+	 * @param Match $match
 	 */
 	public function __construct(Match $match) {
 		//

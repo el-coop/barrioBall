@@ -30,6 +30,9 @@ class RejectJoinManagementRequest extends FormRequest {
 		];
 	}
 
+	/**
+	 *
+	 */
 	public function commit(): void {
 		$this->match->removeManageInvitation($this->user());
 		event(new ManageInvitationRejected($this->match, $this->user()));

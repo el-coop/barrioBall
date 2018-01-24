@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 class HomeController extends Controller {
 
 	/**
+	 * @param Request $request
+	 *
 	 * @return View
 	 */
 	public function index(Request $request): View {
@@ -56,7 +58,9 @@ class HomeController extends Controller {
 	}
 
 	/**
-	 * @return View
+	 * @param ContactRequest $request
+	 *
+	 * @return RedirectResponse
 	 */
 	public function contactUs(ContactRequest $request): RedirectResponse {
 		$request->commit();

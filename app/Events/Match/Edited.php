@@ -21,7 +21,7 @@ class Edited {
 	/**
 	 * Create a new event instance.
 	 *
-	 * @return void
+	 * @param Match $match
 	 */
 	public function __construct(Match $match) {
 		//

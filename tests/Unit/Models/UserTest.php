@@ -381,4 +381,20 @@ class UserTest extends TestCase {
 		$this->user->getConversationWith($user2);
 		$this->assertFalse($user2->hasUnreadConversations());
 	}
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_countUnreadConversations_return_correctly(): void {
+		$user2 = factory(User::class)->create();
+		$conversation = $this->user->getConversationWith($user2);
+		$this->assertEquals(0,$user2->countUnreadConversations());
+		$message = factory(Message::class)->make([
+			'user_id' => $this->user->id,
+			'conversation_id' => null,
+		]);
+		$conversation->addMessage($message);
+		$this->assertEquals(1,$user2->countUnreadConversations());
+	}
 }

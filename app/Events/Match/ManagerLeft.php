@@ -22,8 +22,7 @@ class ManagerLeft {
 	 * Create a new event instance.
 	 *
 	 * @param Match $match
-	 * @param User $manager
-	 *
+	 * @param User $user
 	 */
 	public function __construct(Match $match, User $user) {
 		$this->user = $user;

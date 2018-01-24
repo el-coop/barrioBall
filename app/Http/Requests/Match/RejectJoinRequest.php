@@ -34,6 +34,9 @@ class RejectJoinRequest extends FormRequest {
 	}
 
 
+	/**
+	 * @param Validator $validator
+	 */
 	public function withValidator(Validator $validator): void {
 		$this->user = User::find($this->input('user'));
 		$validator->after(function ($validator) {
@@ -46,6 +49,9 @@ class RejectJoinRequest extends FormRequest {
 		});
 	}
 
+	/**
+	 *
+	 */
 	public function commit():void {
 		$this->match->joinRequests()->detach($this->user);
 		event(new PlayerRejected($this->match, $this->user(), $this->user, $this->input('message')));

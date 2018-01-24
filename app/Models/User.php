@@ -157,6 +157,7 @@ class User extends Authenticatable {
 
 	/**
 	 * @return bool|null
+	 * @throws Exception
 	 */
 	public function delete(): ?bool {
 		$this->user->delete();

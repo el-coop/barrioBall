@@ -24,7 +24,7 @@ class SendPlayerLeftNotification implements ShouldQueue {
 	 *
 	 * @return void
 	 */
-	public function handle(PlayerLeft $event) {
+	public function handle(PlayerLeft $event): void {
 		$event->match->managers->each->notify(new PlayerLeftNotification($event->match, $event->user));
 	}
 }

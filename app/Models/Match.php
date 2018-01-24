@@ -21,9 +21,6 @@ class Match extends Model {
 	];
 
 	/**
-	 *
-	 * @param string $value
-	 *
 	 * @return string
 	 */
 	public function getDateAttribute(): string {
@@ -32,8 +29,6 @@ class Match extends Model {
 
 
 	/**
-	 * @param string $value
-	 *
 	 * @return string
 	 */
 	public function getTimeAttribute(): string {
