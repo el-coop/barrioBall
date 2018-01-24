@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Models\Admin;
 use App\Models\Conversation;
 use App\Models\Match;
+use App\Models\Message;
 use App\Models\Player;
 use App\Models\User;
 use Exception;
@@ -347,9 +348,37 @@ class UserTest extends TestCase {
      * @test
      * @group user
      */
-    public function test_getConversationWith_returns_empty_when_no_conversation(): void {
+    public function test_getConversationWith_returns_new_conversation(): void {
         $user2 = factory(User::class)->create();
         $conversation = $this->user->getConversationWith($user2);
-        $this->assertEmpty($conversation);
+        $this->assertInstanceOf(Conversation::class,$conversation);
+        $this->assertCount(0,$conversation->messages);
+		$this->assertArraySubset([$this->user->id,$user2->id],$conversation->users->pluck('id')->toArray());
     }
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_hasUnreadConversations_return_true_when_has(): void {
+		$user2 = factory(User::class)->create();
+		$message = factory(Message::class)->make([
+			'user_id' => $this->user->id,
+			'conversation_id' => null,
+		]);
+		$conversation = $this->user->getConversationWith($user2);
+		$conversation->addMessage($message);
+		$this->assertTrue($user2->hasUnreadConversations());
+	}
+
+
+	/**
+	 * @test
+	 * @group user
+	 */
+	public function test_hasUnreadConversations_return_false_when_doesnt_have(): void {
+		$user2 = factory(User::class)->create();
+		$this->user->getConversationWith($user2);
+		$this->assertFalse($user2->hasUnreadConversations());
+	}
 }

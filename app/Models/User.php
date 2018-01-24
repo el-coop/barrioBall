@@ -137,14 +137,6 @@ class User extends Authenticatable {
 	}
 
 	/**
-	 * @return BelongsToMany
-	 */
-	public function manageInvites(): BelongsToMany {
-		return $this->belongsToMany(Match::class, 'manager_invites')
-			->withTimestamps();
-	}
-
-	/**
 	 * @param Match $match
 	 *
 	 * @return bool
@@ -153,6 +145,14 @@ class User extends Authenticatable {
 		return Cache::rememberForever(sha1("{$this->id}_{$match->id}_managerInvitation"), function () use ($match) {
 			return $this->manageInvites()->where('id', $match->id)->exists();
 		});
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function manageInvites(): BelongsToMany {
+		return $this->belongsToMany(Match::class, 'manager_invites')
+			->withTimestamps();
 	}
 
 	/**
@@ -168,7 +168,7 @@ class User extends Authenticatable {
 	 * @throws Exception
 	 */
 	public function makeAdmin(): void {
-		if($this->user_type == 'Player'){
+		if ($this->user_type == 'Player') {
 			$oldUser = $this->user;
 			$admin = new Admin;
 			$admin->save();
@@ -179,47 +179,51 @@ class User extends Authenticatable {
 		}
 	}
 
-    /**
-     * @return BelongsToMany
-     */
-    public function conversations() : BelongsToMany{
-	    return $this->belongsToMany(Conversation::class)->withPivot('read');
-    }
-
-
-    /**
-     * @return HasMany
-     */
-    public function messages() : HasMany{
-	    return $this->hasMany(Message::class);
-    }
-
+	/**
+	 * @return HasMany
+	 */
+	public function messages(): HasMany {
+		return $this->hasMany(Message::class);
+	}
 
 	/**
 	 * @param User $user
 	 *
 	 * @return Conversation|null
 	 */
-    public function getConversationWith(User $user): ?Conversation{
-        $conversations = $this->conversations()->with('users')->get();
-        return $conversations->first(function($value) use ($user) {
-            return $value->users->contains(function ($value) use ($user) {
-                return $value->id == $user->id;
-            });
-        });
-    }
+	public function getConversationWith(User $user): Conversation {
+		$conversations = $this->conversations()->with('users')->get();
+		$conversation = $conversations->first(function ($value) use ($user) {
+			return $value->users->contains(function ($value) use ($user) {
+				return $value->id == $user->id;
+			});
+		});
+		if(! $conversation){
+			$conversation = new Conversation;
+			$conversation->save();
+			$conversation->users()->attach([$this->id, $user->id]);
+		}
+		return $conversation;
+	}
+
+	/**
+	 * @return BelongsToMany
+	 */
+	public function conversations(): BelongsToMany {
+		return $this->belongsToMany(Conversation::class)->withPivot('read');
+	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasUnreadConversations(): bool{
-		return $this->conversations()->wherePivot('read', '=', false)->exists();
+	public function hasUnreadConversations(): bool {
+		return $this->conversations()->wherePivot('read', false)->exists();
 	}
 
 	/**
 	 * @return int
 	 */
-	public function countUnreadConversations(): int{
-		return $this->conversations()->wherePivot('read', '=', false)->count();
+	public function countUnreadConversations(): int {
+		return $this->conversations()->wherePivot('read',false)->count();
 	}
 }

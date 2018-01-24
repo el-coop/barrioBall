@@ -5,10 +5,13 @@ namespace Tests\Unit\Models;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
 {
+	use RefreshDatabase;
+
 	protected $admin;
 
 	public function setUp() {

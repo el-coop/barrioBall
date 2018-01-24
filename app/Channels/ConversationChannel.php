@@ -17,13 +17,7 @@ class ConversationChannel {
 	 */
 	public function send($notifiable, Notification $notification): void {
 		$message = $notification->toConversation($notifiable);
-		if (!$conversation = $notifiable->getConversationWith($notification->user)) {
-			$conversation = New Conversation;
-			$conversation->save();
-			$conversation->users()->attach([$notification->user->id, $notifiable->id]);
-		}
-		$conversation->touch();
-		$conversation->markAsUnread($notifiable);
-		$conversation->messages()->save($message);
+		$conversation = $notifiable->getConversationWith($notification->user);
+		$conversation->addMessage($message);
 	}
 }

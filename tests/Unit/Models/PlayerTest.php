@@ -4,10 +4,13 @@ namespace Tests\Unit\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PlayerTest extends TestCase
 {
+	use RefreshDatabase;
+
 	protected $player;
 
 	public function setUp() {

@@ -5,13 +5,20 @@ namespace App\Http\Controllers\User;
 use App\Http\Requests\User\SendMessageRequest;
 use App\Models\Conversation;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 
 class ConversationController extends Controller {
 
-	public function showConversations(Request $request) {
-		$conversations = $request->user()->conversations()->with(['users'])->orderBy('updated_at','desc')->get();
+	/**
+	 * @param Request $request
+	 *
+	 * @return View
+	 */
+	public function showConversations(Request $request): View {
+		$conversations = $request->user()->conversations()->whereHas('messages')->with(['users'])->orderBy('updated_at','desc')->get();
 		if ($conversation = $conversations->shift()) {
 			$conversation->markAsRead($request->user());
 			$conversation->pivot->read = 1;
@@ -21,13 +28,25 @@ class ConversationController extends Controller {
 		return view('user.conversations.show', compact('conversations'));
 	}
 
-	public function getConversationMessages(Conversation $conversation, Request $request) {
+	/**
+	 * @param Conversation $conversation
+	 * @param Request $request
+	 *
+	 * @return Collection
+	 */
+	public function getConversationMessages(Conversation $conversation, Request $request): Collection {
 		$conversation->markAsRead($request->user());
 
 		return $conversation->messages->each->append(['date','time']);
 	}
 
-	public function sendMessage(SendMessageRequest $request, Conversation $conversation) {
+	/**
+	 * @param SendMessageRequest $request
+	 * @param Conversation $conversation
+	 *
+	 * @return array
+	 */
+	public function sendMessage(SendMessageRequest $request, Conversation $conversation): array {
 		$request->commit();
 
 		return [
@@ -39,6 +58,11 @@ class ConversationController extends Controller {
 		];
 	}
 
+	/**
+	 * @param Conversation $conversation
+	 *
+	 * @return array
+	 */
 	public function markAsRead(Conversation $conversation): array {
 		$conversation->markAsRead();
 

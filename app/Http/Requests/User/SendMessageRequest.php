@@ -25,7 +25,7 @@ class SendMessageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'message' => 'required'
         ];
     }
 
