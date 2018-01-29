@@ -193,17 +193,28 @@ class User extends Authenticatable {
 	 * @return Conversation|null
 	 */
 	public function getConversationWith(User $user): Conversation {
-		$conversations = $this->conversations()->with('users')->get();
-		$conversation = $conversations->first(function ($value) use ($user) {
-			return $value->users->contains(function ($value) use ($user) {
-				return $value->id == $user->id;
-			});
-		});
-		if(! $conversation){
-			$conversation = new Conversation;
-			$conversation->save();
-			$conversation->users()->attach([$this->id, $user->id]);
+		$firstId = $this->id;
+		$secondId = $user->id;
+		if($secondId < $firstId){
+			$firstId = $user->id;
+			$secondId = $this->id;
 		}
+
+		$conversation = Cache::rememberForever(sha1("{$firstId}_{$secondId}_conversation"),function() use($user){
+			$conversations = $this->conversations()->with('users')->get();
+			$conversation = $conversations->first(function ($value) use ($user) {
+				return $value->users->contains(function ($value) use ($user) {
+					return $value->id == $user->id;
+				});
+			});
+			if(! $conversation){
+				$conversation = new Conversation;
+				$conversation->save();
+				$conversation->users()->attach([$this->id, $user->id]);
+			}
+			return $conversation;
+		});
+
 		return $conversation;
 	}
 
@@ -225,6 +236,8 @@ class User extends Authenticatable {
 	 * @return int
 	 */
 	public function countUnreadConversations(): int {
-		return $this->conversations()->wherePivot('read',false)->count();
+		return Cache::rememberForever(sha1("{$this->id}_unread_count"),function(){
+			return $this->conversations()->wherePivot('read',false)->count();
+		});
 	}
 }

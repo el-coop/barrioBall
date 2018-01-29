@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Conversation;
+use Cache;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ConversationPolicy {
@@ -18,7 +19,9 @@ class ConversationPolicy {
 	 * @return bool
 	 */
 	public function update(User $user, Conversation $conversation): bool {
-		return $conversation->users()->where('users.id', $user->id)->exists();
+		return Cache::rememberForever(sha1("{$user->id}_participates_{$conversation->id}"),function() use ($conversation, $user){
+			return $conversation->users()->where('users.id', $user->id)->exists();
+		});
 	}
 
 
