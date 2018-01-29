@@ -7,10 +7,12 @@ use App\Models\Errors\PhpError;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ErrorTest extends TestCase
 {
+	use RefreshDatabase;
 
 	public function setUp() {
 		parent::setUp();

@@ -48,6 +48,11 @@ class PageController extends Controller {
 		return view('admin.overview', compact('users', 'newUsers', 'matches', 'newMatches', 'errorsCount', 'newErrors', 'jsErrors', 'phpErrors'));
 	}
 
+	/**
+	 * @param Request $request
+	 *
+	 * @return LengthAwarePaginator
+	 */
 	public function getUsers(Request $request): LengthAwarePaginator {
 		return Cache::tags('admin_users', 'admin_overview')->rememberForever(sha1($request->fullUrl()), function () use ($request) {
 			$users = User::select('id','username', 'email','user_type');

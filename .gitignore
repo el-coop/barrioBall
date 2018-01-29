@@ -12,3 +12,4 @@ Homestead.yaml
 .env.dusk.local
 /public/mix-manifest.json
 .env.dusk
+/laravel-echo-server.json

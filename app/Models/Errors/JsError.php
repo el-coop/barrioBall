@@ -20,6 +20,7 @@ class JsError extends Model {
 
 	/**
 	 * @return bool|null
+	 * @throws \Exception
 	 */
 	public function delete(): ?bool {
 		$this->error->delete();

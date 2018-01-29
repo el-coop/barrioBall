@@ -27,9 +27,12 @@
     @endslot
     @slot('navbarRight')
         <li class="nav-item {{ Request::is('user/conversations') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ action('User\UserController@showConversations') }}" >
-                <i class="fa {{$user->hasUnreadConversations() ? 'fa-comment'  : 'fa-comment-o'}}">
-                </i>
+            <a class="nav-link" href="{{ action('User\ConversationController@showConversations') }}">
+                <span class="position-relative">
+                    <i class="fa" :class="{'fa-comment': messagesCount > 0, 'fa-comment-o' : messagesCount == 0}">
+                    </i>
+                    <span class="badge badge-info small-badge" v-text="messagesCount" v-if="messagesCount > 0"></span>
+                </span>
                 <span class="d-md-hidden">| @lang('navbar.conversationsLink')</span>
             </a>
         </li>

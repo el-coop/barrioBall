@@ -4,10 +4,12 @@
         <input type="text" id="address" name="address" v-model="address"
                value="{{ old('address') }}"
                class="form-control" required>
-        <span class="input-group-addon">
-            <i class="fa fa-spinner fa-spin" v-if="calcAddress"></i>
-            <i class="fa fa-check" v-else></i>
-        </span>
+        <div class="input-group-append">
+            <span class="input-group-text">
+                <i class="fa fa-spinner fa-spin" v-if="calcAddress"></i>
+                <i class="fa fa-check" v-else></i>
+            </span>
+        </div>
     </div>
     @if ($errors->has('address'))
         <div class="invalid-feedback">

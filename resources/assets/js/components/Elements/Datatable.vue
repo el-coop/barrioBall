@@ -6,11 +6,11 @@
                     <label>{{ translations.search}}:</label>
                     <div class="input-group">
                         <input type="text" class="form-control" v-model="filter" @keyup.enter="updateParams">
-                        <span class="input-group-btn">
+                        <div class="input-group-append">
                             <button class="btn btn-primary" type="button" @click="updateParams">
                                 <i class="fa fa-search"></i>
                             </button>
-                        </span>
+                        </div>
                     </div>
                 </div>
             </div>

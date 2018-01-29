@@ -24,7 +24,7 @@ class ClearUserPendingRequestCache {
 	 *
 	 * @return void
 	 */
-	public function handle($event) {
+	public function handle($event): void {
 		Cache::forget(sha1("{$event->user->username}_requests"));
 	}
 }

@@ -2,26 +2,32 @@
     <div class="card">
         <div class="card-header">{{this.sender}}</div>
         <div class="card-body">
-            <div v-for="message in messages" :class="{'text-right': isCurrent(message.user_id)}"
-                 class="message-wrapper">
-            <span class="message"
-                  :class="[isCurrent(message.user_id) ? 'current-user' : 'sender']">
-                <h5 v-if="message.action_type">
-                    {{message.action_type}} <a :href="'/matches/' + message.action_match_id">{{message.action_match}}</a>
-                </h5>
-                <p>{{message.text}}</p></span>
-                <span class="time"
-                      :class="[isCurrent(message.user_id) ? 'current-user-time' : 'sender-time']">{{message.date}} {{message.time}}</span>
+            <div v-for="message in messages" class="d-flex flex-column mb-1"
+                 :class="messageClass(message.user_id)">
+                <span class="message px-2 pt-2 pb-1" :class="[messageBackground(message.user_id)]">
+                    <h6 v-if="message.action" v-html="message.action"></h6>
+                    <p class="m-0">
+                        {{message.text}}
+                    </p>
+                    <small class="text-muted d-block" :class="{'text-right' : ! isCurrent(message.user_id)}">
+                        {{message.date}}
+                        {{message.time}}
+                    </small>
+                </span>
             </div>
         </div>
         <div class="card-footer">
             <ajax-form event="sent" ref="form"
-                       :action="'/user/conversations/' + conversation"
-                       @sent="updateConversation">
-                <div class="form-group">
-                    <input type="text" name="message" id="message" class="form-control" required>
+                       btnWrapperClass="d-none"
+                       :action="'/user/conversations/' + conversation">
+                <div class="input-group">
+                    <input type="text" name="message" id="message" class="form-control" v-model="input">
+                    <div class="input-group-append">
+                        <button class="btn btn-info" type="submit" :disabled="sending || input == ''"
+                                @click="sending = true">Button
+                        </button>
+                    </div>
                 </div>
-                <span class="float-lg-right" slot="submit">{{this.btnTxt}}</span>
             </ajax-form>
         </div>
     </div>
@@ -29,40 +35,15 @@
 <style scoped>
     .current-user {
         background-color: #dcf8c6;
-        float: right;
-        clear: right;
     }
 
     .sender {
-        background-color: #cccdce;
-        float: left;
-        clear: left;
-    }
-
-    .current-user-time {
-        float: right;
-        clear: right;
-    }
-
-    .sender-time {
-        float: left;
-        clear: left;
-    }
-
-    .time {
-        margin: 0px 12px;
-        font-size: 10px;
+        background-color: #f3f4f5;
     }
 
     .message {
-        border-radius: 26px;
+        border-radius: 1rem;
         max-width: 65%;
-        margin: 5px;
-        padding: 10px;
-    }
-
-    .message-wrapper {
-        margin: 18px 0px;
     }
 
     .card-body {
@@ -71,59 +52,114 @@
     }
 </style>
 <script>
-    export default {
-        props: {
-            conversation: {
-                type: Number,
-                required: true
-            },
+	export default {
+		props: {
+			conversation: {
+				type: Number,
+				required: true
+			},
 
-            currentUser: {
-                type: Number,
-                required: true
-            },
-            sender: {
-                type: String,
-                required: true
-            },
-            btnTxt: {
-                type: String,
-                required: true
-            }
-        },
-        data() {
-            return {
-                messages: []
-            }
-        },
+			currentUser: {
+				type: Number,
+				required: true
+			},
+			sender: {
+				type: String,
+				required: true
+			},
+			btnTxt: {
+				type: String,
+				required: true
+			},
+		},
+		data() {
+			return {
+				messages: [],
+				sending: false,
+				input: ''
+			}
+		},
 
-        watch: {
-            conversation() {
-                axios.get('/user/conversations/' + this.conversation).then((response) => {
-                    this.messages = response.data;
-                    setTimeout(() => {
-                        let chat = this.$el.querySelector(".card-body");
-                        chat.scrollTop = chat.scrollHeight;
-                    }, 50);
-                });
+		created() {
+			this.$bus.$on('new-notification', (notification) => {
+				if (notification.conversation == this.conversation) {
+                    let reset = false;
+					if(notification.action == null){
+						reset = true;
+                    }
+					if (notification.message.user_id != this.currentUser) {
+						this.$bus.$emit('decrement-notifications');
+						reset = false;
+					}
+					this.updateConversation(notification.message, reset);
+					this.markAsRead();
+				}
+			});
+		},
+		beforeDestroy() {
+			this.$bus.$off('new-notification');
+		},
 
-            },
-        },
+		watch: {
+			conversation() {
+				this.load();
+			},
+		},
 
-        methods: {
-            isCurrent(userId) {
-                return this.currentUser == userId;
-            },
+		methods: {
+			isCurrent(userId) {
+				return this.currentUser == userId;
+			},
 
-            updateConversation(response, data) {
-                this.messages.push({
-                    'text': response.message,
-                    'user_id': this.currentUser,
-                    'date': moment().format('M/D/Y'),
-                    'time': moment().format('HH:mm')
-                });
-                $('#message').val('');
-            },
-        },
-    }
+			updateConversation(data, resetInput = true) {
+				this.messages.push({
+					action: data.action,
+					text: data.text,
+					user_id: data.user_id,
+					date: data.date,
+					time: data.time
+				});
+				if (resetInput) {
+					this.input = '';
+					this.sending = false;
+				}
+				this.scrollToBottom();
+			},
+
+			markAsRead() {
+				axios.post('/user/conversations/read/' + this.conversation).then(() => {
+				});
+			},
+
+			load() {
+				axios.get('/user/conversations/' + this.conversation).then((response) => {
+					this.messages = response.data;
+					this.scrollToBottom();
+				});
+			},
+
+			scrollToBottom() {
+				setTimeout(() => {
+					let chat = this.$el.querySelector(".card-body");
+					chat.scrollTop = chat.scrollHeight;
+				}, 50);
+			},
+
+			messageClass(userId) {
+				if (!this.isCurrent(userId)) {
+					return ['align-items-start'];
+				} else {
+					return ['align-items-end'];
+				}
+			},
+
+			messageBackground(userId) {
+				if (!this.isCurrent(userId)) {
+					return 'sender';
+				} else {
+					return 'current-user';
+				}
+			}
+		},
+	}
 </script>

@@ -17,17 +17,23 @@
 
     <!-- Scripts -->
     <script>
-		window.Laravel = <?= json_encode([
+		window.Laravel = @json([
 			'csrfToken' => csrf_token(),
             'locale' => App::getLocale()
-		]); ?>
+		])
     </script>
+    <script src="{{ env('APP_URL') }}:6001/socket.io/socket.io.js"></script>
 
     @yield('head')
 </head>
 <body>
 <div id="app">
     @yield('content')
+
+    @auth
+        <echo :user="{{ $user->id }}">
+        </echo>
+    @endauth
 </div>
 
 <!-- Scripts -->

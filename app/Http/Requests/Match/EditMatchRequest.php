@@ -59,7 +59,10 @@ class EditMatchRequest extends FormRequest {
 		}
 	}
 
-	public function commit() {
+	/**
+	 *
+	 */
+	public function commit(): void {
 		$this->match->name = $this->input('name');
 		$this->match->address = $this->input('address');
 		$this->match->lat = $this->input('lat');

@@ -25,6 +25,6 @@ class SendPlayerRemovedNotification implements ShouldQueue {
 	 * @return void
 	 */
 	public function handle(PlayerRemoved $event): void {
-		$event->user->notify(new Notification($event->match, $event->message ?? ''));
+		$event->user->notify(new Notification($event->match, $event->manager,$event->message ?? ''));
 	}
 }

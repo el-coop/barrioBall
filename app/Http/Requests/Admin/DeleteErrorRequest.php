@@ -31,6 +31,9 @@ class DeleteErrorRequest extends FormRequest {
 		];
 	}
 
+	/**
+	 *
+	 */
 	public function commit(): void {
 		$this->error->errorable->delete();
 		event(new Resolved());

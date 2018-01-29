@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Admin;
+use App\Models\Conversation;
 use App\Models\Errors\Error;
 use App\Models\Match;
 use App\Policies\AdminPolicy;
+use App\Policies\ConversationPolicy;
 use App\Policies\ErrorPolicy;
 use App\Policies\MatchPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -21,7 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Match::class => MatchPolicy::class,
 		Error::class => ErrorPolicy::class,
-		Admin::class => AdminPolicy::class
+		Admin::class => AdminPolicy::class,
+		Conversation::class => ConversationPolicy::class
     ];
 
     /**
