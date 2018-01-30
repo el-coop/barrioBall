@@ -6,8 +6,7 @@ import VueEcho from 'vue-echo';
 
 Vue.use(VueEcho, {
 	broadcaster: 'socket.io',
-	key: process.env.SOCET_IO_KEY,
-	host: window.location.hostname + ':6001'
+	host: window.location.hostname + process.env.MIX_SOCKET_IO_PREFIX
 });
 
 Vue.use(VueMq, {
