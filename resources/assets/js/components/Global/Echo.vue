@@ -14,10 +14,10 @@
 		created() {
 			this.$echo.private('App.Models.User.' + this.user)
 				.notification((notification) => {
-					this.$bus.$emit('new-notification', notification);
 					if (notification.message.user_id != this.user) {
 						this.$bus.$emit('increment-notification');
 					}
+					this.$bus.$emit('new-notification', notification);
 				});
 		}
 
