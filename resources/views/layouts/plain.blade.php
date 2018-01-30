@@ -22,7 +22,6 @@
             'locale' => App::getLocale()
 		])
     </script>
-    <script src="{{ env('APP_URL') }}{{env('MIX_SOCKET_IO_PREFIX')}}/socket.io/socket.io.js"></script>
 
     @yield('head')
 </head>

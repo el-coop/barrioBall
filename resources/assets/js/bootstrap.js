@@ -45,5 +45,4 @@ window.moment = require('moment');
 window.datetimepicker = require('eonasdan-bootstrap-datetimepicker');
 window.L = require('leaflet/dist/leaflet');
 window.L.leafletgeocoder = require('leaflet-control-geocoder/dist/Control.Geocoder');
-
-console.log(process.env);
+window.io = require('socket.io-client');
