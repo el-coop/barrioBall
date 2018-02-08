@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.6.0 on 2018-02-08 06:18:28.
+ * Generated for Laravel 5.6.2 on 2018-02-08 22:24:57.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -715,40 +715,6 @@ namespace Illuminate\Support\Facades {
         public static function provideFacades($namespace)
         {
             \Illuminate\Foundation\Application::provideFacades($namespace);
-        }
-        
-        /**
-         * Define a callback to be used to configure Monolog.
-         *
-         * @param callable $callback
-         * @return $this 
-         * @static 
-         */ 
-        public static function configureMonologUsing($callback)
-        {
-            return \Illuminate\Foundation\Application::configureMonologUsing($callback);
-        }
-        
-        /**
-         * Determine if the application has a custom Monolog configurator.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function hasMonologConfigurator()
-        {
-            return \Illuminate\Foundation\Application::hasMonologConfigurator();
-        }
-        
-        /**
-         * Get the custom Monolog configurator for the application.
-         *
-         * @return callable 
-         * @static 
-         */ 
-        public static function getMonologConfigurator()
-        {
-            return \Illuminate\Foundation\Application::getMonologConfigurator();
         }
         
         /**
