@@ -223,7 +223,7 @@ class InviteManagersTest extends TestCase {
 	 */
 	public function test_handles_manager_joining_when_has_join_request(): void {
 
-		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
+		/*Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_managerInvitation"), Mockery::any())->andReturn(true);
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->player->id}_{$this->match->id}_joinRequest"), Mockery::any())->andReturn(true);
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("{$this->match->id}_isFull"), Mockery::any())->andReturn(false);
 		Cache::shouldReceive('rememberForever')->once()->with(sha1("match_{$this->match->id}"), Mockery::any())->andReturn($this->match);
@@ -242,13 +242,14 @@ class InviteManagersTest extends TestCase {
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_registeredPlayers"));
 		Cache::shouldReceive('forget')->once()->with(sha1("{$this->match->id}_isFull"));
 		Cache::shouldReceive('forget')->twice()->with(sha1("{$this->player->username}_requests"));
-		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));
+		Cache::shouldReceive('forget')->once()->with(sha1("{$this->manager->username}_requests"));*/
 
 		$this->match->inviteManager($this->player);
 		$this->match->addJoinRequest($this->player);
 
 		$this->actingAs($this->player)
 			->post(action('Match\MatchUserController@joinAsManager', $this->match))
+			->dump()
 			->assertSessionHas('alert', __('match/show.managerJoined'));
 		$this->assertFalse($this->match->hasManagerInvite($this->player));
 		$this->assertTrue($this->match->hasManager($this->player));
