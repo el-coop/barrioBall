@@ -41,8 +41,7 @@ class ContactUsTest extends DuskTestCase {
 				->submitForm([
 					'email' => 'test@best.com',
 					'message' => 'This is a message!',
-				])->assertVisible('@sending')
-				->waitForText('Success!')
+				])->waitForText('Success!')
 				->click('@tryAgain')
 				->assertVisible('@submit');
 		});

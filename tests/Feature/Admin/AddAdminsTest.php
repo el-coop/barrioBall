@@ -65,7 +65,7 @@ class AddAdminsTest extends TestCase
 	 * @group admin
 	 * @group addAdmin
 	 */
-	public function test_admin_can_convert_admin_twice(): void {
+	public function test_admin_cant_convert_admin_twice(): void {
 
 		$this->actingAs($this->admin)->post(action('Admin\UserController@addAdmin',$this->admin))
 			->assertSessionHasErrors('alreadyAdmin',__('global.error',[],$this->admin->language));

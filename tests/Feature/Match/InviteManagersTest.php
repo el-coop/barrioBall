@@ -369,7 +369,6 @@ class InviteManagersTest extends TestCase {
 	}
 
 
-
 	/**
 	 * @test
 	 * @group match
