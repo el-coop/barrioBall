@@ -24,7 +24,7 @@
                     <input type="text" name="message" id="message" class="form-control" v-model="input">
                     <div class="input-group-append">
                         <button class="btn btn-info" type="submit" :disabled="sending || input == ''"
-                                @click="sending = true">Button
+                                @click="sending = true">{{ window.Laravel.locale == 'es' ? 'Enviar' : 'Send' }}
                         </button>
                     </div>
                 </div>
