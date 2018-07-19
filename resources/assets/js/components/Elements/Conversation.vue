@@ -24,7 +24,7 @@
                     <input type="text" name="message" id="message" class="form-control" v-model="input">
                     <div class="input-group-append">
                         <button class="btn btn-info" type="submit" :disabled="sending || input == ''"
-                                @click="sending = true">{{ window.Laravel.locale == 'es' ? 'Enviar' : 'Send' }}
+                                @click="sending = true">{{ locale == 'es' ? 'Enviar' : 'Send' }}
                         </button>
                     </div>
                 </div>
@@ -76,17 +76,18 @@
 			return {
 				messages: [],
 				sending: false,
-				input: ''
+				input: '',
+				locale: window.Laravel.locale
 			}
 		},
 
 		created() {
 			this.$bus.$on('new-notification', (notification) => {
 				if (notification.conversation == this.conversation) {
-                    let reset = false;
-					if(notification.action == null){
+					let reset = false;
+					if (notification.action == null) {
 						reset = true;
-                    }
+					}
 					if (notification.message.user_id != this.currentUser) {
 						this.$bus.$emit('decrement-notifications');
 						reset = false;
